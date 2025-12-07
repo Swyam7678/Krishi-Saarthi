@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
+import { FileSpreadsheet, Info } from "lucide-react";
 
 interface NPKData {
   n: number;
@@ -132,9 +133,25 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                     <p className="text-xs text-muted-foreground">
                       वर्तमान: {currentUrl ? "कस्टम शीट" : "डिफ़ॉल्ट (डेमो शीट)"}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      सुनिश्चित करें कि शीट सार्वजनिक है और इसमें Nitrogen, Phosphorus, Potassium कॉलम हैं।
-                    </p>
+                    
+                    <div className="bg-muted/50 p-3 rounded-md text-xs space-y-2 border border-border">
+                      <div className="flex items-center gap-2 font-medium text-foreground">
+                        <FileSpreadsheet className="h-3.5 w-3.5" />
+                        आवश्यक शीट प्रारूप (Required Format)
+                      </div>
+                      <p>आपकी Google Sheet में ये कॉलम हेडर (अंग्रेजी में) होने चाहिए:</p>
+                      <div className="grid grid-cols-3 gap-2 font-mono bg-background p-2 rounded border text-center">
+                        <div className="bg-muted/30 rounded px-1">Nitrogen</div>
+                        <div className="bg-muted/30 rounded px-1">Phosphorus</div>
+                        <div className="bg-muted/30 rounded px-1">Potassium</div>
+                      </div>
+                      <div className="flex gap-2 items-start text-muted-foreground">
+                        <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                        <span>
+                          सुनिश्चित करें कि शीट की शेयर सेटिंग्स में <strong>"Anyone with the link"</strong> चुना गया है।
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   <DialogFooter>
                     {currentUrl && (

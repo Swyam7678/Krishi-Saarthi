@@ -4,7 +4,7 @@ import { WeatherCard } from "@/components/dashboard/WeatherCard";
 import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
-import { useAction } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { LayoutDashboard, LogOut, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const getWeather = useAction(api.weather.getWeather);
   const getNPK = useAction(api.npk.getLiveNPK);
   const getMarket = useAction(api.market.getMarketPrices);
+  const updateUser = useMutation(api.users.updateUser);
 
   const [weather, setWeather] = useState<any>(null);
   const [npk, setNpk] = useState<any>(null);
@@ -25,6 +26,14 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [location, setLocation] = useState<string | undefined>(undefined);
   const [sheetUrl, setSheetUrl] = useState<string | undefined>(undefined);
+
+  // Load user preferences
+  useEffect(() => {
+    if (user) {
+      if (user.location && location === undefined) setLocation(user.location);
+      if (user.sheetUrl && sheetUrl === undefined) setSheetUrl(user.sheetUrl);
+    }
+  }, [user]);
 
   const fetchData = async () => {
     try {
@@ -54,10 +63,16 @@ export default function Dashboard() {
 
   const handleLocationChange = (newLocation: string) => {
     setLocation(newLocation);
+    if (user) {
+      updateUser({ location: newLocation });
+    }
   };
 
   const handleSheetUrlChange = (newUrl: string | undefined) => {
     setSheetUrl(newUrl);
+    if (user) {
+      updateUser({ sheetUrl: newUrl || "" });
+    }
     toast.success(newUrl ? "डेटा स्रोत अपडेट किया गया" : "डिफ़ॉल्ट डेटा स्रोत पर रीसेट किया गया");
   };
 

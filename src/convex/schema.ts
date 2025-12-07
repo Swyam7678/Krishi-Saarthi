@@ -30,6 +30,10 @@ const schema = defineSchema(
       isAnonymous: v.optional(v.boolean()), // is the user anonymous. do not remove
 
       role: v.optional(roleValidator), // role of the user. do not remove
+      
+      // User preferences
+      sheetUrl: v.optional(v.string()),
+      location: v.optional(v.string()),
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
     // Store crop recommendations history
