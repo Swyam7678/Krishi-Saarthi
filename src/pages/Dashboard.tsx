@@ -56,9 +56,9 @@ export default function Dashboard() {
     setLocation(newLocation);
   };
 
-  const handleSheetUrlChange = (newUrl: string) => {
+  const handleSheetUrlChange = (newUrl: string | undefined) => {
     setSheetUrl(newUrl);
-    toast.success("डेटा स्रोत अपडेट किया गया");
+    toast.success(newUrl ? "डेटा स्रोत अपडेट किया गया" : "डिफ़ॉल्ट डेटा स्रोत पर रीसेट किया गया");
   };
 
   return (
@@ -94,7 +94,7 @@ export default function Dashboard() {
             <WeatherCard data={weather} onLocationChange={handleLocationChange} />
           </div>
           <div className="h-full">
-            <NPKCard data={npk} onSheetUrlChange={handleSheetUrlChange} />
+            <NPKCard data={npk} onSheetUrlChange={handleSheetUrlChange} currentUrl={sheetUrl} />
           </div>
           <div className="h-full">
             <MarketCard data={market} />

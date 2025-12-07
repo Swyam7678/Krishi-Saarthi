@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Sprout, TrendingDown, TrendingUp, Settings, Link as LinkIcon } from "lucide-react";
+import { Activity, Sprout, TrendingDown, TrendingUp, Settings, Link as LinkIcon, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface NPKData {
   n: number;
@@ -31,18 +31,31 @@ interface NPKData {
 
 interface NPKCardProps {
   data: NPKData | null;
-  onSheetUrlChange?: (url: string) => void;
+  onSheetUrlChange?: (url: string | undefined) => void;
+  currentUrl?: string;
 }
 
-export function NPKCard({ data, onSheetUrlChange }: NPKCardProps) {
-  const [newUrl, setNewUrl] = useState("");
+export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
+  const [newUrl, setNewUrl] = useState(currentUrl || "");
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setNewUrl(currentUrl || "");
+    }
+  }, [open, currentUrl]);
 
   const handleUpdate = () => {
     if (onSheetUrlChange && newUrl.trim()) {
       onSheetUrlChange(newUrl.trim());
       setOpen(false);
-      setNewUrl("");
+    }
+  };
+
+  const handleReset = () => {
+    if (onSheetUrlChange) {
+      onSheetUrlChange(undefined);
+      setOpen(false);
     }
   };
 
@@ -117,10 +130,19 @@ export function NPKCard({ data, onSheetUrlChange }: NPKCardProps) {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
+                      वर्तमान: {currentUrl ? "कस्टम शीट" : "डिफ़ॉल्ट (डेमो शीट)"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
                       सुनिश्चित करें कि शीट सार्वजनिक है और इसमें Nitrogen, Phosphorus, Potassium कॉलम हैं।
                     </p>
                   </div>
                   <DialogFooter>
+                    {currentUrl && (
+                        <Button variant="outline" onClick={handleReset} className="mr-auto gap-2">
+                            <RotateCcw className="h-4 w-4" />
+                            रीसेट
+                        </Button>
+                    )}
                     <Button onClick={handleUpdate}>अपडेट करें</Button>
                   </DialogFooter>
                 </DialogContent>
