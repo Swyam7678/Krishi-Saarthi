@@ -1,1 +1,1 @@
-cat src/lib/vly-integrations.ts
+cat node_modules/@vly-ai/integrations/dist/index.d.ts
