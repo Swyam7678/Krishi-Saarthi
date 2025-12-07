@@ -33,16 +33,16 @@ export const getLiveNPK = action({
       const nIndex = headers.findIndex(h => h.includes('nitrogen'));
       const pIndex = headers.findIndex(h => h.includes('phosphorus'));
       const kIndex = headers.findIndex(h => h.includes('potassium'));
+      const timeIndex = headers.findIndex(h => h.includes('timestamp') || h.includes('date') || h.includes('time'));
       
       if (nIndex === -1 || pIndex === -1 || kIndex === -1) {
         throw new Error("NPK columns not found in sheet");
       }
 
-      // Find last valid row with data
-      let lastRow = null;
-      let prevRow = null;
+      // Collect history (last 20 points)
+      const history: any[] = [];
       
-      // Iterate backwards to find the latest data
+      // Iterate backwards to find the latest data and history
       for (let i = rows.length - 1; i > 0; i--) {
         const row = rows[i];
         // Ensure row has enough columns and data is not empty
@@ -51,48 +51,62 @@ export const getLiveNPK = action({
             row[pIndex]?.trim() && 
             row[kIndex]?.trim()) {
             
-            if (!lastRow) {
-                lastRow = row;
-            } else {
-                prevRow = row;
-                break; // Found both last and previous rows
+            const nVal = parseFloat(row[nIndex]);
+            const pVal = parseFloat(row[pIndex]);
+            const kVal = parseFloat(row[kIndex]);
+            
+            let timeLabel = `Reading ${i}`;
+            if (timeIndex !== -1 && row[timeIndex]) {
+                // Try to format time if possible, otherwise use raw
+                try {
+                    const date = new Date(row[timeIndex]);
+                    if (!isNaN(date.getTime())) {
+                        timeLabel = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    } else {
+                        timeLabel = row[timeIndex];
+                    }
+                } catch (e) {
+                    timeLabel = row[timeIndex];
+                }
             }
+
+            if (!isNaN(nVal) && !isNaN(pVal) && !isNaN(kVal) && nVal >= 0 && pVal >= 0 && kVal >= 0) {
+                 history.unshift({
+                    n: Math.round(nVal * 10) / 10,
+                    p: Math.round(pVal * 10) / 10,
+                    k: Math.round(kVal * 10) / 10,
+                    time: timeLabel
+                 });
+            }
+            
+            if (history.length >= 20) break;
         }
       }
 
-      if (!lastRow) throw new Error("No valid data found in sheet");
+      if (history.length === 0) throw new Error("No valid data found in sheet");
 
-      const n = parseFloat(lastRow[nIndex]);
-      const p = parseFloat(lastRow[pIndex]);
-      const k = parseFloat(lastRow[kIndex]);
-
-      // Validate values
-      if (isNaN(n) || isNaN(p) || isNaN(k)) {
-        throw new Error("Invalid number format in NPK columns");
-      }
-      if (n < 0 || p < 0 || k < 0) {
-        throw new Error("NPK values cannot be negative");
-      }
+      // Use the latest entry (last in history) as current
+      const latest = history[history.length - 1];
+      const n = latest.n;
+      const p = latest.p;
+      const k = latest.k;
 
       // Calculate trend if previous row exists
       let trendN: "up" | "down" = "up";
       let trendP: "up" | "down" = "up";
       let trendK: "up" | "down" = "up";
 
-      if (prevRow) {
-          const prevN = parseFloat(prevRow[nIndex]);
-          const prevP = parseFloat(prevRow[pIndex]);
-          const prevK = parseFloat(prevRow[kIndex]);
-          
-          trendN = n >= prevN ? "up" : "down";
-          trendP = p >= prevP ? "up" : "down";
-          trendK = k >= prevK ? "up" : "down";
+      if (history.length > 1) {
+          const prev = history[history.length - 2];
+          trendN = n >= prev.n ? "up" : "down";
+          trendP = p >= prev.p ? "up" : "down";
+          trendK = k >= prev.k ? "up" : "down";
       }
 
       return {
-        n: Math.round(n * 10) / 10,
-        p: Math.round(p * 10) / 10,
-        k: Math.round(k * 10) / 10,
+        n,
+        p,
+        k,
         timestamp: Date.now(),
         status: {
           n: n < 100 ? "Low" : n > 200 ? "High" : "Optimal",
@@ -104,6 +118,7 @@ export const getLiveNPK = action({
           p: trendP,
           k: trendK,
         },
+        history, // Return history
         isFallback: false
       };
 
@@ -116,6 +131,22 @@ export const getLiveNPK = action({
       const k = 240 + (Math.random() * 4 - 2); 
 
       const getTrend = () => Math.random() > 0.5 ? "up" : "down";
+
+      // Generate fake history
+      const history = Array.from({ length: 10 }).map((_, i) => ({
+        n: Math.round((173 + (Math.random() * 20 - 10)) * 10) / 10,
+        p: Math.round((192 + (Math.random() * 20 - 10)) * 10) / 10,
+        k: Math.round((240 + (Math.random() * 20 - 10)) * 10) / 10,
+        time: `T-${9-i}`
+      }));
+      
+      // Ensure the last point matches current
+      history[history.length - 1] = {
+          n: Math.round(n * 10) / 10,
+          p: Math.round(p * 10) / 10,
+          k: Math.round(k * 10) / 10,
+          time: "Now"
+      };
 
       return {
         n: Math.round(n * 10) / 10,
@@ -132,6 +163,7 @@ export const getLiveNPK = action({
           p: getTrend(),
           k: getTrend(),
         },
+        history,
         isFallback: true,
         error: error.message || "Failed to fetch data"
       };

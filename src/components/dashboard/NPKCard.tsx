@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import { FileSpreadsheet, Info } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface NPKData {
   n: number;
@@ -28,6 +30,12 @@ interface NPKData {
     p: "up" | "down";
     k: "up" | "down";
   };
+  history?: {
+    n: number;
+    p: number;
+    k: number;
+    time: string;
+  }[];
   isFallback?: boolean;
   error?: string;
 }
@@ -177,59 +185,92 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col justify-center">
-        <div className="space-y-6 mt-2">
-          {/* Nitrogen */}
-          <div className="space-y-1">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">नाइट्रोजन (N)</span>
-              <div className="flex items-center">
-                <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
-                {data.trend && <TrendIcon direction={data.trend.n} />}
+      <CardContent className="flex-1 flex flex-col min-h-0">
+        <Tabs defaultValue="overview" className="flex-1 flex flex-col min-h-0">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="flex-1 flex flex-col justify-center space-y-6 mt-0">
+            {/* Nitrogen */}
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">नाइट्रोजन (N)</span>
+                <div className="flex items-center">
+                  <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
+                  {data.trend && <TrendIcon direction={data.trend.n} />}
+                </div>
+              </div>
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${getStatusColor(data.status.n)} transition-all duration-1000`} 
+                  style={{ width: `${Math.min(data.n / 2, 100)}%` }}
+                />
               </div>
             </div>
-            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-              <div 
-                className={`h-full ${getStatusColor(data.status.n)} transition-all duration-1000`} 
-                style={{ width: `${Math.min(data.n / 2, 100)}%` }}
-              />
-            </div>
-          </div>
 
-          {/* Phosphorus */}
-          <div className="space-y-1">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">फॉस्फोरस (P)</span>
-              <div className="flex items-center">
-                <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
-                {data.trend && <TrendIcon direction={data.trend.p} />}
+            {/* Phosphorus */}
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">फॉस्फोरस (P)</span>
+                <div className="flex items-center">
+                  <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
+                  {data.trend && <TrendIcon direction={data.trend.p} />}
+                </div>
+              </div>
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${getStatusColor(data.status.p)} transition-all duration-1000`} 
+                  style={{ width: `${Math.min(data.p / 2, 100)}%` }}
+                />
               </div>
             </div>
-            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-              <div 
-                className={`h-full ${getStatusColor(data.status.p)} transition-all duration-1000`} 
-                style={{ width: `${Math.min(data.p / 2, 100)}%` }}
-              />
-            </div>
-          </div>
 
-          {/* Potassium */}
-          <div className="space-y-1">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">पोटैशियम (K)</span>
-              <div className="flex items-center">
-                <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
-                {data.trend && <TrendIcon direction={data.trend.k} />}
+            {/* Potassium */}
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">पोटैशियम (K)</span>
+                <div className="flex items-center">
+                  <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
+                  {data.trend && <TrendIcon direction={data.trend.k} />}
+                </div>
+              </div>
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${getStatusColor(data.status.k)} transition-all duration-1000`} 
+                  style={{ width: `${Math.min(data.k / 3, 100)}%` }}
+                />
               </div>
             </div>
-            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-              <div 
-                className={`h-full ${getStatusColor(data.status.k)} transition-all duration-1000`} 
-                style={{ width: `${Math.min(data.k / 3, 100)}%` }}
-              />
+          </TabsContent>
+
+          <TabsContent value="history" className="flex-1 min-h-0 mt-0">
+            <div className="h-full w-full min-h-[200px]">
+              {data.history && data.history.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                    <XAxis dataKey="time" hide />
+                    <YAxis fontSize={12} />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      labelStyle={{ color: '#666', marginBottom: '4px' }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                    <Line type="monotone" dataKey="n" stroke="#22c55e" strokeWidth={2} dot={false} name="Nitrogen" />
+                    <Line type="monotone" dataKey="p" stroke="#eab308" strokeWidth={2} dot={false} name="Phosphorus" />
+                    <Line type="monotone" dataKey="k" stroke="#3b82f6" strokeWidth={2} dot={false} name="Potassium" />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                  No history available
+                </div>
+              )}
             </div>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
