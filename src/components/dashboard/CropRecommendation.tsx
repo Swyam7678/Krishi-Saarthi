@@ -42,9 +42,9 @@ export function CropRecommendation() {
     try {
       const response = await generateRecommendation(values);
       setResult(response);
-      toast.success("Recommendation generated!");
+      toast.success("सिफारिश तैयार है!");
     } catch (error) {
-      toast.error("Failed to generate recommendation");
+      toast.error("सिफारिश उत्पन्न करने में विफल");
       console.error(error);
     }
   }
@@ -54,7 +54,7 @@ export function CropRecommendation() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <BrainCircuit className="h-5 w-5 text-purple-600" />
-          <span>AI Crop Recommendation</span>
+          <span>AI फसल सुझाव</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -67,7 +67,7 @@ export function CropRecommendation() {
                   name="nitrogen"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nitrogen (N)</FormLabel>
+                      <FormLabel>नाइट्रोजन (N)</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -80,7 +80,7 @@ export function CropRecommendation() {
                   name="phosphorus"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phosphorus (P)</FormLabel>
+                      <FormLabel>फॉस्फोरस (P)</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -93,7 +93,7 @@ export function CropRecommendation() {
                   name="potassium"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Potassium (K)</FormLabel>
+                      <FormLabel>पोटैशियम (K)</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -106,7 +106,7 @@ export function CropRecommendation() {
                   name="ph"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>pH Level</FormLabel>
+                      <FormLabel>pH स्तर</FormLabel>
                       <FormControl>
                         <Input type="number" step="0.1" {...field} />
                       </FormControl>
@@ -119,7 +119,7 @@ export function CropRecommendation() {
                   name="rainfall"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Rainfall (mm)</FormLabel>
+                      <FormLabel>वर्षा (mm)</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -132,20 +132,20 @@ export function CropRecommendation() {
                   name="soilType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Soil Type</FormLabel>
+                      <FormLabel>मिट्टी का प्रकार</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select soil type" />
+                            <SelectValue placeholder="मिट्टी का प्रकार चुनें" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Loamy">Loamy</SelectItem>
-                          <SelectItem value="Sandy">Sandy</SelectItem>
-                          <SelectItem value="Clay">Clay</SelectItem>
-                          <SelectItem value="Silt">Silt</SelectItem>
-                          <SelectItem value="Peaty">Peaty</SelectItem>
-                          <SelectItem value="Chalky">Chalky</SelectItem>
+                          <SelectItem value="Loamy">दोमट (Loamy)</SelectItem>
+                          <SelectItem value="Sandy">रेतीली (Sandy)</SelectItem>
+                          <SelectItem value="Clay">चिकनी (Clay)</SelectItem>
+                          <SelectItem value="Silt">गाद (Silt)</SelectItem>
+                          <SelectItem value="Peaty">पीट (Peaty)</SelectItem>
+                          <SelectItem value="Chalky">चूना (Chalky)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -157,12 +157,12 @@ export function CropRecommendation() {
                 {form.formState.isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
+                    विश्लेषण कर रहा है...
                   </>
                 ) : (
                   <>
                     <Sprout className="mr-2 h-4 w-4" />
-                    Get Recommendation
+                    सुझाव प्राप्त करें
                   </>
                 )}
               </Button>
@@ -177,7 +177,7 @@ export function CropRecommendation() {
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-center p-4">
                 <Sprout className="h-12 w-12 mb-2 opacity-20" />
-                <p>Enter soil details and click "Get Recommendation" to see AI suggestions.</p>
+                <p>मिट्टी का विवरण दर्ज करें और "सुझाव प्राप्त करें" पर क्लिक करें।</p>
               </div>
             )}
           </div>

@@ -12,7 +12,7 @@ interface MarketItem {
 export function MarketCard({ data }: { data: MarketItem[] | null }) {
   if (!data) return (
     <Card className="h-full animate-pulse">
-      <CardHeader><CardTitle>Market Prices</CardTitle></CardHeader>
+      <CardHeader><CardTitle>मंडी भाव</CardTitle></CardHeader>
       <CardContent className="h-32 bg-muted/20 rounded-md" />
     </Card>
   );
@@ -22,7 +22,7 @@ export function MarketCard({ data }: { data: MarketItem[] | null }) {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <DollarSign className="h-5 w-5 text-orange-600" />
-          <span>Mandi Market Prices</span>
+          <span>मंडी भाव</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -31,7 +31,7 @@ export function MarketCard({ data }: { data: MarketItem[] | null }) {
             <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
               <div className="flex flex-col">
                 <span className="font-semibold">{item.name}</span>
-                <span className="text-xs text-muted-foreground">Avg: ₹{item.avg}/q</span>
+                <span className="text-xs text-muted-foreground">औसत: ₹{item.avg}/q</span>
               </div>
               <div className="flex flex-col items-end">
                 <div className="flex items-center gap-1 font-bold">

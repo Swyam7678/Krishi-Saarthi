@@ -31,7 +31,7 @@ export function NPKCard({ data }: { data: NPKData | null }) {
 
   if (!data) return (
     <Card className="h-full animate-pulse">
-      <CardHeader><CardTitle>NPK Levels</CardTitle></CardHeader>
+      <CardHeader><CardTitle>NPK स्तर</CardTitle></CardHeader>
       <CardContent className="h-32 bg-muted/20 rounded-md" />
     </Card>
   );
@@ -42,11 +42,11 @@ export function NPKCard({ data }: { data: NPKData | null }) {
         <CardTitle className="flex justify-between items-center text-lg">
           <div className="flex items-center gap-2">
             <Sprout className="h-5 w-5 text-green-600" />
-            <span>Live Soil NPK</span>
+            <span>मिट्टी के पोषक तत्व (NPK)</span>
           </div>
           <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
             <Activity className="h-3 w-3 animate-pulse" />
-            Live Sensor
+            लाइव सेंसर
           </div>
         </CardTitle>
       </CardHeader>
@@ -55,13 +55,13 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           {/* Nitrogen */}
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="font-medium">Nitrogen (N)</span>
+              <span className="font-medium">नाइट्रोजन (N)</span>
               <span className={getTextColor(data.status.n)}>{data.n} mg/kg ({data.status.n})</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
                 className={`h-full ${getStatusColor(data.status.n)} transition-all duration-1000`} 
-                style={{ width: `${Math.min(data.n, 100)}%` }}
+                style={{ width: `${Math.min(data.n / 2, 100)}%` }}
               />
             </div>
           </div>
@@ -69,13 +69,13 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           {/* Phosphorus */}
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="font-medium">Phosphorus (P)</span>
+              <span className="font-medium">फॉस्फोरस (P)</span>
               <span className={getTextColor(data.status.p)}>{data.p} mg/kg ({data.status.p})</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
                 className={`h-full ${getStatusColor(data.status.p)} transition-all duration-1000`} 
-                style={{ width: `${Math.min(data.p, 100)}%` }}
+                style={{ width: `${Math.min(data.p / 2, 100)}%` }}
               />
             </div>
           </div>
@@ -83,13 +83,13 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           {/* Potassium */}
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="font-medium">Potassium (K)</span>
+              <span className="font-medium">पोटैशियम (K)</span>
               <span className={getTextColor(data.status.k)}>{data.k} mg/kg ({data.status.k})</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
                 className={`h-full ${getStatusColor(data.status.k)} transition-all duration-1000`} 
-                style={{ width: `${Math.min(data.k, 100)}%` }}
+                style={{ width: `${Math.min(data.k / 3, 100)}%` }}
               />
             </div>
           </div>

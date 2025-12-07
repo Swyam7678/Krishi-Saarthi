@@ -51,7 +51,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to send verification code. Please try again.",
+          : "सत्यापन कोड भेजने में विफल। कृपया पुनः प्रयास करें।",
       );
       setIsLoading(false);
     }
@@ -72,7 +72,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     } catch (error) {
       console.error("OTP verification error:", error);
 
-      setError("The verification code you entered is incorrect.");
+      setError("आपके द्वारा दर्ज किया गया सत्यापन कोड गलत है।");
       setIsLoading(false);
 
       setOtp("");
@@ -91,7 +91,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     } catch (error) {
       console.error("Guest login error:", error);
       console.error("Error details:", JSON.stringify(error, null, 2));
-      setError(`Failed to sign in as guest: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setError(`अतिथि के रूप में साइन इन करने में विफल: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setIsLoading(false);
     }
   };
@@ -117,9 +117,9 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       onClick={() => navigate("/")}
                     />
                   </div>
-                <CardTitle className="text-xl">Get Started</CardTitle>
+                <CardTitle className="text-xl">शुरू करें</CardTitle>
                 <CardDescription>
-                  Enter your email to log in or sign up
+                  लॉग इन या साइन अप करने के लिए अपना ईमेल दर्ज करें
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleEmailSubmit}>
@@ -161,7 +161,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
                         <span className="bg-background px-2 text-muted-foreground">
-                          Or
+                          या
                         </span>
                       </div>
                     </div>
@@ -174,7 +174,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       disabled={isLoading}
                     >
                       <UserX className="mr-2 h-4 w-4" />
-                      Continue as Guest
+                      अतिथि के रूप में जारी रखें
                     </Button>
                   </div>
                 </CardContent>
@@ -183,9 +183,9 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
           ) : (
             <>
               <CardHeader className="text-center mt-4">
-                <CardTitle>Check your email</CardTitle>
+                <CardTitle>अपना ईमेल चेक करें</CardTitle>
                 <CardDescription>
-                  We've sent a code to {step.email}
+                  हमने {step.email} पर एक कोड भेजा है
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleOtpSubmit}>
@@ -222,13 +222,13 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     </p>
                   )}
                   <p className="text-sm text-muted-foreground text-center mt-4">
-                    Didn't receive a code?{" "}
+                    कोड नहीं मिला?{" "}
                     <Button
                       variant="link"
                       className="p-0 h-auto"
                       onClick={() => setStep("signIn")}
                     >
-                      Try again
+                      पुनः प्रयास करें
                     </Button>
                   </p>
                 </CardContent>
@@ -241,11 +241,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Verifying...
+                        सत्यापन हो रहा है...
                       </>
                     ) : (
                       <>
-                        Verify code
+                        कोड सत्यापित करें
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     )}
@@ -257,7 +257,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     disabled={isLoading}
                     className="w-full"
                   >
-                    Use different email
+                    अलग ईमेल का उपयोग करें
                   </Button>
                 </CardFooter>
               </form>

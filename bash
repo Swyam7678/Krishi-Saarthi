@@ -1,1 +1,1 @@
-npx convex dev --once && npx tsc -b --noEmit
+cat src/lib/vly-integrations.ts

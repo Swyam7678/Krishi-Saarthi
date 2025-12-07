@@ -24,15 +24,20 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   const fetchData = async () => {
-    const [w, n, m] = await Promise.all([
-      getWeather({}),
-      getNPK({}),
-      getMarket({})
-    ]);
-    setWeather(w);
-    setNpk(n);
-    setMarket(m);
-    setLastUpdated(new Date());
+    try {
+      const [w, n, m] = await Promise.all([
+        getWeather({}),
+        getNPK({}),
+        getMarket({})
+      ]);
+      setWeather(w);
+      setNpk(n);
+      setMarket(m);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      // Optionally show a toast or partial data
+    }
   };
 
   useEffect(() => {
@@ -51,19 +56,19 @@ export default function Dashboard() {
               <LayoutDashboard className="h-8 w-8" />
               KrishiSaarthi
             </h1>
-            <p className="text-muted-foreground">Smart Farming Assistant • Welcome back, {user?.name || 'Farmer'}</p>
+            <p className="text-muted-foreground">स्मार्ट कृषि सहायक • स्वागत है, {user?.name || 'किसान'}</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground hidden md:inline">
-              Updated: {lastUpdated.toLocaleTimeString()}
+              अद्यतन: {lastUpdated.toLocaleTimeString()}
             </span>
             <Button variant="outline" size="sm" onClick={fetchData}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              ताज़ा करें
             </Button>
             <Button variant="ghost" size="sm" onClick={() => signOut()}>
               <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
+              साइन आउट
             </Button>
           </div>
         </div>

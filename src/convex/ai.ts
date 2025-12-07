@@ -1,7 +1,7 @@
 "use node";
 import { action } from "./_generated/server";
 import { v } from "convex/values";
-import { vly } from '../lib/vly-integrations';
+import { vly } from "../lib/vly-integrations";
 
 export const generateCropRecommendation = action({
   args: {
@@ -28,18 +28,24 @@ export const generateCropRecommendation = action({
       2. A brief reasoning for why these crops are suitable.
       3. Fertilizer suggestions to improve yield.
       
+      IMPORTANT: Provide the response in HINDI language.
       Format the response clearly in Markdown.
     `;
 
-    const result = await vly.ai.completion({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      maxTokens: 1000
-    });
+    try {
+      const result = await vly.ai.completion({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        maxTokens: 1000
+      });
 
-    if (result.success && result.data) {
-      return result.data.choices[0]?.message?.content || "Could not generate recommendation.";
+      if (result.success && result.data) {
+        return result.data.choices[0]?.message?.content || "सिफारिश उत्पन्न नहीं की जा सकी।";
+      }
+      return result.error || "अनुरोध विफल रहा";
+    } catch (e) {
+      console.error("AI Error:", e);
+      return "AI सेवा वर्तमान में अनुपलब्ध है। कृपया बाद में पुनः प्रयास करें।";
     }
-    return result.error || "Request failed";
   },
 });

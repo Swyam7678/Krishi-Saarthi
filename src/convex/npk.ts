@@ -10,20 +10,22 @@ export const getLiveNPK = action({
     // Simulate reading from a sensor/sheet
     // In a real scenario, we would fetch the CSV from the sheetUrl
     
-    // Generating realistic fluctuating values
-    const n = 40 + Math.random() * 20; // 40-60
-    const p = 30 + Math.random() * 15; // 30-45
-    const k = 35 + Math.random() * 15; // 35-50
+    // Generating realistic fluctuating values based on the user's image
+    // Image shows N: 173, P: 192, K: 240
+    // We keep the fluctuation very small to represent the "last" stable reading
+    const n = 173 + (Math.random() * 1 - 0.5); 
+    const p = 192 + (Math.random() * 1 - 0.5); 
+    const k = 240 + (Math.random() * 1 - 0.5); 
 
     return {
-      n: Math.round(n),
-      p: Math.round(p),
-      k: Math.round(k),
+      n: Math.round(n * 10) / 10,
+      p: Math.round(p * 10) / 10,
+      k: Math.round(k * 10) / 10,
       timestamp: Date.now(),
       status: {
-        n: n < 30 ? "Low" : n > 50 ? "High" : "Optimal",
-        p: p < 20 ? "Low" : p > 40 ? "High" : "Optimal",
-        k: k < 25 ? "Low" : k > 45 ? "High" : "Optimal",
+        n: n < 100 ? "Low" : n > 200 ? "High" : "Optimal",
+        p: p < 100 ? "Low" : p > 200 ? "High" : "Optimal",
+        k: k < 150 ? "Low" : k > 300 ? "High" : "Optimal",
       }
     };
   },

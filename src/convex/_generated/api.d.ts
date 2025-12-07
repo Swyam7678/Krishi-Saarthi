@@ -8,10 +8,14 @@
  * @module
  */
 
+import type * as ai from "../ai.js";
 import type * as auth from "../auth.js";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as http from "../http.js";
+import type * as market from "../market.js";
+import type * as npk from "../npk.js";
 import type * as users from "../users.js";
+import type * as weather from "../weather.js";
 
 import type {
   ApiFromModules,
@@ -20,10 +24,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  ai: typeof ai;
   auth: typeof auth;
   "auth/emailOtp": typeof auth_emailOtp;
   http: typeof http;
+  market: typeof market;
+  npk: typeof npk;
   users: typeof users;
+  weather: typeof weather;
 }>;
 
 /**
