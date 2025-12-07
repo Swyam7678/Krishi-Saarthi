@@ -37,7 +37,7 @@ export function NPKCard({ data }: { data: NPKData | null }) {
   );
 
   return (
-    <Card className="h-full border-l-4 border-l-green-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+    <Card className="h-full flex flex-col border-l-4 border-l-green-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center text-lg">
           <div className="flex items-center gap-2">
@@ -50,8 +50,8 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4 mt-2">
+      <CardContent className="flex-1 flex flex-col justify-center">
+        <div className="space-y-6 mt-2">
           {/* Nitrogen */}
           <div className="space-y-1">
             <div className="flex justify-between text-sm">

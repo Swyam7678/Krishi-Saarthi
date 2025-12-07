@@ -36,14 +36,14 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
   };
 
   return (
-    <Card className="h-full border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+    <Card className="h-full flex flex-col border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center text-lg">
           <span>मौसम का हाल</span>
           <span className="text-sm font-normal text-muted-foreground">{data.location}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
@@ -75,9 +75,9 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
         </div>
 
         {data.forecast && (
-          <div className="space-y-2">
+          <div className="flex-1 flex flex-col min-h-0">
             <h4 className="text-sm font-semibold text-muted-foreground mb-2">आगामी 7 दिन</h4>
-            <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-1">
               {data.forecast.map((day, index) => (
                 <div key={index} className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-muted/50 transition-colors">
                   <span className="w-24 font-medium">{day.day}</span>

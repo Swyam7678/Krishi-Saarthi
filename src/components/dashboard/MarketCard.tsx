@@ -18,15 +18,15 @@ export function MarketCard({ data }: { data: MarketItem[] | null }) {
   );
 
   return (
-    <Card className="h-full border-l-4 border-l-orange-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+    <Card className="h-full flex flex-col border-l-4 border-l-orange-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <DollarSign className="h-5 w-5 text-orange-600" />
           <span>मंडी भाव</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
+      <CardContent className="flex-1 flex flex-col min-h-0">
+        <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-1">
           {data.map((item) => (
             <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
               <div className="flex flex-col">
