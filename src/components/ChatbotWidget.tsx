@@ -1,21 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { MessageCircle, X, Send, Mic, Volume2, VolumeX, Share2 } from "lucide-react";
+import { MessageCircle, X, Send, Mic, Volume2, VolumeX, Share2, RefreshCw, AlertCircle, Droplets } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface ChatbotWidgetProps {
   npkData: {
     n: number;
     p: number;
     k: number;
-    status: { n: string; p: string; k: string };
+    moisture?: number;
+    status: { n: string; p: string; k: string; moisture?: string };
+    isFallback?: boolean;
+    timestamp?: number;
   } | null;
+  onRefresh?: () => void;
 }
 
-export function ChatbotWidget({ npkData }: ChatbotWidgetProps) {
+export function ChatbotWidget({ npkData, onRefresh }: ChatbotWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { t, language } = useLanguage();
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -77,9 +82,9 @@ export function ChatbotWidget({ npkData }: ChatbotWidgetProps) {
     if (!npkData) return;
 
     const text = `
-      ${t('chatbot_welcome')}
-      ${t('nitrogen')}: ${npkData.n}, ${t('phosphorus')}: ${npkData.p}, ${t('potassium')}: ${npkData.k}.
-      ${t('fertilizer_rec')}: ${fertilizers.join(", ")}.
+      ${t('chatbot_welcome')}\n
+      ${t('nitrogen')}: ${npkData.n}, ${t('phosphorus')}: ${npkData.p}, ${t('potassium')}: ${npkData.k}.\n
+      ${t('fertilizer_rec')}: ${fertilizers.join(", ")}.\n
       ${t('crop_rec')}: ${crops.join(", ")}.
     `;
 
@@ -122,9 +127,16 @@ export function ChatbotWidget({ npkData }: ChatbotWidgetProps) {
               </div>
               <CardTitle className="text-base">{t('chatbot_title')}</CardTitle>
             </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/20 text-primary-foreground" onClick={() => setIsOpen(false)}>
-              <X className="h-5 w-5" />
-            </Button>
+            <div className="flex items-center gap-1">
+              {onRefresh && (
+                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/20 text-primary-foreground" onClick={onRefresh} title={t('refresh')}>
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+              )}
+              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/20 text-primary-foreground" onClick={() => setIsOpen(false)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </CardHeader>
           
           <CardContent className="flex-1 overflow-hidden p-0 bg-muted/10">
@@ -147,7 +159,15 @@ export function ChatbotWidget({ npkData }: ChatbotWidgetProps) {
                       <MessageCircle className="h-4 w-4 text-primary" />
                     </div>
                     <div className="bg-white dark:bg-card border rounded-2xl rounded-tl-none p-3 shadow-sm text-sm max-w-[85%] space-y-3 w-full">
-                      <p className="font-semibold text-primary">{t('live_npk')}:</p>
+                      <div className="flex justify-between items-center">
+                        <p className="font-semibold text-primary">{t('live_npk')}:</p>
+                        {npkData.isFallback && (
+                          <Badge variant="outline" className="text-[10px] h-5 border-yellow-500 text-yellow-600 bg-yellow-50">
+                            Simulation
+                          </Badge>
+                        )}
+                      </div>
+                      
                       <div className="grid grid-cols-3 gap-2 text-center">
                         <div className="bg-green-50 dark:bg-green-900/20 p-2 rounded border border-green-100 dark:border-green-800">
                           <div className="text-xs text-muted-foreground">N</div>
@@ -161,7 +181,21 @@ export function ChatbotWidget({ npkData }: ChatbotWidgetProps) {
                           <div className="text-xs text-muted-foreground">K</div>
                           <div className="font-bold text-orange-700 dark:text-orange-400">{npkData.k}</div>
                         </div>
+                        
+                        {npkData.moisture !== undefined && (
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded border border-blue-100 dark:border-blue-800 col-span-3 mt-1 flex items-center justify-center gap-2">
+                            <Droplets className="h-3 w-3 text-blue-500" />
+                            <div className="text-xs text-muted-foreground">{t('moisture')}</div>
+                            <div className="font-bold text-blue-700 dark:text-blue-400">{npkData.moisture}%</div>
+                          </div>
+                        )}
                       </div>
+                      
+                      {npkData.timestamp && (
+                        <p className="text-[10px] text-muted-foreground text-right">
+                          {new Date(npkData.timestamp).toLocaleTimeString()}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ) : (

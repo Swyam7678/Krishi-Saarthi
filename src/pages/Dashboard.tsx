@@ -169,7 +169,7 @@ export default function Dashboard() {
       </div>
 
       {/* Chatbot Widget */}
-      <ChatbotWidget npkData={npk} />
+      <ChatbotWidget npkData={npk} onRefresh={fetchData} />
     </div>
   );
 }
