@@ -1,279 +1,240 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { MessageCircle, X, Send, Sprout, Droplets, Leaf, Bot, AlertTriangle } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
+import { MessageCircle, X, Send, Mic, Volume2, VolumeX, Share2 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 
-interface NPKData {
-  n: number;
-  p: number;
-  k: number;
-  moisture?: number;
-  status: {
-    n: string;
-    p: string;
-    k: string;
-  };
-}
-
 interface ChatbotWidgetProps {
-  npkData: NPKData | null;
-}
-
-interface Message {
-  id: string;
-  role: 'bot' | 'user';
-  content: React.ReactNode;
-  timestamp: Date;
+  npkData: {
+    n: number;
+    p: number;
+    k: number;
+    status: { n: string; p: string; k: string };
+  } | null;
 }
 
 export function ChatbotWidget({ npkData }: ChatbotWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
   const { t, language } = useLanguage();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Initialize chat with NPK analysis when data is available
-  useEffect(() => {
-    if (npkData && messages.length === 0) {
-      const analysis = generateAnalysis(npkData);
-      setMessages([
-        {
-          id: 'welcome',
-          role: 'bot',
-          content: t('chatbot_welcome'),
-          timestamp: new Date()
-        },
-        {
-          id: 'analysis',
-          role: 'bot',
-          content: analysis,
-          timestamp: new Date()
-        }
-      ]);
-    }
-  }, [npkData, t, language]);
+  // Recommendation Logic
+  const getRecommendations = () => {
+    if (!npkData) return { fertilizers: [], crops: [] };
 
-  // Auto-scroll to bottom
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages, isOpen]);
-
-  const generateAnalysis = (data: NPKData) => {
-    const issues = [];
-    const recs = [];
+    const fertilizers = [];
     const crops = [];
+    let isHealthy = true;
 
-    // Thresholds based on convex/npk.ts
-    // N < 100 Low, P < 100 Low, K < 150 Low
-    
-    const isLowN = data.n < 100;
-    const isLowP = data.p < 100;
-    const isLowK = data.k < 150;
-
-    if (isLowN) {
-      issues.push({ text: t('low_n'), color: "text-red-500" });
-      recs.push("Urea / Ammonium Sulfate");
-      crops.push("Millets (Bajra/Jowar)", "Pulses (Moong/Urad)");
-    }
-    if (isLowP) {
-      issues.push({ text: t('low_p'), color: "text-orange-500" });
-      recs.push("Single Super Phosphate (SSP)");
-      crops.push("Groundnut", "Pulses");
-    }
-    if (isLowK) {
-      issues.push({ text: t('low_k'), color: "text-yellow-600" });
-      recs.push("Muriate of Potash (MOP)");
-      crops.push("Millets");
+    // Nitrogen Logic
+    if (npkData.n < 100) { // Low
+      fertilizers.push(t('low_n_fert'));
+      crops.push(language === 'en' ? "Millets" : "बाजरा (Millets)", language === 'en' ? "Pulses" : "दालें (Pulses)");
+      isHealthy = false;
     }
 
-    if (!isLowN && !isLowP && !isLowK) {
-      return (
-        <div className="space-y-3">
-          <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
-            <p className="font-medium text-green-700 dark:text-green-400 flex items-center gap-2">
-              <Sprout className="h-4 w-4" /> {t('soil_healthy')}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">{t('rec_healthy_crops')}</p>
-            <div className="flex flex-wrap gap-2">
-              {["Wheat", "Rice", "Sugarcane"].map(c => (
-                <Badge key={c} variant="outline" className="bg-background">{c}</Badge>
-              ))}
-            </div>
-          </div>
-        </div>
+    // Phosphorus Logic
+    if (npkData.p < 100) { // Low
+      fertilizers.push(t('low_p_fert'));
+      crops.push(language === 'en' ? "Pulses" : "दालें (Pulses)", language === 'en' ? "Groundnut" : "मूंगफली (Groundnut)");
+      isHealthy = false;
+    }
+
+    // Potassium Logic
+    if (npkData.k < 150) { // Low
+      fertilizers.push(t('low_k_fert'));
+      crops.push(language === 'en' ? "Millets" : "बाजरा (Millets)");
+      isHealthy = false;
+    }
+
+    if (isHealthy) {
+      fertilizers.push(t('healthy_soil'));
+      crops.push(
+        language === 'en' ? "Wheat" : "गेहूँ (Wheat)", 
+        language === 'en' ? "Rice" : "धान (Rice)", 
+        language === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)"
       );
     }
 
-    return (
-      <div className="space-y-4">
-        {/* Current Values */}
-        <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          <div className={cn("p-2 rounded bg-muted", isLowN ? "border-red-200 bg-red-50 text-red-700" : "text-green-700")}>
-            <div className="font-bold">N</div>
-            <div>{data.n}</div>
-          </div>
-          <div className={cn("p-2 rounded bg-muted", isLowP ? "border-orange-200 bg-orange-50 text-orange-700" : "text-green-700")}>
-            <div className="font-bold">P</div>
-            <div>{data.p}</div>
-          </div>
-          <div className={cn("p-2 rounded bg-muted", isLowK ? "border-yellow-200 bg-yellow-50 text-yellow-700" : "text-green-700")}>
-            <div className="font-bold">K</div>
-            <div>{data.k}</div>
-          </div>
-        </div>
-
-        {/* Issues */}
-        <div className="space-y-1">
-          {issues.map((issue, i) => (
-            <div key={i} className={cn("flex items-center gap-2 text-sm font-medium", issue.color)}>
-              <AlertTriangle className="h-4 w-4" /> {issue.text}
-            </div>
-          ))}
-        </div>
-
-        {/* Fertilizer Recs */}
-        {recs.length > 0 && (
-          <div className="space-y-1 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-md">
-            <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider">{t('rec_fertilizer')}</p>
-            <ul className="list-disc list-inside text-sm text-blue-900 dark:text-blue-200">
-              {recs.map((r, i) => <li key={i}>{r}</li>)}
-            </ul>
-          </div>
-        )}
-
-        {/* Crop Recs */}
-        {crops.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('rec_crops')}</p>
-            <div className="flex flex-wrap gap-2">
-              {[...new Set(crops)].map(c => (
-                <Badge key={c} variant="secondary">{c}</Badge>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
-
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: inputValue,
-      timestamp: new Date()
+    return { 
+      fertilizers: [...new Set(fertilizers)], 
+      crops: [...new Set(crops)] 
     };
-
-    setMessages(prev => [...prev, userMsg]);
-    setInputValue("");
-
-    // Simple mock response for now
-    setTimeout(() => {
-      const botMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'bot',
-        content: "I am currently in NPK Analysis mode. Please use the dashboard for full AI features.",
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botMsg]);
-    }, 1000);
   };
+
+  const { fertilizers, crops } = getRecommendations();
+
+  const handleSpeak = () => {
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    if (!npkData) return;
+
+    const text = `
+      ${t('chatbot_welcome')}
+      ${t('nitrogen')}: ${npkData.n}, ${t('phosphorus')}: ${npkData.p}, ${t('potassium')}: ${npkData.k}.
+      ${t('fertilizer_rec')}: ${fertilizers.join(", ")}.
+      ${t('crop_rec')}: ${crops.join(", ")}.
+    `;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Try to set language
+    if (language === 'hi') utterance.lang = 'hi-IN';
+    else if (language === 'en') utterance.lang = 'en-IN';
+    // Add other languages if supported by browser
+
+    utterance.onend = () => setIsSpeaking(false);
+    speechRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+  };
+
+  const handleWhatsAppShare = () => {
+    if (!npkData) return;
+    const text = `*KrishiSaarthi Report* 🌱\n\n*NPK Values:*\nN: ${npkData.n}\nP: ${npkData.p}\nK: ${npkData.k}\n\n*Fertilizers:* ${fertilizers.join(", ")}\n*Crops:* ${crops.join(", ")}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
+  // Stop speaking when closed
+  useEffect(() => {
+    if (!isOpen) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  }, [isOpen]);
 
   return (
-    <>
-      {/* Toggle Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-xl z-50 transition-all duration-300 hover:scale-110",
-          isOpen ? "bg-red-500 hover:bg-red-600 rotate-90" : "bg-primary hover:bg-primary/90"
-        )}
-      >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-8 w-8" />}
-      </Button>
-
-      {/* Chat Window */}
-      <div className={cn(
-        "fixed bottom-24 right-6 w-[350px] md:w-[400px] bg-background border rounded-xl shadow-2xl z-50 transition-all duration-300 origin-bottom-right flex flex-col overflow-hidden",
-        isOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-10 pointer-events-none"
-      )} style={{ maxHeight: 'calc(100vh - 120px)', height: '600px' }}>
-        
-        {/* Header */}
-        <div className="bg-primary p-4 flex items-center gap-3 text-primary-foreground">
-          <div className="bg-white/20 p-2 rounded-full">
-            <Bot className="h-6 w-6" />
-          </div>
-          <div>
-            <h3 className="font-bold text-lg leading-none">{t('chatbot_title')}</h3>
-            <span className="text-xs opacity-80 flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"/> Online
-            </span>
-          </div>
-        </div>
-
-        {/* Messages Area */}
-        <ScrollArea className="flex-1 p-4 bg-muted/30">
-          <div className="space-y-4">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn(
-                  "flex w-full",
-                  msg.role === 'user' ? "justify-end" : "justify-start"
-                )}
-              >
-                <div
-                  className={cn(
-                    "max-w-[85%] rounded-2xl px-4 py-3 text-sm shadow-sm",
-                    msg.role === 'user' 
-                      ? "bg-primary text-primary-foreground rounded-br-none" 
-                      : "bg-card border rounded-bl-none"
-                  )}
-                >
-                  {msg.content}
-                  <div className={cn(
-                    "text-[10px] mt-1 opacity-70 text-right",
-                    msg.role === 'user' ? "text-primary-foreground" : "text-muted-foreground"
-                  )}>
-                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+      {isOpen && (
+        <Card className="w-[350px] h-[500px] mb-4 shadow-2xl border-2 border-primary/20 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300">
+          <CardHeader className="bg-primary text-primary-foreground py-3 px-4 rounded-t-lg flex flex-row justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="bg-white/20 p-1.5 rounded-full">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+              <CardTitle className="text-base">{t('chatbot_title')}</CardTitle>
+            </div>
+            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/20 text-primary-foreground" onClick={() => setIsOpen(false)}>
+              <X className="h-5 w-5" />
+            </Button>
+          </CardHeader>
+          
+          <CardContent className="flex-1 overflow-hidden p-0 bg-muted/10">
+            <ScrollArea className="h-full p-4">
+              <div className="space-y-4">
+                {/* Welcome Message */}
+                <div className="flex gap-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+                    <MessageCircle className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="bg-white dark:bg-card border rounded-2xl rounded-tl-none p-3 shadow-sm text-sm max-w-[85%]">
+                    <p>{t('chatbot_welcome')}</p>
                   </div>
                 </div>
-              </div>
-            ))}
-            <div ref={scrollRef} />
-          </div>
-        </ScrollArea>
 
-        {/* Input Area */}
-        <div className="p-4 bg-background border-t">
-          <form 
-            onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-            className="flex gap-2"
-          >
-            <Input 
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={t('ask_me')}
-              className="flex-1"
-            />
-            <Button type="submit" size="icon" disabled={!inputValue.trim()}>
-              <Send className="h-4 w-4" />
+                {/* NPK Data Card */}
+                {npkData ? (
+                  <div className="flex gap-3">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+                      <MessageCircle className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="bg-white dark:bg-card border rounded-2xl rounded-tl-none p-3 shadow-sm text-sm max-w-[85%] space-y-3 w-full">
+                      <p className="font-semibold text-primary">{t('live_npk')}:</p>
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        <div className="bg-green-50 dark:bg-green-900/20 p-2 rounded border border-green-100 dark:border-green-800">
+                          <div className="text-xs text-muted-foreground">N</div>
+                          <div className="font-bold text-green-700 dark:text-green-400">{npkData.n}</div>
+                        </div>
+                        <div className="bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded border border-yellow-100 dark:border-yellow-800">
+                          <div className="text-xs text-muted-foreground">P</div>
+                          <div className="font-bold text-yellow-700 dark:text-yellow-400">{npkData.p}</div>
+                        </div>
+                        <div className="bg-orange-50 dark:bg-orange-900/20 p-2 rounded border border-orange-100 dark:border-orange-800">
+                          <div className="text-xs text-muted-foreground">K</div>
+                          <div className="font-bold text-orange-700 dark:text-orange-400">{npkData.k}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+                      <MessageCircle className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="bg-white dark:bg-card border rounded-2xl rounded-tl-none p-3 shadow-sm text-sm max-w-[85%]">
+                      <p className="animate-pulse">Loading data...</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Recommendations */}
+                {npkData && (
+                  <div className="flex gap-3">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+                      <MessageCircle className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="bg-white dark:bg-card border rounded-2xl rounded-tl-none p-3 shadow-sm text-sm max-w-[85%] space-y-3">
+                      <div>
+                        <p className="font-semibold text-primary mb-1">{t('fertilizer_rec')}:</p>
+                        <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+                          {fertilizers.map((f, i) => (
+                            <li key={i}>{f}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="border-t pt-2">
+                        <p className="font-semibold text-primary mb-1">{t('crop_rec')}:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {crops.map((c, i) => (
+                            <Badge key={i} variant="secondary" className="text-xs">{c}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </CardContent>
+
+          <CardFooter className="p-3 bg-background border-t flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1 gap-2"
+              onClick={handleSpeak}
+            >
+              {isSpeaking ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              {isSpeaking ? t('stop_reading') : t('read_aloud')}
             </Button>
-          </form>
-        </div>
-      </div>
-    </>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1 gap-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+              onClick={handleWhatsAppShare}
+            >
+              <Share2 className="h-4 w-4" />
+              WhatsApp
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+
+      <Button
+        onClick={() => setIsOpen(!isOpen)}
+        size="lg"
+        className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/90"
+      >
+        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+      </Button>
+    </div>
   );
 }
