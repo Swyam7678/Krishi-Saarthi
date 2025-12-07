@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind } from "lucide-react";
+import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake } from "lucide-react";
 
 interface ForecastDay {
   day: string;
@@ -26,8 +26,12 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
   );
 
   const getWeatherIcon = (condition: string) => {
-    if (condition.includes("बारिश")) return <CloudRain className="h-4 w-4 text-blue-500" />;
-    if (condition.includes("बादल")) return <Cloud className="h-4 w-4 text-gray-500" />;
+    const c = condition.toLowerCase();
+    if (c.includes("बारिश") || c.includes("rain")) return <CloudRain className="h-4 w-4 text-blue-500" />;
+    if (c.includes("बादल") || c.includes("cloud")) return <Cloud className="h-4 w-4 text-gray-500" />;
+    if (c.includes("कोहरा") || c.includes("fog")) return <CloudFog className="h-4 w-4 text-gray-400" />;
+    if (c.includes("तूफान") || c.includes("storm")) return <CloudLightning className="h-4 w-4 text-yellow-600" />;
+    if (c.includes("बर्फ") || c.includes("snow")) return <Snowflake className="h-4 w-4 text-cyan-400" />;
     return <Sun className="h-4 w-4 text-orange-500" />;
   };
 
