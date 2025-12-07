@@ -1,6 +1,8 @@
 {
   "file_paths": [
-    "src/components/LogoDropdown.tsx"
+    "src/convex/npk.ts",
+    "src/components/dashboard/NPKCard.tsx",
+    "src/lib/translations.ts"
   ],
   "replace_files_in_context": false
 }
