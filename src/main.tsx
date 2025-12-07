@@ -8,9 +8,9 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeProvider } from "next-themes";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import "./index.css";
 import "./types/global.d.ts";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Lazy load route components for better code splitting
 const Landing = lazy(() => import("./pages/Landing.tsx"));
@@ -54,13 +54,13 @@ function RouteSyncer() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <VlyToolbar />
     <InstrumentationProvider>
       <ConvexAuthProvider client={convex}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TooltipProvider>
             <LanguageProvider>
               <BrowserRouter>
+                <VlyToolbar />
                 <RouteSyncer />
                 <Suspense fallback={<RouteLoading />}>
                   <Routes>
@@ -70,8 +70,8 @@ createRoot(document.getElementById("root")!).render(
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
+                <Toaster />
               </BrowserRouter>
-              <Toaster />
             </LanguageProvider>
           </TooltipProvider>
         </ThemeProvider>
