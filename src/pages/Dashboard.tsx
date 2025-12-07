@@ -1,0 +1,91 @@
+import { MarketCard } from "@/components/dashboard/MarketCard";
+import { NPKCard } from "@/components/dashboard/NPKCard";
+import { WeatherCard } from "@/components/dashboard/WeatherCard";
+import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
+import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
+import { useAction } from "convex/react";
+import { LayoutDashboard, LogOut, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "react-router";
+
+export default function Dashboard() {
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+  
+  const getWeather = useAction(api.weather.getWeather);
+  const getNPK = useAction(api.npk.getLiveNPK);
+  const getMarket = useAction(api.market.getMarketPrices);
+
+  const [weather, setWeather] = useState<any>(null);
+  const [npk, setNpk] = useState<any>(null);
+  const [market, setMarket] = useState<any>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+
+  const fetchData = async () => {
+    const [w, n, m] = await Promise.all([
+      getWeather({}),
+      getNPK({}),
+      getMarket({})
+    ]);
+    setWeather(w);
+    setNpk(n);
+    setMarket(m);
+    setLastUpdated(new Date());
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 10000); // Auto update every 10s
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background p-4 md:p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
+              <LayoutDashboard className="h-8 w-8" />
+              KrishiSaarthi
+            </h1>
+            <p className="text-muted-foreground">Smart Farming Assistant • Welcome back, {user?.name || 'Farmer'}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground hidden md:inline">
+              Updated: {lastUpdated.toLocaleTimeString()}
+            </span>
+            <Button variant="outline" size="sm" onClick={fetchData}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => signOut()}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+
+        {/* Top Grid: Weather, NPK, Market */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="h-full">
+            <WeatherCard data={weather} />
+          </div>
+          <div className="h-full">
+            <NPKCard data={npk} />
+          </div>
+          <div className="h-full">
+            <MarketCard data={market} />
+          </div>
+        </div>
+
+        {/* Bottom Section: AI Recommendation */}
+        <div className="w-full">
+          <CropRecommendation />
+        </div>
+      </div>
+    </div>
+  );
+}

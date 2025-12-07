@@ -32,12 +32,18 @@ const schema = defineSchema(
       role: v.optional(roleValidator), // role of the user. do not remove
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
-    // add other tables here
-
-    // tableName: defineTable({
-    //   ...
-    //   // table fields
-    // }).index("by_field", ["field"])
+    // Store crop recommendations history
+    recommendations: defineTable({
+      userId: v.optional(v.id("users")),
+      nitrogen: v.number(),
+      phosphorus: v.number(),
+      potassium: v.number(),
+      soilType: v.string(),
+      ph: v.number(),
+      rainfall: v.number(),
+      recommendation: v.string(),
+      reasoning: v.string(),
+    }).index("by_user", ["userId"]),
   },
   {
     schemaValidation: false,
