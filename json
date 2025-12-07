@@ -1,6 +1,3 @@
 {
-  "file_paths": [
-    "src/convex/npk.ts"
-  ],
-  "replace_files_in_context": false
+  "command": "npx convex run test_ai_debug:debugAI"
 }
