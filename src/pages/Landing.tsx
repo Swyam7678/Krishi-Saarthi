@@ -15,9 +15,11 @@ export default function Landing() {
           <Sprout className="h-8 w-8" />
           {t('app_name')}
         </div>
-        <Link to="/auth">
-          <Button>{t('login_title')}</Button>
-        </Link>
+        <Button asChild>
+          <Link to="/auth">
+            {t('login_title')}
+          </Link>
+        </Button>
       </header>
 
       <main className="flex-1">
@@ -29,11 +31,11 @@ export default function Landing() {
             {t('hero_desc')}
           </p>
           <div className="flex justify-center gap-4 pt-4">
-            <Link to="/auth">
-              <Button size="lg" className="gap-2">
+            <Button asChild size="lg" className="gap-2">
+              <Link to="/auth">
                 {t('get_started')} <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </section>
 
