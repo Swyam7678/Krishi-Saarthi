@@ -40,31 +40,31 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  const fetchData = async () => {
-    try {
-      const [w, n, m] = await Promise.all([
-        getWeather({ location, lang: language }),
-        getNPK({ sheetUrl }),
-        getMarket({ location, lang: language })
-      ]);
-      setWeather(w);
-      setNpk(n);
-      setMarket(m);
-      setLastUpdated(new Date());
-    } catch (error: any) {
-      console.error("Error fetching dashboard data:", error);
-      if (error.message && error.message.includes("Location not found")) {
-        toast.error(t('error'));
-        setLocation(undefined); // Reset to default
-      }
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [w, n, m] = await Promise.all([
+          getWeather({ location, lang: language }),
+          getNPK({ sheetUrl }),
+          getMarket({ location, lang: language })
+        ]);
+        setWeather(w);
+        setNpk(n);
+        setMarket(m);
+        setLastUpdated(new Date());
+      } catch (error: any) {
+        console.error("Error fetching dashboard data:", error);
+        if (error.message && error.message.includes("Location not found")) {
+          toast.error(t('error'));
+          setLocation(undefined); // Reset to default
+        }
+      }
+    };
+
     fetchData();
     const interval = setInterval(fetchData, 10000); // Auto update every 10s
     return () => clearInterval(interval);
-  }, [location, sheetUrl, language]); // Re-fetch when location, sheetUrl or language changes
+  }, [location, sheetUrl, language, getWeather, getNPK, getMarket, t]);
 
   const handleLocationChange = (newLocation: string) => {
     setLocation(newLocation);
@@ -110,7 +110,7 @@ export default function Dashboard() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Languages className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{language === 'en' ? 'English' : 'हिंदी'}</span>
+                  <span className="hidden sm:inline" key={language}>{language === 'en' ? 'English' : 'हिंदी'}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
