@@ -20,6 +20,9 @@ export const getMarketPrices = action({
   handler: async (ctx, args) => {
     const location = args.location || "Jharkhand, India";
     const lang = args.lang || 'hi';
+    
+    const langName: any = { en: 'English', hi: 'Hindi', pa: 'Punjabi', mr: 'Marathi', ta: 'Tamil' };
+    const targetLang = langName[lang] || 'Hindi';
 
     // Helper to generate mock history based on current price
     const generateHistory = (basePrice: number) => {
@@ -49,7 +52,7 @@ export const getMarketPrices = action({
         Wheat, Rice, Maize, Sugarcane, Soybean, Mustard, Potato, Onion, Tomato.
         
         Return ONLY a JSON array with objects containing:
-        - name: string (Name in ${lang === 'en' ? 'English' : 'Hindi and English, e.g., "गेहूँ (Wheat)"'})
+        - name: string (Name in ${targetLang} and English, e.g., "गेहूँ (Wheat)")
         - min: number (Minimum price)
         - max: number (Maximum price)
         - avg: number (Average price)

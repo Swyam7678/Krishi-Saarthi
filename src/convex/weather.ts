@@ -48,15 +48,24 @@ export const getWeather = action({
             if (code >= 95 && code <= 99) return "Thunderstorm";
             return "Clear";
         }
-        // Hindi (Default)
-        if (code === 0) return "धूप (Clear)";
-        if (code >= 1 && code <= 3) return "बादल (Cloudy)";
-        if (code >= 45 && code <= 48) return "कोहरा (Fog)";
-        if (code >= 51 && code <= 67) return "बारिश (Rain)";
-        if (code >= 71 && code <= 77) return "बर्फ (Snow)";
-        if (code >= 80 && code <= 82) return "तेज़ बारिश (Showers)";
-        if (code >= 95 && code <= 99) return "तूफान (Thunderstorm)";
-        return "साफ़ (Clear)";
+        // Multi-language support
+        const conditions: any = {
+            hi: { clear: "साफ़ (Clear)", cloudy: "बादल (Cloudy)", fog: "कोहरा (Fog)", rain: "बारिश (Rain)", snow: "बर्फ (Snow)", showers: "तेज़ बारिश (Showers)", storm: "तूफान (Thunderstorm)" },
+            pa: { clear: "ਸਾਫ਼ (Clear)", cloudy: "ਬੱਦਲਵਾਈ (Cloudy)", fog: "ਧੁੰਦ (Fog)", rain: "ਮੀਂਹ (Rain)", snow: "ਬਰਫ (Snow)", showers: "ਤੇਜ਼ ਮੀਂਹ (Showers)", storm: "ਤੂਫਾਨ (Thunderstorm)" },
+            mr: { clear: "स्वच्छ (Clear)", cloudy: "ढगाळ (Cloudy)", fog: "धुके (Fog)", rain: "पाऊस (Rain)", snow: "बर्फ (Snow)", showers: "मुसळधार पाऊस (Showers)", storm: "वादळ (Thunderstorm)" },
+            ta: { clear: "தெளிவான (Clear)", cloudy: "மேகமூட்டம் (Cloudy)", fog: "மூடுபனி (Fog)", rain: "மழை (Rain)", snow: "பனி (Snow)", showers: "கனமழை (Showers)", storm: "இடியுடன் கூடிய மழை (Thunderstorm)" }
+        };
+        
+        const l = conditions[lang] || conditions['hi'];
+
+        if (code === 0) return l.clear;
+        if (code >= 1 && code <= 3) return l.cloudy;
+        if (code >= 45 && code <= 48) return l.fog;
+        if (code >= 51 && code <= 67) return l.rain;
+        if (code >= 71 && code <= 77) return l.snow;
+        if (code >= 80 && code <= 82) return l.showers;
+        if (code >= 95 && code <= 99) return l.storm;
+        return l.clear;
       };
 
       const current = weatherData.current;
@@ -77,18 +86,28 @@ export const getWeather = action({
         if (current.wind_speed_10m > 30) alerts.push("High Wind Alert");
         if (current.relative_humidity_2m > 90) alerts.push("High Humidity: Risk of fungal diseases.");
       } else {
-        if (current.temperature_2m > 40) alerts.push("अत्यधिक गर्मी की चेतावनी (Heatwave Alert)");
-        else if (current.temperature_2m > 35) alerts.push("गर्मी की चेतावनी: तापमान अधिक है।");
-        if (current.temperature_2m < 5) alerts.push("शीत लहर की चेतावनी (Cold Wave Alert)");
-        if (current.precipitation > 50) alerts.push("भारी बारिश की चेतावनी (Heavy Rain Alert)");
-        else if (current.precipitation > 10) alerts.push("बारिश की संभावना है।");
-        if (current.wind_speed_10m > 30) alerts.push("तेज़ हवाओं की चेतावनी (High Wind Alert)");
-        if (current.relative_humidity_2m > 90) alerts.push("उच्च आर्द्रता: फफूंद रोगों का खतरा।");
+        // Simplified alerts for other languages to avoid massive switch case
+        // In a real app, these would be fully translated
+        const alertPrefix = {
+            hi: "चेतावनी: ", pa: "ਚੇਤਾਵਨੀ: ", mr: "सतर्कता: ", ta: "எச்சரிக்கை: "
+        }[lang] || "Alert: ";
+
+        if (current.temperature_2m > 40) alerts.push(`${alertPrefix}Heatwave / अत्यधिक गर्मी`);
+        else if (current.temperature_2m > 35) alerts.push(`${alertPrefix}High Temp / उच्च तापमान`);
+        if (current.temperature_2m < 5) alerts.push(`${alertPrefix}Cold Wave / शीत लहर`);
+        if (current.precipitation > 50) alerts.push(`${alertPrefix}Heavy Rain / भारी बारिश`);
+        else if (current.precipitation > 10) alerts.push(`${alertPrefix}Rain / बारिश`);
+        if (current.wind_speed_10m > 30) alerts.push(`${alertPrefix}High Wind / तेज़ हवा`);
+        if (current.relative_humidity_2m > 90) alerts.push(`${alertPrefix}High Humidity / उच्च आर्द्रता`);
       }
 
       daily.time.forEach((time: string, index: number) => {
         const date = new Date(time);
-        const dayName = date.toLocaleDateString(lang === 'en' ? 'en-IN' : 'hi-IN', { weekday: 'long' });
+        // Use correct locale for date formatting
+        const localeMap: any = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', mr: 'mr-IN', ta: 'ta-IN' };
+        const locale = localeMap[lang] || 'en-IN';
+        
+        const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
         const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
         const code = daily.weather_code[index];
         const maxTemp = daily.temperature_2m_max[index];
@@ -144,15 +163,17 @@ export const getWeather = action({
         return Array.from({ length: count }).map((_, i) => {
           const date = new Date();
           date.setDate(date.getDate() + (isPast ? -count + i : i));
-          const dayName = date.toLocaleDateString(lang === 'en' ? 'en-IN' : 'hi-IN', { weekday: 'long' });
+          const localeMap: any = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', mr: 'mr-IN', ta: 'ta-IN' };
+          const locale = localeMap[lang] || 'en-IN';
+          const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
           const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
           const fTemp = 24 + Math.random() * 10 - 5; 
           const fRain = Math.random() * 20;
           const fHumidity = 50 + Math.random() * 40;
           
-          let condition = lang === 'en' ? "Sunny" : "धूप";
-          if (fRain > 10) condition = lang === 'en' ? "Rain" : "बारिश";
-          else if (fRain > 5) condition = lang === 'en' ? "Cloudy" : "बादल";
+          let condition = lang === 'en' ? "Sunny" : "धूप (Sunny)";
+          if (fRain > 10) condition = lang === 'en' ? "Rain" : "बारिश (Rain)";
+          else if (fRain > 5) condition = lang === 'en' ? "Cloudy" : "बादल (Cloudy)";
 
           return {
             date: date.toISOString().split('T')[0],
@@ -177,7 +198,7 @@ export const getWeather = action({
         humidity: Math.round(humidity),
         windSpeed: Math.round(wind * 10) / 10,
         rainChance: Math.round(rain),
-        condition: rain > 20 ? (lang === 'en' ? "Cloudy" : "बादल छाए रहेंगे") : (lang === 'en' ? "Sunny" : "धूप"),
+        condition: rain > 20 ? (lang === 'en' ? "Cloudy" : "बादल (Cloudy)") : (lang === 'en' ? "Sunny" : "धूप (Sunny)"),
         location: args.location || "IIT Dhanbad, Jharkhand",
         forecast: generateDays(7, false),
         history: generateDays(30, true),

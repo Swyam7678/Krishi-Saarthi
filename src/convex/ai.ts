@@ -17,6 +17,9 @@ export const generateCropRecommendation = action({
   },
   handler: async (ctx, args) => {
     const lang = args.lang || 'hi';
+    const langName: any = { en: 'English', hi: 'Hindi', pa: 'Punjabi', mr: 'Marathi', ta: 'Tamil' };
+    const targetLang = langName[lang] || 'Hindi';
+
     const prompt = `
       Act as a senior agricultural scientist and expert farmer (Krishi Vigyanik) for Indian agriculture.
       Analyze the following field conditions to recommend the most suitable crops:
@@ -34,9 +37,9 @@ export const generateCropRecommendation = action({
       **Task:**
       Recommend the top 3 most viable crops for these specific conditions.
 
-      **Response Format (in ${lang === 'en' ? 'English' : 'Hindi'}):**
+      **Response Format (in ${targetLang}):**
       For each crop, provide:
-      1. **Crop Name**: (Name in ${lang === 'en' ? 'English' : 'Hindi'})
+      1. **Crop Name**: (Name in ${targetLang})
       2. **Suitability Analysis**: Why this crop fits the NPK, pH, and weather data.
       3. **Water Management**: Irrigation needs based on the rainfall provided.
       4. **Fertilizer Guide**: Specific dosage corrections for the N, P, K levels provided.
@@ -151,6 +154,11 @@ export const generateCropRecommendation = action({
       let response = lang === 'en' 
         ? `### 🌾 Recommended Crops (AI Simulation)\n\nDue to technical issues, we are using a simulation based on your soil conditions (N: ${args.nitrogen}, P: ${args.phosphorus}, K: ${args.potassium}, pH: ${args.ph}, Rain: ${args.rainfall}mm, Temp: ${args.temperature}°C):\n\n`
         : `### 🌾 अनुशंसित फसलें (AI सिमुलेशन)\n\nतकनीकी समस्या के कारण हम वास्तविक समय AI से संपर्क नहीं कर सके, लेकिन आपकी मिट्टी की स्थिति (N: ${args.nitrogen}, P: ${args.phosphorus}, K: ${args.potassium}, pH: ${args.ph}, वर्षा: ${args.rainfall}mm, तापमान: ${args.temperature}°C) के आधार पर यहाँ एक अनुमानित सुझाव है:\n\n`;
+
+      // Simple fallback for other languages if not English
+      if (lang !== 'en' && lang !== 'hi') {
+         response = `### 🌾 Recommended Crops (AI Simulation - ${targetLang})\n\n(Simulation Mode) Based on your soil conditions:\n\n`;
+      }
 
       topCrops.forEach((crop, index) => {
           response += `${index + 1}. **${crop.name}**\n   - **${lang === 'en' ? 'Reason' : 'कारण'}:** ${crop.reason} `;
