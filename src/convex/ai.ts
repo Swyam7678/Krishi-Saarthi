@@ -54,7 +54,7 @@ export const generateCropRecommendation = action({
         { 
           name: "धान (Rice)", 
           minRain: 100, 
-          soil: ["Clay", "Loamy", "Silt"], 
+          soil: ["Clay", "Loamy", "Silt", "Peaty"], 
           minPh: 5.0, maxPh: 8.0, 
           reason: "अधिक वर्षा और नमी वाली मिट्टी उपयुक्त है।",
           nutrientNeeds: { n: "high", p: "medium", k: "medium" }
@@ -62,7 +62,7 @@ export const generateCropRecommendation = action({
         { 
           name: "गेहूँ (Wheat)", 
           minRain: 50, maxRain: 100, 
-          soil: ["Loamy", "Clay", "Silt"], 
+          soil: ["Loamy", "Clay", "Silt", "Chalky"], 
           minPh: 6.0, maxPh: 7.5, 
           reason: "ठंडी जलवायु और मध्यम पानी की आवश्यकता।",
           nutrientNeeds: { n: "medium", p: "medium", k: "medium" }
@@ -70,7 +70,7 @@ export const generateCropRecommendation = action({
         { 
           name: "मक्का (Maize)", 
           minRain: 50, 
-          soil: ["Loamy", "Sandy", "Silt"], 
+          soil: ["Loamy", "Sandy", "Silt", "Chalky"], 
           minPh: 5.5, maxPh: 7.5, 
           reason: "अच्छी जल निकासी वाली मिट्टी की आवश्यकता।",
           nutrientNeeds: { n: "high", p: "medium", k: "medium" }
@@ -78,7 +78,7 @@ export const generateCropRecommendation = action({
         { 
           name: "गन्ना (Sugarcane)", 
           minRain: 150, 
-          soil: ["Loamy", "Clay"], 
+          soil: ["Loamy", "Clay", "Peaty"], 
           minPh: 6.0, maxPh: 8.0, 
           reason: "उच्च वर्षा और उपजाऊ मिट्टी की आवश्यकता।",
           nutrientNeeds: { n: "high", p: "high", k: "medium" }
@@ -86,7 +86,7 @@ export const generateCropRecommendation = action({
         { 
           name: "सरसों (Mustard)", 
           maxRain: 60, 
-          soil: ["Sandy", "Loamy"], 
+          soil: ["Sandy", "Loamy", "Chalky"], 
           minPh: 6.0, maxPh: 7.5, 
           reason: "कम पानी और रेतीली मिट्टी में अच्छी उपज।",
           nutrientNeeds: { n: "medium", p: "medium", k: "medium" }
@@ -94,7 +94,7 @@ export const generateCropRecommendation = action({
         { 
           name: "चना (Chickpea)", 
           maxRain: 50, 
-          soil: ["Loamy", "Sandy"], 
+          soil: ["Loamy", "Sandy", "Chalky"], 
           minPh: 6.0, maxPh: 8.0, 
           reason: "कम नमी और हल्की मिट्टी उपयुक्त है।",
           nutrientNeeds: { n: "low", p: "medium", k: "medium" } // Legume
@@ -102,7 +102,7 @@ export const generateCropRecommendation = action({
         { 
           name: "आलू (Potato)", 
           minRain: 50, 
-          soil: ["Sandy", "Loamy"], 
+          soil: ["Sandy", "Loamy", "Peaty"], 
           minPh: 4.8, maxPh: 6.5, 
           reason: "भुरभुरी मिट्टी और मध्यम पानी की आवश्यकता।",
           nutrientNeeds: { n: "medium", p: "medium", k: "high" } // Needs K
@@ -110,7 +110,7 @@ export const generateCropRecommendation = action({
         { 
           name: "बाजरा (Pearl Millet)", 
           maxRain: 50, 
-          soil: ["Sandy", "Loamy"], 
+          soil: ["Sandy", "Loamy", "Chalky"], 
           minPh: 6.5, maxPh: 8.0, 
           reason: "सूखा प्रतिरोधी और कम उपजाऊ मिट्टी में भी उगता है।",
           nutrientNeeds: { n: "low", p: "low", k: "low" } // Hardy
@@ -157,10 +157,6 @@ export const generateCropRecommendation = action({
          else if (Math.abs(args.ph - crop.minPh) < 0.5 || Math.abs(args.ph - crop.maxPh) < 0.5) score += 1;
 
          // Nutrient compatibility check
-         // If soil is rich (High N) and crop needs High N -> Good match (+2)
-         // If soil is poor (Low N) and crop needs Low N -> Good match (+2)
-         // If soil is poor (Low N) and crop needs High N -> Penalty (-1) (Needs lots of fertilizer)
-         
          // Nitrogen
          if (crop.nutrientNeeds.n === nLevel) score += 2;
          else if (nLevel === "high" && crop.nutrientNeeds.n === "medium") score += 1;
@@ -196,11 +192,13 @@ export const generateCropRecommendation = action({
           if (crop.soil.some(s => args.soilType.includes(s))) {
             response += `आपकी **${args.soilType}** मिट्टी इसके लिए उपयुक्त है। `;
           }
+          
+          // Dynamic NPK feedback
           if (crop.nutrientNeeds.n === "low" && nLevel === "low") {
-             response += `कम नाइट्रोजन वाली मिट्टी में भी यह अच्छी उपज देती है। `;
+             response += `कम नाइट्रोजन (${args.nitrogen}) वाली मिट्टी में भी यह अच्छी उपज देती है। `;
           }
           if (crop.nutrientNeeds.n === "high" && nLevel === "high") {
-             response += `उच्च नाइट्रोजन स्तर का यह फसल अच्छा लाभ उठाएगी। `;
+             response += `उच्च नाइट्रोजन (${args.nitrogen}) का यह फसल अच्छा लाभ उठाएगी। `;
           }
           
           response += `\n`;
