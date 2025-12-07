@@ -14,7 +14,7 @@ export default function Landing() {
       <header className="w-full py-6 px-4 md:px-8 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2 font-bold text-2xl text-primary">
           <Sprout className="h-8 w-8" />
-          {t('app_name')}
+          <span>{t('app_name')}</span>
         </div>
         <Link to="/auth" className={buttonVariants({ variant: "default" })}>
           {t('login_title')}
@@ -31,7 +31,7 @@ export default function Landing() {
           </p>
           <div className="flex justify-center gap-4 pt-4">
             <Link to="/auth" className={cn(buttonVariants({ size: "lg" }), "gap-2")}>
-              {t('get_started')} <ArrowRight className="h-4 w-4" />
+              <span>{t('get_started')}</span> <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </section>
