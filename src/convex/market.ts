@@ -12,8 +12,12 @@ interface MarketItem {
 }
 
 export const getMarketPrices = action({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    location: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const location = args.location || "Jharkhand, India";
+
     // Fallback data defined first so it can be used in catch block
     const fallbackCrops: MarketItem[] = [
       { name: "गेहूँ (Wheat)", min: 2100, max: 2400, avg: 2250, current: 2250 },
@@ -29,7 +33,7 @@ export const getMarketPrices = action({
 
     try {
       const prompt = `
-        Provide current estimated market prices (Mandi rates) in INR/quintal for the following crops in Jharkhand, India: 
+        Provide current estimated market prices (Mandi rates) in INR/quintal for the following crops in ${location}: 
         Wheat, Rice, Maize, Sugarcane, Soybean, Mustard, Potato, Onion, Tomato.
         
         Return ONLY a JSON array with objects containing:

@@ -9,7 +9,7 @@ interface MarketItem {
   current: number;
 }
 
-export function MarketCard({ data }: { data: MarketItem[] | null }) {
+export function MarketCard({ data, location }: { data: MarketItem[] | null, location?: string }) {
   if (!data) return (
     <Card className="h-full animate-pulse">
       <CardHeader><CardTitle>मंडी भाव</CardTitle></CardHeader>
@@ -22,7 +22,7 @@ export function MarketCard({ data }: { data: MarketItem[] | null }) {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <DollarSign className="h-5 w-5 text-orange-600" />
-          <span>मंडी भाव</span>
+          <span>मंडी भाव {location ? <span className="text-sm font-normal text-muted-foreground">({location})</span> : null}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">

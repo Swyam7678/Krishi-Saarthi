@@ -40,7 +40,7 @@ export default function Dashboard() {
       const [w, n, m] = await Promise.all([
         getWeather({ location }),
         getNPK({ sheetUrl }),
-        getMarket({})
+        getMarket({ location })
       ]);
       setWeather(w);
       setNpk(n);
@@ -112,7 +112,7 @@ export default function Dashboard() {
             <NPKCard data={npk} onSheetUrlChange={handleSheetUrlChange} currentUrl={sheetUrl} />
           </div>
           <div className="h-full">
-            <MarketCard data={market} />
+            <MarketCard data={market} location={location} />
           </div>
         </div>
 
