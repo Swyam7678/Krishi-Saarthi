@@ -1,11 +1,6 @@
 {
-  "type": "tool_call",
-  "tool_number": 2,
-  "tool_name": "readFilesToContextTool",
-  "input_args": {
-    "file_paths": [
-      "src/pages/NotFound.tsx"
-    ],
-    "replace_files_in_context": false
-  }
+  "file_paths": [
+    "src/components/LogoDropdown.tsx"
+  ],
+  "replace_files_in_context": false
 }
