@@ -27,7 +27,7 @@ export function CropRecommendation() {
   const generateRecommendation = useAction(api.ai.generateCropRecommendation);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       nitrogen: 50,
       phosphorus: 50,

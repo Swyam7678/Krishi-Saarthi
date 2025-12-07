@@ -9,7 +9,7 @@ function getInstance() {
     // Use a fallback key if env var is missing to prevent runtime crashes in dev
     // In production, the env var should be set
     instance = new VlyIntegrations({
-      apiKey: process.env.VLY_INTEGRATION_KEY || "sk-proj-build-placeholder-key",
+      token: process.env.VLY_INTEGRATION_KEY || "sk-proj-build-placeholder-key",
     });
   }
   return instance;
