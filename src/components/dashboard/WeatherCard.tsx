@@ -1,5 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CloudRain, Droplets, Thermometer, Wind } from "lucide-react";
+import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind } from "lucide-react";
+
+interface ForecastDay {
+  day: string;
+  temp: number;
+  condition: string;
+}
 
 interface WeatherData {
   temp: number;
@@ -8,6 +14,7 @@ interface WeatherData {
   rainChance: number;
   condition: string;
   location: string;
+  forecast?: ForecastDay[];
 }
 
 export function WeatherCard({ data }: { data: WeatherData | null }) {
@@ -17,6 +24,12 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
       <CardContent className="h-32 bg-muted/20 rounded-md" />
     </Card>
   );
+
+  const getWeatherIcon = (condition: string) => {
+    if (condition.includes("बारिश")) return <CloudRain className="h-4 w-4 text-blue-500" />;
+    if (condition.includes("बादल")) return <Cloud className="h-4 w-4 text-gray-500" />;
+    return <Sun className="h-4 w-4 text-orange-500" />;
+  };
 
   return (
     <Card className="h-full border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
@@ -39,7 +52,7 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
           </div>
         </div>
         
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
             <Droplets className="h-4 w-4 mb-1 text-blue-500" />
             <span className="text-sm font-semibold">{data.humidity}%</span>
@@ -56,6 +69,24 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
             <span className="text-xs text-muted-foreground">हवा</span>
           </div>
         </div>
+
+        {data.forecast && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-muted-foreground mb-2">आगामी 7 दिन</h4>
+            <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+              {data.forecast.map((day, index) => (
+                <div key={index} className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-muted/50 transition-colors">
+                  <span className="w-24 font-medium">{day.day}</span>
+                  <div className="flex items-center gap-2">
+                    {getWeatherIcon(day.condition)}
+                    <span className="text-muted-foreground">{day.condition}</span>
+                  </div>
+                  <span className="font-bold">{day.temp}°C</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
