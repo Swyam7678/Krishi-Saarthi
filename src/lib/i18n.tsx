@@ -10,15 +10,16 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('hi'); // Default to Hindi
-
-  useEffect(() => {
-    const savedLang = localStorage.getItem('app-language') as Language;
-    // Allow any valid language from the Language type
-    if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn'].includes(savedLang)) {
-      setLanguage(savedLang);
+  // Lazy initialization to prevent hydration mismatch and extra renders
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('app-language') as Language;
+      if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn'].includes(savedLang)) {
+        return savedLang;
+      }
     }
-  }, []);
+    return 'hi'; // Default to Hindi
+  });
 
   const handleSetLanguage = useCallback((lang: Language) => {
     setLanguage(lang);
@@ -26,9 +27,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: keyof typeof translations['en']) => {
-    // Safely access translations, fallback to English if language not found
-    const langTranslations = translations[language] || translations['en'];
-    return langTranslations[key] || translations['en'][key] || key;
+    return translations[language]?.[key] || translations['en'][key] || key;
   }, [language]);
 
   const value = useMemo(() => ({

@@ -57,8 +57,8 @@ createRoot(document.getElementById("root")!).render(
     <InstrumentationProvider>
       <ConvexAuthProvider client={convex}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            <LanguageProvider>
+          <LanguageProvider>
+            <TooltipProvider>
               <BrowserRouter>
                 <VlyToolbar />
                 <RouteSyncer />
@@ -72,8 +72,8 @@ createRoot(document.getElementById("root")!).render(
                 </Suspense>
                 <Toaster />
               </BrowserRouter>
-            </LanguageProvider>
-          </TooltipProvider>
+            </TooltipProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </ConvexAuthProvider>
     </InstrumentationProvider>
