@@ -17,7 +17,15 @@ export const generateCropRecommendation = action({
   },
   handler: async (ctx, args) => {
     const lang = args.lang || 'hi';
-    const langName: any = { en: 'English', hi: 'Hindi', pa: 'Punjabi', mr: 'Marathi', ta: 'Tamil' };
+    const langName: any = { 
+      en: 'English', 
+      hi: 'Hindi', 
+      pa: 'Punjabi', 
+      mr: 'Marathi', 
+      ta: 'Tamil',
+      gu: 'Gujarati',
+      bn: 'Bengali'
+    };
     const targetLang = langName[lang] || 'Hindi';
 
     const prompt = `

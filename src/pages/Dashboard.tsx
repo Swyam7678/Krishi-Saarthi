@@ -125,6 +125,8 @@ export default function Dashboard() {
                 <DropdownMenuItem onClick={() => setLanguage('pa')}>ਪੰਜਾਬੀ</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage('mr')}>मराठी</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage('ta')}>தமிழ்</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage('gu')}>ગુજરાતી</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage('bn')}>বাংলা</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 

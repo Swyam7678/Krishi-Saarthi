@@ -53,7 +53,9 @@ export const getWeather = action({
             hi: { clear: "साफ़ (Clear)", cloudy: "बादल (Cloudy)", fog: "कोहरा (Fog)", rain: "बारिश (Rain)", snow: "बर्फ (Snow)", showers: "तेज़ बारिश (Showers)", storm: "तूफान (Thunderstorm)" },
             pa: { clear: "ਸਾਫ਼ (Clear)", cloudy: "ਬੱਦਲਵਾਈ (Cloudy)", fog: "ਧੁੰਦ (Fog)", rain: "ਮੀਂਹ (Rain)", snow: "ਬਰਫ (Snow)", showers: "ਤੇਜ਼ ਮੀਂਹ (Showers)", storm: "ਤੂਫਾਨ (Thunderstorm)" },
             mr: { clear: "स्वच्छ (Clear)", cloudy: "ढगाळ (Cloudy)", fog: "धुके (Fog)", rain: "पाऊस (Rain)", snow: "बर्फ (Snow)", showers: "मुसळधार पाऊस (Showers)", storm: "वादळ (Thunderstorm)" },
-            ta: { clear: "தெளிவான (Clear)", cloudy: "மேகமூட்டம் (Cloudy)", fog: "மூடுபனி (Fog)", rain: "மழை (Rain)", snow: "பனி (Snow)", showers: "கனமழை (Showers)", storm: "இடியுடன் கூடிய மழை (Thunderstorm)" }
+            ta: { clear: "தெளிவான (Clear)", cloudy: "மேகமூட்டம் (Cloudy)", fog: "மூடுபனி (Fog)", rain: "மழை (Rain)", snow: "பனி (Snow)", showers: "கனமழை (Showers)", storm: "இடியுடன் கூடிய மழை (Thunderstorm)" },
+            gu: { clear: "ચોખ્ખું (Clear)", cloudy: "વાદળછાયું (Cloudy)", fog: "ધુમ્મસ (Fog)", rain: "વરસાદ (Rain)", snow: "બરફ (Snow)", showers: "ભારે વરસાદ (Showers)", storm: "વાવાઝોડું (Thunderstorm)" },
+            bn: { clear: "পরিষ্কার (Clear)", cloudy: "মেঘলা (Cloudy)", fog: "কুয়াশা (Fog)", rain: "বৃষ্টি (Rain)", snow: "বরফ (Snow)", showers: "ভারী বৃষ্টি (Showers)", storm: "ঝড় (Thunderstorm)" }
         };
         
         const l = conditions[lang] || conditions['hi'];
@@ -89,7 +91,8 @@ export const getWeather = action({
         // Simplified alerts for other languages to avoid massive switch case
         // In a real app, these would be fully translated
         const alertPrefix = {
-            hi: "चेतावनी: ", pa: "ਚੇਤਾਵਨੀ: ", mr: "सतर्कता: ", ta: "எச்சரிக்கை: "
+            hi: "चेतावनी: ", pa: "ਚੇਤਾਵਨੀ: ", mr: "सतर्कता: ", ta: "எச்சரிக்கை: ",
+            gu: "ચેતવણી: ", bn: "সতর্কতা: "
         }[lang] || "Alert: ";
 
         if (current.temperature_2m > 40) alerts.push(`${alertPrefix}Heatwave / अत्यधिक गर्मी`);
@@ -104,7 +107,10 @@ export const getWeather = action({
       daily.time.forEach((time: string, index: number) => {
         const date = new Date(time);
         // Use correct locale for date formatting
-        const localeMap: any = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', mr: 'mr-IN', ta: 'ta-IN' };
+        const localeMap: any = { 
+          en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', mr: 'mr-IN', ta: 'ta-IN',
+          gu: 'gu-IN', bn: 'bn-IN'
+        };
         const locale = localeMap[lang] || 'en-IN';
         
         const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
@@ -163,7 +169,10 @@ export const getWeather = action({
         return Array.from({ length: count }).map((_, i) => {
           const date = new Date();
           date.setDate(date.getDate() + (isPast ? -count + i : i));
-          const localeMap: any = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', mr: 'mr-IN', ta: 'ta-IN' };
+          const localeMap: any = { 
+            en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', mr: 'mr-IN', ta: 'ta-IN',
+            gu: 'gu-IN', bn: 'bn-IN'
+          };
           const locale = localeMap[lang] || 'en-IN';
           const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
           const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
