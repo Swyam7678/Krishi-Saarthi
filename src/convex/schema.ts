@@ -34,6 +34,7 @@ const schema = defineSchema(
       // User preferences
       sheetUrl: v.optional(v.string()),
       location: v.optional(v.string()),
+      selectedCrops: v.optional(v.array(v.string())),
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
     // Store crop recommendations history

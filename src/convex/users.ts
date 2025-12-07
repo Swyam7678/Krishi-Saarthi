@@ -37,6 +37,7 @@ export const updateUser = mutation({
   args: {
     sheetUrl: v.optional(v.string()),
     location: v.optional(v.string()),
+    selectedCrops: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -47,6 +48,7 @@ export const updateUser = mutation({
     const patchData: any = {};
     if (args.sheetUrl !== undefined) patchData.sheetUrl = args.sheetUrl;
     if (args.location !== undefined) patchData.location = args.location;
+    if (args.selectedCrops !== undefined) patchData.selectedCrops = args.selectedCrops;
 
     await ctx.db.patch(userId, patchData);
   },

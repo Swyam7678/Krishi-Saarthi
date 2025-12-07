@@ -1,9 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, DollarSign, LineChart as LineChartIcon } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, LineChart as LineChartIcon, Settings, Check } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MarketItem {
   name: string;
@@ -14,8 +26,17 @@ interface MarketItem {
   history: { date: string; price: number }[];
 }
 
-export function MarketCard({ data, location }: { data: MarketItem[] | null, location?: string }) {
+interface MarketCardProps {
+  data: MarketItem[] | null;
+  location?: string;
+  selectedCrops?: string[];
+  onCropsChange?: (crops: string[]) => void;
+}
+
+export function MarketCard({ data, location, selectedCrops = [], onCropsChange }: MarketCardProps) {
   const [selectedCrop, setSelectedCrop] = useState<string>("");
+  const [open, setOpen] = useState(false);
+  const [tempSelectedCrops, setTempSelectedCrops] = useState<string[]>(selectedCrops);
 
   if (!data) return (
     <Card className="h-full animate-pulse">
@@ -24,19 +45,96 @@ export function MarketCard({ data, location }: { data: MarketItem[] | null, loca
     </Card>
   );
 
-  // Set default selected crop if not set
-  if (!selectedCrop && data.length > 0) {
-    setSelectedCrop(data[0].name);
+  // Filter data based on selected crops
+  const filteredData = selectedCrops.length > 0 
+    ? data.filter(item => selectedCrops.includes(item.name))
+    : data;
+
+  // Set default selected crop for chart if not set or not in filtered list
+  if ((!selectedCrop || (filteredData.length > 0 && !filteredData.find(c => c.name === selectedCrop))) && filteredData.length > 0) {
+    setSelectedCrop(filteredData[0].name);
   }
 
   const currentCropData = data.find(c => c.name === selectedCrop);
 
+  const toggleCropSelection = (cropName: string) => {
+    setTempSelectedCrops(prev => {
+      if (prev.includes(cropName)) {
+        return prev.filter(c => c !== cropName);
+      } else {
+        return [...prev, cropName];
+      }
+    });
+  };
+
+  const handleSaveCrops = () => {
+    if (onCropsChange) {
+      onCropsChange(tempSelectedCrops);
+    }
+    setOpen(false);
+  };
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen) {
+      setTempSelectedCrops(selectedCrops);
+    }
+    setOpen(isOpen);
+  };
+
   return (
     <Card className="h-full flex flex-col border-l-4 border-l-orange-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <DollarSign className="h-5 w-5 text-orange-600" />
-          <span>मंडी भाव {location ? <span className="text-sm font-normal text-muted-foreground">({location})</span> : null}</span>
+        <CardTitle className="flex items-center justify-between text-lg">
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-orange-600" />
+            <span>मंडी भाव {location ? <span className="text-sm font-normal text-muted-foreground">({location})</span> : null}</span>
+          </div>
+          {onCropsChange && (
+            <Dialog open={open} onOpenChange={handleOpenChange}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6 hover:bg-muted">
+                  <Settings className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>फसलें चुनें</DialogTitle>
+                  <DialogDescription>
+                    उन फसलों का चयन करें जिन्हें आप डैशबोर्ड पर देखना चाहते हैं।
+                  </DialogDescription>
+                </DialogHeader>
+                <ScrollArea className="h-[300px] pr-4">
+                  <div className="grid grid-cols-1 gap-2">
+                    {data.map((crop) => (
+                      <div 
+                        key={crop.name} 
+                        className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
+                          tempSelectedCrops.includes(crop.name) 
+                            ? "bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800" 
+                            : "hover:bg-muted"
+                        }`}
+                        onClick={() => toggleCropSelection(crop.name)}
+                      >
+                        <span className="font-medium">{crop.name}</span>
+                        {tempSelectedCrops.includes(crop.name) && (
+                          <Check className="h-4 w-4 text-orange-600" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+                <DialogFooter className="flex-col sm:flex-row gap-2">
+                  <div className="flex-1 text-xs text-muted-foreground flex items-center">
+                    {tempSelectedCrops.length} फसलें चुनी गईं
+                  </div>
+                  <Button variant="outline" onClick={() => setTempSelectedCrops([])}>
+                    सभी हटाएं
+                  </Button>
+                  <Button onClick={handleSaveCrops}>सहेजें</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
@@ -47,29 +145,36 @@ export function MarketCard({ data, location }: { data: MarketItem[] | null, loca
           </TabsList>
 
           <TabsContent value="rates" className="flex-1 min-h-0 mt-0">
-            <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar h-[300px]">
-              {data.map((item) => (
-                <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
-                  <div className="flex flex-col">
-                    <span className="font-semibold">{item.name}</span>
-                    <span className="text-xs text-muted-foreground">औसत: ₹{item.avg}/q</span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-1 font-bold">
-                      ₹{item.current}
-                      {item.current > item.avg ? (
-                        <TrendingUp className="h-3 w-3 text-green-500" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 text-red-500" />
-                      )}
+            {filteredData.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
+                <p>कोई फसल नहीं चुनी गई।</p>
+                <Button variant="link" onClick={() => setOpen(true)}>फसलें चुनें</Button>
+              </div>
+            ) : (
+              <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar h-[300px]">
+                {filteredData.map((item) => (
+                  <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                    <div className="flex flex-col">
+                      <span className="font-semibold">{item.name}</span>
+                      <span className="text-xs text-muted-foreground">औसत: ₹{item.avg}/q</span>
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                      ₹{item.min} - ₹{item.max}
-                    </span>
+                    <div className="flex flex-col items-end">
+                      <div className="flex items-center gap-1 font-bold">
+                        ₹{item.current}
+                        {item.current > item.avg ? (
+                          <TrendingUp className="h-3 w-3 text-green-500" />
+                        ) : (
+                          <TrendingDown className="h-3 w-3 text-red-500" />
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        ₹{item.min} - ₹{item.max}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="trends" className="flex-1 flex flex-col min-h-0 mt-0">
@@ -79,7 +184,7 @@ export function MarketCard({ data, location }: { data: MarketItem[] | null, loca
                   <SelectValue placeholder="फसल चुनें" />
                 </SelectTrigger>
                 <SelectContent>
-                  {data.map((crop) => (
+                  {filteredData.map((crop) => (
                     <SelectItem key={crop.name} value={crop.name}>
                       {crop.name}
                     </SelectItem>

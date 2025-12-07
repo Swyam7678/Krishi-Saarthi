@@ -26,12 +26,14 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [location, setLocation] = useState<string | undefined>(undefined);
   const [sheetUrl, setSheetUrl] = useState<string | undefined>(undefined);
+  const [selectedCrops, setSelectedCrops] = useState<string[]>([]);
 
   // Load user preferences
   useEffect(() => {
     if (user) {
       if (user.location && location === undefined) setLocation(user.location);
       if (user.sheetUrl && sheetUrl === undefined) setSheetUrl(user.sheetUrl);
+      if (user.selectedCrops) setSelectedCrops(user.selectedCrops);
     }
   }, [user]);
 
@@ -76,6 +78,14 @@ export default function Dashboard() {
     toast.success(newUrl ? "डेटा स्रोत अपडेट किया गया" : "डिफ़ॉल्ट डेटा स्रोत पर रीसेट किया गया");
   };
 
+  const handleCropsChange = (crops: string[]) => {
+    setSelectedCrops(crops);
+    if (user) {
+      updateUser({ selectedCrops: crops });
+    }
+    toast.success("फसल सूची अपडेट की गई");
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -112,7 +122,12 @@ export default function Dashboard() {
             <NPKCard data={npk} onSheetUrlChange={handleSheetUrlChange} currentUrl={sheetUrl} />
           </div>
           <div className="h-full">
-            <MarketCard data={market} location={location} />
+            <MarketCard 
+              data={market} 
+              location={location} 
+              selectedCrops={selectedCrops}
+              onCropsChange={handleCropsChange}
+            />
           </div>
         </div>
 
