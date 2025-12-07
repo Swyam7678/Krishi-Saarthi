@@ -20,6 +20,8 @@ const formSchema = z.object({
   soilType: z.string().min(1),
   ph: z.coerce.number().min(0).max(14),
   rainfall: z.coerce.number().min(0),
+  temperature: z.coerce.number().min(-50).max(60),
+  humidity: z.coerce.number().min(0).max(100),
 });
 
 export function CropRecommendation() {
@@ -35,6 +37,8 @@ export function CropRecommendation() {
       soilType: "Loamy",
       ph: 6.5,
       rainfall: 100,
+      temperature: 25,
+      humidity: 60,
     },
   });
 
@@ -121,6 +125,32 @@ export function CropRecommendation() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>वर्षा (mm)</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="temperature"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>तापमान (°C)</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="humidity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>नमी (%)</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>

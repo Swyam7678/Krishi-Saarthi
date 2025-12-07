@@ -11,6 +11,8 @@ export const generateCropRecommendation = action({
     soilType: v.string(),
     ph: v.number(),
     rainfall: v.number(),
+    temperature: v.number(),
+    humidity: v.number(),
   },
   handler: async (ctx, args) => {
     const prompt = `
@@ -22,6 +24,8 @@ export const generateCropRecommendation = action({
       Soil Type: ${args.soilType}
       pH Level: ${args.ph}
       Rainfall: ${args.rainfall} mm
+      Temperature: ${args.temperature}°C
+      Humidity: ${args.humidity}%
 
       Please provide:
       1. Top 3 recommended crops.
@@ -54,6 +58,7 @@ export const generateCropRecommendation = action({
         { 
           name: "धान (Rice)", 
           minRain: 100, 
+          minTemp: 20, maxTemp: 35,
           soil: ["Clay", "Loamy", "Silt", "Peaty"], 
           minPh: 5.0, maxPh: 8.0, 
           reason: "अधिक वर्षा और नमी वाली मिट्टी उपयुक्त है।",
@@ -62,6 +67,7 @@ export const generateCropRecommendation = action({
         { 
           name: "गेहूँ (Wheat)", 
           minRain: 50, maxRain: 100, 
+          minTemp: 10, maxTemp: 25,
           soil: ["Loamy", "Clay", "Silt", "Chalky"], 
           minPh: 6.0, maxPh: 7.5, 
           reason: "ठंडी जलवायु और मध्यम पानी की आवश्यकता।",
@@ -70,6 +76,7 @@ export const generateCropRecommendation = action({
         { 
           name: "मक्का (Maize)", 
           minRain: 50, 
+          minTemp: 18, maxTemp: 30,
           soil: ["Loamy", "Sandy", "Silt", "Chalky"], 
           minPh: 5.5, maxPh: 7.5, 
           reason: "अच्छी जल निकासी वाली मिट्टी की आवश्यकता।",
@@ -78,6 +85,7 @@ export const generateCropRecommendation = action({
         { 
           name: "गन्ना (Sugarcane)", 
           minRain: 150, 
+          minTemp: 20, maxTemp: 35,
           soil: ["Loamy", "Clay", "Peaty"], 
           minPh: 6.0, maxPh: 8.0, 
           reason: "उच्च वर्षा और उपजाऊ मिट्टी की आवश्यकता।",
@@ -86,6 +94,7 @@ export const generateCropRecommendation = action({
         { 
           name: "सरसों (Mustard)", 
           maxRain: 60, 
+          minTemp: 10, maxTemp: 25,
           soil: ["Sandy", "Loamy", "Chalky"], 
           minPh: 6.0, maxPh: 7.5, 
           reason: "कम पानी और रेतीली मिट्टी में अच्छी उपज।",
@@ -94,6 +103,7 @@ export const generateCropRecommendation = action({
         { 
           name: "चना (Chickpea)", 
           maxRain: 50, 
+          minTemp: 15, maxTemp: 30,
           soil: ["Loamy", "Sandy", "Chalky"], 
           minPh: 6.0, maxPh: 8.0, 
           reason: "कम नमी और हल्की मिट्टी उपयुक्त है।",
@@ -102,6 +112,7 @@ export const generateCropRecommendation = action({
         { 
           name: "आलू (Potato)", 
           minRain: 50, 
+          minTemp: 15, maxTemp: 25,
           soil: ["Sandy", "Loamy", "Peaty"], 
           minPh: 4.8, maxPh: 6.5, 
           reason: "भुरभुरी मिट्टी और मध्यम पानी की आवश्यकता।",
@@ -110,6 +121,7 @@ export const generateCropRecommendation = action({
         { 
           name: "बाजरा (Pearl Millet)", 
           maxRain: 50, 
+          minTemp: 25, maxTemp: 35,
           soil: ["Sandy", "Loamy", "Chalky"], 
           minPh: 6.5, maxPh: 8.0, 
           reason: "सूखा प्रतिरोधी और कम उपजाऊ मिट्टी में भी उगता है।",
@@ -118,6 +130,7 @@ export const generateCropRecommendation = action({
         { 
           name: "सोयाबीन (Soybean)", 
           minRain: 60, 
+          minTemp: 20, maxTemp: 30,
           soil: ["Loamy", "Clay"], 
           minPh: 6.0, maxPh: 7.0, 
           reason: "मध्यम वर्षा और कार्बनिक मिट्टी उपयुक्त है।",
@@ -126,6 +139,7 @@ export const generateCropRecommendation = action({
         { 
           name: "मूंगफली (Groundnut)", 
           maxRain: 100, 
+          minTemp: 20, maxTemp: 30,
           soil: ["Sandy", "Loamy"], 
           minPh: 5.0, maxPh: 7.0, 
           reason: "रेतीली दोमट मिट्टी इसके लिए सर्वोत्तम है।",
@@ -156,6 +170,10 @@ export const generateCropRecommendation = action({
          if (args.ph >= crop.minPh && args.ph <= crop.maxPh) score += 2;
          else if (Math.abs(args.ph - crop.minPh) < 0.5 || Math.abs(args.ph - crop.maxPh) < 0.5) score += 1;
 
+         // Temperature check
+         if (args.temperature >= crop.minTemp && args.temperature <= crop.maxTemp) score += 2;
+         else if (Math.abs(args.temperature - crop.minTemp) < 5 || Math.abs(args.temperature - crop.maxTemp) < 5) score += 1;
+
          // Nutrient compatibility check
          // Nitrogen
          if (crop.nutrientNeeds.n === nLevel) score += 2;
@@ -183,7 +201,7 @@ export const generateCropRecommendation = action({
           topCrops = [...topCrops, ...remaining.slice(0, 3 - topCrops.length)];
       }
 
-      let response = `### 🌾 अनुशंसित फसलें (AI सिमुलेशन)\n\nतकनीकी समस्या के कारण हम वास्तविक समय AI से संपर्क नहीं कर सके, लेकिन आपकी मिट्टी की स्थिति (N: ${args.nitrogen}, P: ${args.phosphorus}, K: ${args.potassium}, pH: ${args.ph}, वर्षा: ${args.rainfall}mm) के आधार पर यहाँ एक अनुमानित सुझाव है:\n\n`;
+      let response = `### 🌾 अनुशंसित फसलें (AI सिमुलेशन)\n\nतकनीकी समस्या के कारण हम वास्तविक समय AI से संपर्क नहीं कर सके, लेकिन आपकी मिट्टी की स्थिति (N: ${args.nitrogen}, P: ${args.phosphorus}, K: ${args.potassium}, pH: ${args.ph}, वर्षा: ${args.rainfall}mm, तापमान: ${args.temperature}°C) के आधार पर यहाँ एक अनुमानित सुझाव है:\n\n`;
 
       topCrops.forEach((crop, index) => {
           response += `${index + 1}. **${crop.name}**\n   - **कारण:** ${crop.reason} `;
