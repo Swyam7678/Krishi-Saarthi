@@ -8,8 +8,16 @@ export const getLiveNPK = action({
   },
   handler: async (ctx, args) => {
     // Default to the provided sheet if no URL is passed
-    const SHEET_CSV_URL = args.sheetUrl || "https://docs.google.com/spreadsheets/d/1zPrbxe8NP2tovaqZLKKj0edoGIZGvjwXyZ_fbmMEefw/export?format=csv";
+    let SHEET_CSV_URL = args.sheetUrl || "https://docs.google.com/spreadsheets/d/1zPrbxe8NP2tovaqZLKKj0edoGIZGvjwXyZ_fbmMEefw/export?format=csv";
     
+    // Helper to convert standard Google Sheet URL to CSV export URL
+    if (args.sheetUrl) {
+       const match = args.sheetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+       if (match && match[1]) {
+         SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${match[1]}/export?format=csv`;
+       }
+    }
+
     try {
       const response = await fetch(SHEET_CSV_URL);
       if (!response.ok) throw new Error("Failed to fetch sheet");

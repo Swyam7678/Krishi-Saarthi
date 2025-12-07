@@ -1,5 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Sprout, TrendingDown, TrendingUp } from "lucide-react";
+import { Activity, Sprout, TrendingDown, TrendingUp, Settings, Link as LinkIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface NPKData {
   n: number;
@@ -17,7 +29,23 @@ interface NPKData {
   };
 }
 
-export function NPKCard({ data }: { data: NPKData | null }) {
+interface NPKCardProps {
+  data: NPKData | null;
+  onSheetUrlChange?: (url: string) => void;
+}
+
+export function NPKCard({ data, onSheetUrlChange }: NPKCardProps) {
+  const [newUrl, setNewUrl] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleUpdate = () => {
+    if (onSheetUrlChange && newUrl.trim()) {
+      onSheetUrlChange(newUrl.trim());
+      setOpen(false);
+      setNewUrl("");
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Optimal": return "bg-green-500";
@@ -58,9 +86,46 @@ export function NPKCard({ data }: { data: NPKData | null }) {
             <Sprout className="h-5 w-5 text-green-600" />
             <span>मिट्टी के पोषक तत्व (NPK)</span>
           </div>
-          <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
-            <Activity className="h-3 w-3 animate-pulse" />
-            लाइव सेंसर
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
+              <Activity className="h-3 w-3 animate-pulse" />
+              लाइव सेंसर
+            </div>
+            {onSheetUrlChange && (
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 hover:bg-muted">
+                    <Settings className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>डेटा स्रोत बदलें</DialogTitle>
+                    <DialogDescription>
+                      Google Sheet URL दर्ज करें जिसमें NPK डेटा हो।
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Input
+                        id="url"
+                        placeholder="Google Sheet URL..."
+                        className="col-span-4"
+                        value={newUrl}
+                        onChange={(e) => setNewUrl(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleUpdate()}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      सुनिश्चित करें कि शीट सार्वजनिक है और इसमें Nitrogen, Phosphorus, Potassium कॉलम हैं।
+                    </p>
+                  </div>
+                  <DialogFooter>
+                    <Button onClick={handleUpdate}>अपडेट करें</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         </CardTitle>
       </CardHeader>

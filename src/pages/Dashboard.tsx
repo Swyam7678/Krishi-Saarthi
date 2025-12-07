@@ -24,12 +24,13 @@ export default function Dashboard() {
   const [market, setMarket] = useState<any>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [location, setLocation] = useState<string | undefined>(undefined);
+  const [sheetUrl, setSheetUrl] = useState<string | undefined>(undefined);
 
   const fetchData = async () => {
     try {
       const [w, n, m] = await Promise.all([
         getWeather({ location }),
-        getNPK({}),
+        getNPK({ sheetUrl }),
         getMarket({})
       ]);
       setWeather(w);
@@ -49,10 +50,15 @@ export default function Dashboard() {
     fetchData();
     const interval = setInterval(fetchData, 10000); // Auto update every 10s
     return () => clearInterval(interval);
-  }, [location]); // Re-fetch when location changes
+  }, [location, sheetUrl]); // Re-fetch when location or sheetUrl changes
 
   const handleLocationChange = (newLocation: string) => {
     setLocation(newLocation);
+  };
+
+  const handleSheetUrlChange = (newUrl: string) => {
+    setSheetUrl(newUrl);
+    toast.success("डेटा स्रोत अपडेट किया गया");
   };
 
   return (
@@ -88,7 +94,7 @@ export default function Dashboard() {
             <WeatherCard data={weather} onLocationChange={handleLocationChange} />
           </div>
           <div className="h-full">
-            <NPKCard data={npk} />
+            <NPKCard data={npk} onSheetUrlChange={handleSheetUrlChange} />
           </div>
           <div className="h-full">
             <MarketCard data={market} />
