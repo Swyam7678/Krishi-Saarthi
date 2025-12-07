@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake, MapPin, CalendarDays, History } from "lucide-react";
+import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake, MapPin, CalendarDays, History, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,7 @@ interface ForecastDay {
   maxTemp: number;
   minTemp: number;
   rain: number;
+  humidity?: number;
   condition: string;
 }
 
@@ -34,6 +36,7 @@ interface WeatherData {
   location: string;
   forecast?: ForecastDay[];
   history?: ForecastDay[];
+  alerts?: string[];
 }
 
 interface WeatherCardProps {
@@ -129,6 +132,20 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
+        {data.alerts && data.alerts.length > 0 && (
+          <div className="mb-4 space-y-2">
+            {data.alerts.map((alert, i) => (
+              <Alert key={i} variant="destructive" className="py-2 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+                <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                <AlertTitle className="text-red-800 dark:text-red-300 text-sm font-bold">चेतावनी</AlertTitle>
+                <AlertDescription className="text-red-700 dark:text-red-300 text-xs">
+                  {alert}
+                </AlertDescription>
+              </Alert>
+            ))}
+          </div>
+        )}
+
         <Tabs defaultValue="current" className="flex-1 flex flex-col min-h-0">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="current" className="gap-2">
@@ -195,11 +212,11 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
           </TabsContent>
 
           <TabsContent value="history" className="flex-1 flex flex-col min-h-0 mt-0">
-            <div className="flex-1 w-full min-h-[250px]">
+            <div className="flex-1 w-full min-h-[350px]">
               {data.history && data.history.length > 0 ? (
-                <div className="h-full flex flex-col gap-4">
-                  <div className="h-1/2 w-full">
-                    <p className="text-xs text-muted-foreground mb-2 text-center">पिछले 30 दिनों का तापमान (°C)</p>
+                <div className="h-full flex flex-col gap-2">
+                  <div className="h-1/3 w-full">
+                    <p className="text-xs text-muted-foreground mb-1 text-center">तापमान (°C)</p>
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <defs>
@@ -225,8 +242,8 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="h-1/2 w-full">
-                    <p className="text-xs text-muted-foreground mb-2 text-center">वर्षा (mm)</p>
+                  <div className="h-1/3 w-full">
+                    <p className="text-xs text-muted-foreground mb-1 text-center">वर्षा (mm)</p>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
@@ -239,6 +256,33 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                         />
                         <Bar dataKey="rain" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                       </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="h-1/3 w-full">
+                    <p className="text-xs text-muted-foreground mb-1 text-center">नमी (%)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorHumidity" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                        <XAxis dataKey="shortDate" fontSize={10} tickLine={false} axisLine={false} interval={6} />
+                        <YAxis fontSize={10} tickLine={false} axisLine={false} domain={[0, 100]} />
+                        <Tooltip 
+                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                          formatter={(value: number) => [`${value}%`, 'Humidity']}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="humidity" 
+                          stroke="#06b6d4" 
+                          fillOpacity={1} 
+                          fill="url(#colorHumidity)" 
+                        />
+                      </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>

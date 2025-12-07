@@ -28,7 +28,7 @@ export const getWeather = action({
       }
 
       // Weather API Fetch (Open-Meteo) - Added past_days=30 and precipitation_sum
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum&timezone=auto&past_days=30`;
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,relative_humidity_2m_mean&timezone=auto&past_days=30`;
       
       const weatherRes = await fetch(weatherUrl);
       if (!weatherRes.ok) throw new Error("Weather API failed");
@@ -52,6 +52,20 @@ export const getWeather = action({
 
       const forecast: any[] = [];
       const history: any[] = [];
+      const alerts: string[] = [];
+
+      // Generate Alerts based on current conditions
+      if (current.temperature_2m > 40) alerts.push("अत्यधिक गर्मी की चेतावनी (Heatwave Alert)");
+      else if (current.temperature_2m > 35) alerts.push("गर्मी की चेतावनी: तापमान अधिक है।");
+      
+      if (current.temperature_2m < 5) alerts.push("शीत लहर की चेतावनी (Cold Wave Alert)");
+      
+      if (current.precipitation > 50) alerts.push("भारी बारिश की चेतावनी (Heavy Rain Alert)");
+      else if (current.precipitation > 10) alerts.push("बारिश की संभावना है।");
+      
+      if (current.wind_speed_10m > 30) alerts.push("तेज़ हवाओं की चेतावनी (High Wind Alert)");
+
+      if (current.relative_humidity_2m > 90) alerts.push("उच्च आर्द्रता: फफूंद रोगों का खतरा।");
 
       daily.time.forEach((time: string, index: number) => {
         const date = new Date(time);
@@ -62,7 +76,7 @@ export const getWeather = action({
         const minTemp = daily.temperature_2m_min[index];
         const avgTemp = (maxTemp + minTemp) / 2;
         const rainSum = daily.precipitation_sum[index];
-        const rainProb = daily.precipitation_probability_max?.[index];
+        const humidity = daily.relative_humidity_2m_mean ? daily.relative_humidity_2m_mean[index] : 0;
 
         const item = {
           date: time,
@@ -72,6 +86,7 @@ export const getWeather = action({
           maxTemp: Math.round(maxTemp),
           minTemp: Math.round(minTemp),
           rain: rainSum,
+          humidity: Math.round(humidity),
           condition: getCondition(code)
         };
 
@@ -90,7 +105,8 @@ export const getWeather = action({
         condition: getCondition(current.weather_code),
         location: locationName,
         forecast: forecast.slice(0, 7), // Next 7 days
-        history: history // Past 30 days
+        history: history, // Past 30 days
+        alerts: alerts
       };
 
     } catch (error: any) {
@@ -113,6 +129,7 @@ export const getWeather = action({
           const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
           const fTemp = 24 + Math.random() * 10 - 5; 
           const fRain = Math.random() * 20;
+          const fHumidity = 50 + Math.random() * 40;
           
           let condition = "धूप";
           if (fRain > 10) condition = "बारिश";
@@ -126,10 +143,15 @@ export const getWeather = action({
             maxTemp: Math.round(fTemp + 5),
             minTemp: Math.round(fTemp - 5),
             rain: Math.round(fRain),
+            humidity: Math.round(fHumidity),
             condition: condition
           };
         });
       };
+
+      const alerts = [];
+      if (temp > 35) alerts.push("गर्मी की चेतावनी (Simulation)");
+      if (rain > 10) alerts.push("बारिश की संभावना (Simulation)");
 
       return {
         temp: Math.round(temp * 10) / 10,
@@ -139,7 +161,8 @@ export const getWeather = action({
         condition: rain > 20 ? "बादल छाए रहेंगे" : "धूप",
         location: args.location || "IIT Dhanbad, Jharkhand",
         forecast: generateDays(7, false),
-        history: generateDays(30, true)
+        history: generateDays(30, true),
+        alerts: alerts
       };
     }
   },
