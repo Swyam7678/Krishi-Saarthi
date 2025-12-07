@@ -25,7 +25,7 @@ export const generateCropRecommendation = action({
 
       Please provide:
       1. Top 3 recommended crops.
-      2. A brief reasoning for why these crops are suitable.
+      2. A brief reasoning for why these crops are suitable, specifically referencing the NPK, pH, and soil values provided.
       3. Fertilizer suggestions to improve yield.
       
       IMPORTANT: Provide the response in HINDI language.
@@ -49,18 +49,94 @@ export const generateCropRecommendation = action({
       console.error("AI Error:", e);
       
       // Enhanced Fallback Logic based on inputs
+      // Define crops with their specific requirements
       const crops = [
-        { name: "धान (Rice)", minRain: 100, soil: ["Clay", "Loamy", "Silt"], minPh: 5.0, maxPh: 8.0, reason: "अधिक वर्षा और नमी वाली मिट्टी उपयुक्त है।" },
-        { name: "गेहूँ (Wheat)", minRain: 50, maxRain: 100, soil: ["Loamy", "Clay", "Silt"], minPh: 6.0, maxPh: 7.5, reason: "ठंडी जलवायु और मध्यम पानी की आवश्यकता।" },
-        { name: "मक्का (Maize)", minRain: 50, soil: ["Loamy", "Sandy", "Silt"], minPh: 5.5, maxPh: 7.5, reason: "अच्छी जल निकासी वाली मिट्टी की आवश्यकता।" },
-        { name: "गन्ना (Sugarcane)", minRain: 150, soil: ["Loamy", "Clay"], minPh: 6.0, maxPh: 8.0, reason: "उच्च वर्षा और उपजाऊ मिट्टी की आवश्यकता।" },
-        { name: "सरसों (Mustard)", maxRain: 60, soil: ["Sandy", "Loamy"], minPh: 6.0, maxPh: 7.5, reason: "कम पानी और रेतीली मिट्टी में अच्छी उपज।" },
-        { name: "चना (Chickpea)", maxRain: 50, soil: ["Loamy", "Sandy"], minPh: 6.0, maxPh: 8.0, reason: "कम नमी और हल्की मिट्टी उपयुक्त है।" },
-        { name: "आलू (Potato)", minRain: 50, soil: ["Sandy", "Loamy"], minPh: 4.8, maxPh: 6.5, reason: "भुरभुरी मिट्टी और मध्यम पानी की आवश्यकता।" },
-        { name: "बाजरा (Pearl Millet)", maxRain: 50, soil: ["Sandy", "Loamy"], minPh: 6.5, maxPh: 8.0, reason: "सूखा प्रतिरोधी और कम उपजाऊ मिट्टी में भी उगता है।" },
-        { name: "सोयाबीन (Soybean)", minRain: 60, soil: ["Loamy", "Clay"], minPh: 6.0, maxPh: 7.0, reason: "मध्यम वर्षा और कार्बनिक मिट्टी उपयुक्त है।" },
-        { name: "मूंगफली (Groundnut)", maxRain: 100, soil: ["Sandy", "Loamy"], minPh: 5.0, maxPh: 7.0, reason: "रेतीली दोमट मिट्टी इसके लिए सर्वोत्तम है।" }
+        { 
+          name: "धान (Rice)", 
+          minRain: 100, 
+          soil: ["Clay", "Loamy", "Silt"], 
+          minPh: 5.0, maxPh: 8.0, 
+          reason: "अधिक वर्षा और नमी वाली मिट्टी उपयुक्त है।",
+          nutrientNeeds: { n: "high", p: "medium", k: "medium" }
+        },
+        { 
+          name: "गेहूँ (Wheat)", 
+          minRain: 50, maxRain: 100, 
+          soil: ["Loamy", "Clay", "Silt"], 
+          minPh: 6.0, maxPh: 7.5, 
+          reason: "ठंडी जलवायु और मध्यम पानी की आवश्यकता।",
+          nutrientNeeds: { n: "medium", p: "medium", k: "medium" }
+        },
+        { 
+          name: "मक्का (Maize)", 
+          minRain: 50, 
+          soil: ["Loamy", "Sandy", "Silt"], 
+          minPh: 5.5, maxPh: 7.5, 
+          reason: "अच्छी जल निकासी वाली मिट्टी की आवश्यकता।",
+          nutrientNeeds: { n: "high", p: "medium", k: "medium" }
+        },
+        { 
+          name: "गन्ना (Sugarcane)", 
+          minRain: 150, 
+          soil: ["Loamy", "Clay"], 
+          minPh: 6.0, maxPh: 8.0, 
+          reason: "उच्च वर्षा और उपजाऊ मिट्टी की आवश्यकता।",
+          nutrientNeeds: { n: "high", p: "high", k: "medium" }
+        },
+        { 
+          name: "सरसों (Mustard)", 
+          maxRain: 60, 
+          soil: ["Sandy", "Loamy"], 
+          minPh: 6.0, maxPh: 7.5, 
+          reason: "कम पानी और रेतीली मिट्टी में अच्छी उपज।",
+          nutrientNeeds: { n: "medium", p: "medium", k: "medium" }
+        },
+        { 
+          name: "चना (Chickpea)", 
+          maxRain: 50, 
+          soil: ["Loamy", "Sandy"], 
+          minPh: 6.0, maxPh: 8.0, 
+          reason: "कम नमी और हल्की मिट्टी उपयुक्त है।",
+          nutrientNeeds: { n: "low", p: "medium", k: "medium" } // Legume
+        },
+        { 
+          name: "आलू (Potato)", 
+          minRain: 50, 
+          soil: ["Sandy", "Loamy"], 
+          minPh: 4.8, maxPh: 6.5, 
+          reason: "भुरभुरी मिट्टी और मध्यम पानी की आवश्यकता।",
+          nutrientNeeds: { n: "medium", p: "medium", k: "high" } // Needs K
+        },
+        { 
+          name: "बाजरा (Pearl Millet)", 
+          maxRain: 50, 
+          soil: ["Sandy", "Loamy"], 
+          minPh: 6.5, maxPh: 8.0, 
+          reason: "सूखा प्रतिरोधी और कम उपजाऊ मिट्टी में भी उगता है।",
+          nutrientNeeds: { n: "low", p: "low", k: "low" } // Hardy
+        },
+        { 
+          name: "सोयाबीन (Soybean)", 
+          minRain: 60, 
+          soil: ["Loamy", "Clay"], 
+          minPh: 6.0, maxPh: 7.0, 
+          reason: "मध्यम वर्षा और कार्बनिक मिट्टी उपयुक्त है।",
+          nutrientNeeds: { n: "low", p: "medium", k: "medium" } // Legume
+        },
+        { 
+          name: "मूंगफली (Groundnut)", 
+          maxRain: 100, 
+          soil: ["Sandy", "Loamy"], 
+          minPh: 5.0, maxPh: 7.0, 
+          reason: "रेतीली दोमट मिट्टी इसके लिए सर्वोत्तम है।",
+          nutrientNeeds: { n: "low", p: "medium", k: "medium" } // Legume
+        }
       ];
+
+      // Determine input levels
+      const nLevel = args.nitrogen < 50 ? "low" : args.nitrogen > 150 ? "high" : "medium";
+      const pLevel = args.phosphorus < 50 ? "low" : args.phosphorus > 100 ? "high" : "medium";
+      const kLevel = args.potassium < 50 ? "low" : args.potassium > 150 ? "high" : "medium";
 
       // Calculate suitability score
       const scoredCrops = crops.map(crop => {
@@ -74,12 +150,25 @@ export const generateCropRecommendation = action({
          }
 
          // Soil check
-         if (crop.soil.some(s => args.soilType.includes(s))) score += 2;
+         if (crop.soil.some(s => args.soilType.includes(s))) score += 3;
 
          // pH check
          if (args.ph >= crop.minPh && args.ph <= crop.maxPh) score += 2;
          else if (Math.abs(args.ph - crop.minPh) < 0.5 || Math.abs(args.ph - crop.maxPh) < 0.5) score += 1;
 
+         // Nutrient compatibility check
+         // If soil is rich (High N) and crop needs High N -> Good match (+2)
+         // If soil is poor (Low N) and crop needs Low N -> Good match (+2)
+         // If soil is poor (Low N) and crop needs High N -> Penalty (-1) (Needs lots of fertilizer)
+         
+         // Nitrogen
+         if (crop.nutrientNeeds.n === nLevel) score += 2;
+         else if (nLevel === "high" && crop.nutrientNeeds.n === "medium") score += 1;
+         else if (nLevel === "low" && crop.nutrientNeeds.n === "high") score -= 1;
+
+         // Potassium (Important for roots/fruits)
+         if (crop.nutrientNeeds.k === kLevel) score += 1;
+         
          return { ...crop, score };
       });
 
@@ -101,13 +190,27 @@ export const generateCropRecommendation = action({
       let response = `### 🌾 अनुशंसित फसलें (AI सिमुलेशन)\n\nतकनीकी समस्या के कारण हम वास्तविक समय AI से संपर्क नहीं कर सके, लेकिन आपकी मिट्टी की स्थिति (N: ${args.nitrogen}, P: ${args.phosphorus}, K: ${args.potassium}, pH: ${args.ph}, वर्षा: ${args.rainfall}mm) के आधार पर यहाँ एक अनुमानित सुझाव है:\n\n`;
 
       topCrops.forEach((crop, index) => {
-          response += `${index + 1}. **${crop.name}**\n   - **कारण:** ${crop.reason}\n`;
+          response += `${index + 1}. **${crop.name}**\n   - **कारण:** ${crop.reason} `;
+          
+          // Add specific reason based on match
+          if (crop.soil.some(s => args.soilType.includes(s))) {
+            response += `आपकी **${args.soilType}** मिट्टी इसके लिए उपयुक्त है। `;
+          }
+          if (crop.nutrientNeeds.n === "low" && nLevel === "low") {
+             response += `कम नाइट्रोजन वाली मिट्टी में भी यह अच्छी उपज देती है। `;
+          }
+          if (crop.nutrientNeeds.n === "high" && nLevel === "high") {
+             response += `उच्च नाइट्रोजन स्तर का यह फसल अच्छा लाभ उठाएगी। `;
+          }
+          
+          response += `\n`;
           
           // Dynamic fertilizer tip
           let tips = [];
-          if (args.nitrogen < 50) tips.push("नाइट्रोजन (यूरिया)");
+          if (args.nitrogen < 50 && crop.nutrientNeeds.n !== "low") tips.push("नाइट्रोजन (यूरिया)");
           if (args.phosphorus < 50) tips.push("फॉस्फोरस (DAP)");
-          if (args.potassium < 50) tips.push("पोटाश");
+          if (args.potassium < 50 && crop.nutrientNeeds.k === "high") tips.push("पोटाश (MOP)"); // Emphasize K for K-loving crops
+          else if (args.potassium < 50) tips.push("पोटाश");
           
           let tipStr = tips.length > 0 
             ? `मिट्टी में पोषक तत्वों की कमी है। ${tips.join(", ")} का प्रयोग करें।` 
