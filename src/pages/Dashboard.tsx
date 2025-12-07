@@ -103,8 +103,8 @@ export default function Dashboard() {
               अद्यतन: {lastUpdated.toLocaleTimeString()}
             </span>
             <Button variant="outline" size="sm" onClick={fetchData}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              ताज़ा करें
+              <RefreshCw className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">ताज़ा करें</span>
             </Button>
             <Button variant="ghost" size="sm" onClick={() => signOut()}>
               <LogOut className="h-4 w-4 mr-2" />
