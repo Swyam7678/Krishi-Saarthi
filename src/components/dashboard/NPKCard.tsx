@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import { FileSpreadsheet, Info } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useLanguage } from "@/lib/i18n";
 
 interface NPKData {
   n: number;
@@ -49,6 +50,7 @@ interface NPKCardProps {
 export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
   const [newUrl, setNewUrl] = useState(currentUrl || "");
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (open) {
@@ -97,7 +99,7 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
 
   if (!data) return (
     <Card className="h-full animate-pulse">
-      <CardHeader><CardTitle>NPK स्तर</CardTitle></CardHeader>
+      <CardHeader><CardTitle>{t('npk_title')}</CardTitle></CardHeader>
       <CardContent className="h-32 bg-muted/20 rounded-md" />
     </Card>
   );
@@ -108,18 +110,18 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
         <CardTitle className="flex justify-between items-center text-lg">
           <div className="flex items-center gap-2">
             <Sprout className="h-5 w-5 text-green-600" />
-            <span>मिट्टी के पोषक तत्व (NPK)</span>
+            <span>{t('npk_title')}</span>
           </div>
           <div className="flex items-center gap-2">
             {data.isFallback && currentUrl ? (
               <div className="flex items-center gap-1 text-xs font-normal bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-1 rounded-full" title={data.error}>
                 <AlertTriangle className="h-3 w-3" />
-                सिमुलेशन (त्रुटि)
+                {t('simulation_error')}
               </div>
             ) : (
               <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
                 <Activity className="h-3 w-3 animate-pulse" />
-                {data.isFallback ? "सिमुलेशन" : "लाइव सेंसर"}
+                {data.isFallback ? t('simulation') : t('live_sensor')}
               </div>
             )}
             {onSheetUrlChange && (
@@ -131,9 +133,9 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>डेटा स्रोत बदलें</DialogTitle>
+                    <DialogTitle>{t('data_source')}</DialogTitle>
                     <DialogDescription>
-                      Google Sheet URL दर्ज करें जिसमें NPK डेटा हो।
+                      {t('sheet_url')}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
@@ -148,15 +150,15 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      वर्तमान: {currentUrl ? "कस्टम शीट" : "डिफ़ॉल्ट (डेमो शीट)"}
+                      {t('current_source')}: {currentUrl ? t('custom_sheet') : t('default_source')}
                     </p>
                     
                     <div className="bg-muted/50 p-3 rounded-md text-xs space-y-2 border border-border">
                       <div className="flex items-center gap-2 font-medium text-foreground">
                         <FileSpreadsheet className="h-3.5 w-3.5" />
-                        आवश्यक शीट प्रारूप (Required Format)
+                        {t('required_format')}
                       </div>
-                      <p>आपकी Google Sheet में ये कॉलम हेडर (अंग्रेजी में) होने चाहिए:</p>
+                      <p>{t('sheet_instruction')}</p>
                       <div className="grid grid-cols-3 gap-2 font-mono bg-background p-2 rounded border text-center">
                         <div className="bg-muted/30 rounded px-1">Nitrogen</div>
                         <div className="bg-muted/30 rounded px-1">Phosphorus</div>
@@ -165,7 +167,7 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                       <div className="flex gap-2 items-start text-muted-foreground">
                         <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                         <span>
-                          सुनिश्चित करें कि शीट की शेयर सेटिंग्स में <strong>"Anyone with the link"</strong> चुना गया है।
+                          {t('share_instruction')}
                         </span>
                       </div>
                     </div>
@@ -174,10 +176,10 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                     {currentUrl && (
                         <Button variant="outline" onClick={handleReset} className="mr-auto gap-2">
                             <RotateCcw className="h-4 w-4" />
-                            रीसेट
+                            {t('reset')}
                         </Button>
                     )}
-                    <Button onClick={handleUpdate}>अपडेट करें</Button>
+                    <Button onClick={handleUpdate}>{t('update_btn')}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -188,15 +190,15 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
       <CardContent className="flex-1 flex flex-col min-h-0">
         <Tabs defaultValue="overview" className="flex-1 flex flex-col min-h-0">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="overview">{t('overview')}</TabsTrigger>
+            <TabsTrigger value="history">{t('history')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="flex-1 flex flex-col justify-center space-y-6 mt-0">
             {/* Nitrogen */}
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">नाइट्रोजन (N)</span>
+                <span className="text-sm font-medium">{t('nitrogen')}</span>
                 <div className="flex items-center">
                   <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
                   {data.trend && <TrendIcon direction={data.trend.n} />}
@@ -213,7 +215,7 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
             {/* Phosphorus */}
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">फॉस्फोरस (P)</span>
+                <span className="text-sm font-medium">{t('phosphorus')}</span>
                 <div className="flex items-center">
                   <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
                   {data.trend && <TrendIcon direction={data.trend.p} />}
@@ -230,7 +232,7 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
             {/* Potassium */}
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">पोटैशियम (K)</span>
+                <span className="text-sm font-medium">{t('potassium')}</span>
                 <div className="flex items-center">
                   <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
                   {data.trend && <TrendIcon direction={data.trend.k} />}
@@ -265,7 +267,7 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                 </ResponsiveContainer>
               ) : (
                 <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                  No history available
+                  {t('no_history')}
                 </div>
               )}
             </div>

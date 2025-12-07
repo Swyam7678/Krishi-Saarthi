@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { ArrowRight, Loader2, Mail, UserX } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useLanguage } from "@/lib/i18n";
 
 interface AuthProps {
   redirectAfterAuth?: string;
@@ -30,6 +31,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
@@ -117,9 +119,9 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       onClick={() => navigate("/")}
                     />
                   </div>
-                <CardTitle className="text-xl">शुरू करें</CardTitle>
+                <CardTitle className="text-xl">{t('login_title')}</CardTitle>
                 <CardDescription>
-                  लॉग इन या साइन अप करने के लिए अपना ईमेल दर्ज करें
+                  {t('login_desc')}
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleEmailSubmit}>
@@ -161,7 +163,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
                         <span className="bg-background px-2 text-muted-foreground">
-                          या
+                          OR
                         </span>
                       </div>
                     </div>
@@ -174,7 +176,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       disabled={isLoading}
                     >
                       <UserX className="mr-2 h-4 w-4" />
-                      अतिथि के रूप में जारी रखें
+                      {t('continue_guest')}
                     </Button>
                   </div>
                 </CardContent>
@@ -183,9 +185,9 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
           ) : (
             <>
               <CardHeader className="text-center mt-4">
-                <CardTitle>अपना ईमेल चेक करें</CardTitle>
+                <CardTitle>{t('verify_code')}</CardTitle>
                 <CardDescription>
-                  हमने {step.email} पर एक कोड भेजा है
+                  {t('code_sent')} {step.email}
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleOtpSubmit}>
@@ -222,13 +224,13 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     </p>
                   )}
                   <p className="text-sm text-muted-foreground text-center mt-4">
-                    कोड नहीं मिला?{" "}
+                    Code not received?{" "}
                     <Button
                       variant="link"
                       className="p-0 h-auto"
                       onClick={() => setStep("signIn")}
                     >
-                      पुनः प्रयास करें
+                      {t('resend')}
                     </Button>
                   </p>
                 </CardContent>
@@ -241,11 +243,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        सत्यापन हो रहा है...
+                        {t('loading')}
                       </>
                     ) : (
                       <>
-                        कोड सत्यापित करें
+                        {t('verify_btn')}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     )}
@@ -257,7 +259,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     disabled={isLoading}
                     className="w-full"
                   >
-                    अलग ईमेल का उपयोग करें
+                    Use different email
                   </Button>
                 </CardFooter>
               </form>

@@ -5,15 +5,18 @@ import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
-import { LayoutDashboard, LogOut, RefreshCw } from "lucide-react";
+import { LayoutDashboard, LogOut, RefreshCw, Languages } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useLanguage } from "@/lib/i18n";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useLanguage();
   
   const getWeather = useAction(api.weather.getWeather);
   const getNPK = useAction(api.npk.getLiveNPK);
@@ -40,9 +43,9 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [w, n, m] = await Promise.all([
-        getWeather({ location }),
+        getWeather({ location, lang: language }),
         getNPK({ sheetUrl }),
-        getMarket({ location })
+        getMarket({ location, lang: language })
       ]);
       setWeather(w);
       setNpk(n);
@@ -51,7 +54,7 @@ export default function Dashboard() {
     } catch (error: any) {
       console.error("Error fetching dashboard data:", error);
       if (error.message && error.message.includes("Location not found")) {
-        toast.error("स्थान नहीं मिला। कृपया सही शहर का नाम दर्ज करें।");
+        toast.error(t('error'));
         setLocation(undefined); // Reset to default
       }
     }
@@ -61,7 +64,7 @@ export default function Dashboard() {
     fetchData();
     const interval = setInterval(fetchData, 10000); // Auto update every 10s
     return () => clearInterval(interval);
-  }, [location, sheetUrl]); // Re-fetch when location or sheetUrl changes
+  }, [location, sheetUrl, language]); // Re-fetch when location, sheetUrl or language changes
 
   const handleLocationChange = (newLocation: string) => {
     setLocation(newLocation);
@@ -75,7 +78,7 @@ export default function Dashboard() {
     if (user) {
       updateUser({ sheetUrl: newUrl || "" });
     }
-    toast.success(newUrl ? "डेटा स्रोत अपडेट किया गया" : "डिफ़ॉल्ट डेटा स्रोत पर रीसेट किया गया");
+    toast.success(newUrl ? t('success') : t('reset'));
   };
 
   const handleCropsChange = (crops: string[]) => {
@@ -83,7 +86,7 @@ export default function Dashboard() {
     if (user) {
       updateUser({ selectedCrops: crops });
     }
-    toast.success("फसल सूची अपडेट की गई");
+    toast.success(t('success'));
   };
 
   return (
@@ -94,21 +97,35 @@ export default function Dashboard() {
           <div>
             <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
               <LayoutDashboard className="h-8 w-8" />
-              KrishiSaarthi
+              {t('app_name')}
             </h1>
-            <p className="text-muted-foreground">स्मार्ट कृषि सहायक • स्वागत है, {user?.name || 'किसान'}</p>
+            <p className="text-muted-foreground">{t('subtitle')} • {t('welcome')}, {user?.name || t('farmer')}</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground hidden md:inline">
-              अद्यतन: {lastUpdated.toLocaleTimeString()}
+              {lastUpdated.toLocaleTimeString()}
             </span>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Languages className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{language === 'en' ? 'English' : 'हिंदी'}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setLanguage('en')}>English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage('hi')}>हिंदी</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button variant="outline" size="sm" onClick={fetchData}>
               <RefreshCw className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">ताज़ा करें</span>
+              <span className="hidden sm:inline">{t('refresh')}</span>
             </Button>
             <Button variant="ghost" size="sm" onClick={() => signOut()}>
               <LogOut className="h-4 w-4 mr-2" />
-              साइन आउट
+              {t('sign_out')}
             </Button>
           </div>
         </div>

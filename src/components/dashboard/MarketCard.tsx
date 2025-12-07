@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from "@/lib/i18n";
 
 interface MarketItem {
   name: string;
@@ -37,10 +38,11 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
   const [selectedCrop, setSelectedCrop] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [tempSelectedCrops, setTempSelectedCrops] = useState<string[]>(selectedCrops);
+  const { t } = useLanguage();
 
   if (!data) return (
     <Card className="h-full animate-pulse">
-      <CardHeader><CardTitle>मंडी भाव</CardTitle></CardHeader>
+      <CardHeader><CardTitle>{t('market_title')}</CardTitle></CardHeader>
       <CardContent className="h-32 bg-muted/20 rounded-md" />
     </Card>
   );
@@ -87,7 +89,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
         <CardTitle className="flex items-center justify-between text-lg">
           <div className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-orange-600" />
-            <span>मंडी भाव {location ? <span className="text-sm font-normal text-muted-foreground">({location})</span> : null}</span>
+            <span>{t('market_title')} {location ? <span className="text-sm font-normal text-muted-foreground">({location})</span> : null}</span>
           </div>
           {onCropsChange && (
             <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -98,9 +100,9 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>फसलें चुनें</DialogTitle>
+                  <DialogTitle>{t('select_crops')}</DialogTitle>
                   <DialogDescription>
-                    उन फसलों का चयन करें जिन्हें आप डैशबोर्ड पर देखना चाहते हैं।
+                    {t('select_crops_desc')}
                   </DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="h-[300px] pr-4">
@@ -125,12 +127,12 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
                 </ScrollArea>
                 <DialogFooter className="flex-col sm:flex-row gap-2">
                   <div className="flex-1 text-xs text-muted-foreground flex items-center">
-                    {tempSelectedCrops.length} फसलें चुनी गईं
+                    {tempSelectedCrops.length} {t('crops_selected')}
                   </div>
                   <Button variant="outline" onClick={() => setTempSelectedCrops([])}>
-                    सभी हटाएं
+                    {t('remove_all')}
                   </Button>
-                  <Button onClick={handleSaveCrops}>सहेजें</Button>
+                  <Button onClick={handleSaveCrops}>{t('save')}</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -140,15 +142,15 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
       <CardContent className="flex-1 flex flex-col min-h-0">
         <Tabs defaultValue="rates" className="flex-1 flex flex-col min-h-0">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="rates">Rates</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
+            <TabsTrigger value="rates">{t('rates')}</TabsTrigger>
+            <TabsTrigger value="trends">{t('trends')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="rates" className="flex-1 min-h-0 mt-0">
             {filteredData.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                <p>कोई फसल नहीं चुनी गई।</p>
-                <Button variant="link" onClick={() => setOpen(true)}>फसलें चुनें</Button>
+                <p>{t('no_crops')}</p>
+                <Button variant="link" onClick={() => setOpen(true)}>{t('select_crops')}</Button>
               </div>
             ) : (
               <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar h-[300px]">
@@ -156,7 +158,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
                   <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
                     <div className="flex flex-col">
                       <span className="font-semibold">{item.name}</span>
-                      <span className="text-xs text-muted-foreground">औसत: ₹{item.avg}/q</span>
+                      <span className="text-xs text-muted-foreground">{t('avg')}: ₹{item.avg}/q</span>
                     </div>
                     <div className="flex flex-col items-end">
                       <div className="flex items-center gap-1 font-bold">
@@ -181,7 +183,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
             <div className="mb-4">
               <Select value={selectedCrop} onValueChange={setSelectedCrop}>
                 <SelectTrigger>
-                  <SelectValue placeholder="फसल चुनें" />
+                  <SelectValue placeholder={t('select_crops')} />
                 </SelectTrigger>
                 <SelectContent>
                   {filteredData.map((crop) => (
@@ -217,7 +219,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
               ) : (
                 <div className="h-full flex items-center justify-center text-muted-foreground">
                   <LineChartIcon className="h-8 w-8 mb-2 opacity-20" />
-                  <p>चार्ट देखने के लिए फसल चुनें</p>
+                  <p>{t('select_crop_view')}</p>
                 </div>
               )}
             </div>

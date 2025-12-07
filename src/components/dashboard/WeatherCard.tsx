@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { useLanguage } from "@/lib/i18n";
 
 interface ForecastDay {
   day: string;
@@ -48,10 +49,11 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
   const [newLocation, setNewLocation] = useState("");
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   const handleUpdate = () => {
     if (!newLocation.trim()) {
-      setError("कृपया शहर का नाम दर्ज करें");
+      setError(t('enter_city'));
       return;
     }
 
@@ -65,7 +67,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
 
   if (!data) return (
     <Card className="h-full animate-pulse">
-      <CardHeader><CardTitle>मौसम का हाल</CardTitle></CardHeader>
+      <CardHeader><CardTitle>{t('weather_title')}</CardTitle></CardHeader>
       <CardContent className="h-32 bg-muted/20 rounded-md" />
     </Card>
   );
@@ -86,7 +88,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
         <CardTitle className="flex justify-between items-center text-lg">
           <div className="flex items-center gap-2">
             <Sun className="h-5 w-5 text-blue-600" />
-            <span>मौसम का हाल</span>
+            <span>{t('weather_title')}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-normal text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]" title={data.location}>
@@ -101,16 +103,16 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>स्थान बदलें</DialogTitle>
+                    <DialogTitle>{t('location_change')}</DialogTitle>
                     <DialogDescription>
-                      अपने क्षेत्र का मौसम देखने के लिए शहर का नाम दर्ज करें।
+                      {t('enter_city')}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Input
                         id="location"
-                        placeholder="शहर का नाम (उदा. दिल्ली)"
+                        placeholder={t('location_placeholder')}
                         className="col-span-4"
                         value={newLocation}
                         onChange={(e) => {
@@ -123,7 +125,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                     {error && <p className="text-sm text-red-500">{error}</p>}
                   </div>
                   <DialogFooter>
-                    <Button onClick={handleUpdate}>अपडेट करें</Button>
+                    <Button onClick={handleUpdate}>{t('update_btn')}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -137,7 +139,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
             {data.alerts.map((alert, i) => (
               <Alert key={i} variant="destructive" className="py-2 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
                 <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                <AlertTitle className="text-red-800 dark:text-red-300 text-sm font-bold">चेतावनी</AlertTitle>
+                <AlertTitle className="text-red-800 dark:text-red-300 text-sm font-bold">{t('alert')}</AlertTitle>
                 <AlertDescription className="text-red-700 dark:text-red-300 text-xs">
                   {alert}
                 </AlertDescription>
@@ -150,11 +152,11 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="current" className="gap-2">
               <CalendarDays className="h-4 w-4" />
-              पूर्वानुमान
+              {t('forecast')}
             </TabsTrigger>
             <TabsTrigger value="history" className="gap-2">
               <History className="h-4 w-4" />
-              इतिहास
+              {t('history')}
             </TabsTrigger>
           </TabsList>
 
@@ -175,23 +177,23 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
               <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
                 <Droplets className="h-4 w-4 mb-1 text-blue-500" />
                 <span className="text-sm font-semibold">{data.humidity}%</span>
-                <span className="text-xs text-muted-foreground">नमी</span>
+                <span className="text-xs text-muted-foreground">{t('humidity')}</span>
               </div>
               <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
                 <CloudRain className="h-4 w-4 mb-1 text-blue-500" />
                 <span className="text-sm font-semibold">{data.rainChance}%</span>
-                <span className="text-xs text-muted-foreground">बारिश</span>
+                <span className="text-xs text-muted-foreground">{t('rain')}</span>
               </div>
               <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
                 <Wind className="h-4 w-4 mb-1 text-blue-500" />
                 <span className="text-sm font-semibold">{data.windSpeed} km/h</span>
-                <span className="text-xs text-muted-foreground">हवा</span>
+                <span className="text-xs text-muted-foreground">{t('wind')}</span>
               </div>
             </div>
 
             {data.forecast && (
               <div className="flex-1 flex flex-col min-h-0">
-                <h4 className="text-sm font-semibold text-muted-foreground mb-2">आगामी 7 दिन</h4>
+                <h4 className="text-sm font-semibold text-muted-foreground mb-2">{t('next_7_days')}</h4>
                 <div className="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-1">
                   {data.forecast.map((day, index) => (
                     <div key={index} className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-muted/50 transition-colors">
@@ -216,7 +218,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
               {data.history && data.history.length > 0 ? (
                 <div className="h-full flex flex-col gap-2">
                   <div className="h-1/3 w-full">
-                    <p className="text-xs text-muted-foreground mb-1 text-center">तापमान (°C)</p>
+                    <p className="text-xs text-muted-foreground mb-1 text-center">{t('temp_history')} (°C)</p>
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <defs>
@@ -243,7 +245,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                     </ResponsiveContainer>
                   </div>
                   <div className="h-1/3 w-full">
-                    <p className="text-xs text-muted-foreground mb-1 text-center">वर्षा (mm)</p>
+                    <p className="text-xs text-muted-foreground mb-1 text-center">{t('rain_history')} (mm)</p>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
@@ -259,7 +261,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                     </ResponsiveContainer>
                   </div>
                   <div className="h-1/3 w-full">
-                    <p className="text-xs text-muted-foreground mb-1 text-center">नमी (%)</p>
+                    <p className="text-xs text-muted-foreground mb-1 text-center">{t('humidity_history')} (%)</p>
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <defs>
@@ -288,7 +290,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-muted-foreground">
-                  <p>इतिहास उपलब्ध नहीं है</p>
+                  <p>{t('no_history')}</p>
                 </div>
               )}
             </div>

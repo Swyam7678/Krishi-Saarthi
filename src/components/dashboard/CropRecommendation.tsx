@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import ReactMarkdown from 'react-markdown';
+import { useLanguage } from "@/lib/i18n";
 
 const formSchema = z.object({
   nitrogen: z.coerce.number().min(0).max(200),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 export function CropRecommendation() {
   const [result, setResult] = useState<string | null>(null);
   const generateRecommendation = useAction(api.ai.generateCropRecommendation);
+  const { t, language } = useLanguage();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema) as any,
@@ -45,11 +47,11 @@ export function CropRecommendation() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setResult(null); // Clear previous result while loading
-      const response = await generateRecommendation(values);
+      const response = await generateRecommendation({ ...values, lang: language });
       setResult(response);
-      toast.success("सिफारिश तैयार है!");
+      toast.success(t('success'));
     } catch (error) {
-      toast.error("सिफारिश उत्पन्न करने में विफल");
+      toast.error(t('error'));
       console.error(error);
     }
   }
@@ -59,7 +61,7 @@ export function CropRecommendation() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <BrainCircuit className="h-5 w-5 text-purple-600" />
-          <span>AI फसल सुझाव</span>
+          <span>{t('ai_title')}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -72,7 +74,7 @@ export function CropRecommendation() {
                   name="nitrogen"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>नाइट्रोजन (N)</FormLabel>
+                      <FormLabel>{t('nitrogen')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -85,7 +87,7 @@ export function CropRecommendation() {
                   name="phosphorus"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>फॉस्फोरस (P)</FormLabel>
+                      <FormLabel>{t('phosphorus')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -98,7 +100,7 @@ export function CropRecommendation() {
                   name="potassium"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>पोटैशियम (K)</FormLabel>
+                      <FormLabel>{t('potassium')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -111,7 +113,7 @@ export function CropRecommendation() {
                   name="ph"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>pH स्तर</FormLabel>
+                      <FormLabel>{t('ph_level')}</FormLabel>
                       <FormControl>
                         <Input type="number" step="0.1" {...field} />
                       </FormControl>
@@ -124,7 +126,7 @@ export function CropRecommendation() {
                   name="rainfall"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>वर्षा (mm)</FormLabel>
+                      <FormLabel>{t('rainfall_mm')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -137,7 +139,7 @@ export function CropRecommendation() {
                   name="temperature"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>तापमान (°C)</FormLabel>
+                      <FormLabel>{t('temp_c')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -150,7 +152,7 @@ export function CropRecommendation() {
                   name="humidity"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>नमी (%)</FormLabel>
+                      <FormLabel>{t('humidity_percent')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -163,20 +165,20 @@ export function CropRecommendation() {
                   name="soilType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>मिट्टी का प्रकार</FormLabel>
+                      <FormLabel>{t('soil_type')}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="मिट्टी का प्रकार चुनें" />
+                            <SelectValue placeholder={t('soil_type')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Loamy">दोमट (Loamy)</SelectItem>
-                          <SelectItem value="Sandy">रेतीली (Sandy)</SelectItem>
-                          <SelectItem value="Clay">चिकनी (Clay)</SelectItem>
-                          <SelectItem value="Silt">गाद (Silt)</SelectItem>
-                          <SelectItem value="Peaty">पीट (Peaty)</SelectItem>
-                          <SelectItem value="Chalky">चूना (Chalky)</SelectItem>
+                          <SelectItem value="Loamy">{t('loamy')}</SelectItem>
+                          <SelectItem value="Sandy">{t('sandy')}</SelectItem>
+                          <SelectItem value="Clay">{t('clay')}</SelectItem>
+                          <SelectItem value="Silt">{t('silt')}</SelectItem>
+                          <SelectItem value="Peaty">{t('peaty')}</SelectItem>
+                          <SelectItem value="Chalky">{t('chalky')}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -189,12 +191,12 @@ export function CropRecommendation() {
                   {form.formState.isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      विश्लेषण कर रहा है...
+                      {t('analyzing')}
                     </>
                   ) : (
                     <>
                       <Sprout className="mr-2 h-4 w-4" />
-                      सुझाव प्राप्त करें
+                      {t('get_suggestion')}
                     </>
                   )}
                 </Button>
@@ -221,7 +223,7 @@ export function CropRecommendation() {
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-center p-4">
                 <Sprout className="h-12 w-12 mb-2 opacity-20" />
-                <p>मिट्टी का विवरण दर्ज करें और "सुझाव प्राप्त करें" पर क्लिक करें।</p>
+                <p>{t('fill_details')}</p>
               </div>
             )}
           </div>

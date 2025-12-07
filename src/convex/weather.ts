@@ -5,8 +5,10 @@ import { v } from "convex/values";
 export const getWeather = action({
   args: {
     location: v.optional(v.string()),
+    lang: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const lang = args.lang || 'hi';
     try {
       let lat = 23.8143;
       let lon = 86.4412;
@@ -34,8 +36,19 @@ export const getWeather = action({
       if (!weatherRes.ok) throw new Error("Weather API failed");
       const weatherData = await weatherRes.json();
 
-      // Helper to map WMO codes to Hindi conditions
+      // Helper to map WMO codes to Hindi/English conditions
       const getCondition = (code: number) => {
+        if (lang === 'en') {
+            if (code === 0) return "Clear";
+            if (code >= 1 && code <= 3) return "Cloudy";
+            if (code >= 45 && code <= 48) return "Fog";
+            if (code >= 51 && code <= 67) return "Rain";
+            if (code >= 71 && code <= 77) return "Snow";
+            if (code >= 80 && code <= 82) return "Showers";
+            if (code >= 95 && code <= 99) return "Thunderstorm";
+            return "Clear";
+        }
+        // Hindi (Default)
         if (code === 0) return "धूप (Clear)";
         if (code >= 1 && code <= 3) return "बादल (Cloudy)";
         if (code >= 45 && code <= 48) return "कोहरा (Fog)";
@@ -55,21 +68,27 @@ export const getWeather = action({
       const alerts: string[] = [];
 
       // Generate Alerts based on current conditions
-      if (current.temperature_2m > 40) alerts.push("अत्यधिक गर्मी की चेतावनी (Heatwave Alert)");
-      else if (current.temperature_2m > 35) alerts.push("गर्मी की चेतावनी: तापमान अधिक है।");
-      
-      if (current.temperature_2m < 5) alerts.push("शीत लहर की चेतावनी (Cold Wave Alert)");
-      
-      if (current.precipitation > 50) alerts.push("भारी बारिश की चेतावनी (Heavy Rain Alert)");
-      else if (current.precipitation > 10) alerts.push("बारिश की संभावना है।");
-      
-      if (current.wind_speed_10m > 30) alerts.push("तेज़ हवाओं की चेतावनी (High Wind Alert)");
-
-      if (current.relative_humidity_2m > 90) alerts.push("उच्च आर्द्रता: फफूंद रोगों का खतरा।");
+      if (lang === 'en') {
+        if (current.temperature_2m > 40) alerts.push("Heatwave Alert");
+        else if (current.temperature_2m > 35) alerts.push("High Temperature Alert");
+        if (current.temperature_2m < 5) alerts.push("Cold Wave Alert");
+        if (current.precipitation > 50) alerts.push("Heavy Rain Alert");
+        else if (current.precipitation > 10) alerts.push("Rain Expected");
+        if (current.wind_speed_10m > 30) alerts.push("High Wind Alert");
+        if (current.relative_humidity_2m > 90) alerts.push("High Humidity: Risk of fungal diseases.");
+      } else {
+        if (current.temperature_2m > 40) alerts.push("अत्यधिक गर्मी की चेतावनी (Heatwave Alert)");
+        else if (current.temperature_2m > 35) alerts.push("गर्मी की चेतावनी: तापमान अधिक है।");
+        if (current.temperature_2m < 5) alerts.push("शीत लहर की चेतावनी (Cold Wave Alert)");
+        if (current.precipitation > 50) alerts.push("भारी बारिश की चेतावनी (Heavy Rain Alert)");
+        else if (current.precipitation > 10) alerts.push("बारिश की संभावना है।");
+        if (current.wind_speed_10m > 30) alerts.push("तेज़ हवाओं की चेतावनी (High Wind Alert)");
+        if (current.relative_humidity_2m > 90) alerts.push("उच्च आर्द्रता: फफूंद रोगों का खतरा।");
+      }
 
       daily.time.forEach((time: string, index: number) => {
         const date = new Date(time);
-        const dayName = date.toLocaleDateString('hi-IN', { weekday: 'long' });
+        const dayName = date.toLocaleDateString(lang === 'en' ? 'en-IN' : 'hi-IN', { weekday: 'long' });
         const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
         const code = daily.weather_code[index];
         const maxTemp = daily.temperature_2m_max[index];
@@ -125,15 +144,15 @@ export const getWeather = action({
         return Array.from({ length: count }).map((_, i) => {
           const date = new Date();
           date.setDate(date.getDate() + (isPast ? -count + i : i));
-          const dayName = date.toLocaleDateString('hi-IN', { weekday: 'long' });
+          const dayName = date.toLocaleDateString(lang === 'en' ? 'en-IN' : 'hi-IN', { weekday: 'long' });
           const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
           const fTemp = 24 + Math.random() * 10 - 5; 
           const fRain = Math.random() * 20;
           const fHumidity = 50 + Math.random() * 40;
           
-          let condition = "धूप";
-          if (fRain > 10) condition = "बारिश";
-          else if (fRain > 5) condition = "बादल";
+          let condition = lang === 'en' ? "Sunny" : "धूप";
+          if (fRain > 10) condition = lang === 'en' ? "Rain" : "बारिश";
+          else if (fRain > 5) condition = lang === 'en' ? "Cloudy" : "बादल";
 
           return {
             date: date.toISOString().split('T')[0],
@@ -150,15 +169,15 @@ export const getWeather = action({
       };
 
       const alerts = [];
-      if (temp > 35) alerts.push("गर्मी की चेतावनी (Simulation)");
-      if (rain > 10) alerts.push("बारिश की संभावना (Simulation)");
+      if (temp > 35) alerts.push(lang === 'en' ? "Heat Alert (Simulation)" : "गर्मी की चेतावनी (Simulation)");
+      if (rain > 10) alerts.push(lang === 'en' ? "Rain Expected (Simulation)" : "बारिश की संभावना (Simulation)");
 
       return {
         temp: Math.round(temp * 10) / 10,
         humidity: Math.round(humidity),
         windSpeed: Math.round(wind * 10) / 10,
         rainChance: Math.round(rain),
-        condition: rain > 20 ? "बादल छाए रहेंगे" : "धूप",
+        condition: rain > 20 ? (lang === 'en' ? "Cloudy" : "बादल छाए रहेंगे") : (lang === 'en' ? "Sunny" : "धूप"),
         location: args.location || "IIT Dhanbad, Jharkhand",
         forecast: generateDays(7, false),
         history: generateDays(30, true),
