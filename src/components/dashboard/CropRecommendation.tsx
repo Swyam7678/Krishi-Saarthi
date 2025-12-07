@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { api } from "@/convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "convex/react";
-import { BrainCircuit, Loader2, Sprout } from "lucide-react";
+import { BrainCircuit, Loader2, Sprout, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,6 +40,7 @@ export function CropRecommendation() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setResult(null); // Clear previous result while loading
       const response = await generateRecommendation(values);
       setResult(response);
       toast.success("सिफारिश तैयार है!");
@@ -153,25 +154,38 @@ export function CropRecommendation() {
                   )}
                 />
               </div>
-              <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    विश्लेषण कर रहा है...
-                  </>
-                ) : (
-                  <>
-                    <Sprout className="mr-2 h-4 w-4" />
-                    सुझाव प्राप्त करें
-                  </>
-                )}
-              </Button>
+              <div className="flex gap-2">
+                <Button type="submit" className="flex-1 bg-purple-600 hover:bg-purple-700" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      विश्लेषण कर रहा है...
+                    </>
+                  ) : (
+                    <>
+                      <Sprout className="mr-2 h-4 w-4" />
+                      सुझाव प्राप्त करें
+                    </>
+                  )}
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => {
+                    form.reset();
+                    setResult(null);
+                  }}
+                  disabled={form.formState.isSubmitting}
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              </div>
             </form>
           </Form>
 
-          <div className="bg-muted/30 rounded-lg p-4 overflow-y-auto max-h-[400px]">
+          <div className="bg-muted/30 rounded-lg p-4 overflow-y-auto max-h-[400px] custom-scrollbar">
             {result ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none">
+              <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500">
                 <ReactMarkdown>{result}</ReactMarkdown>
               </div>
             ) : (
