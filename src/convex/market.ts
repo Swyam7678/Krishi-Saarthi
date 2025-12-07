@@ -9,6 +9,7 @@ interface MarketItem {
   max: number;
   avg: number;
   current: number;
+  history: { date: string; price: number }[];
 }
 
 export const getMarketPrices = action({
@@ -18,18 +19,27 @@ export const getMarketPrices = action({
   handler: async (ctx, args) => {
     const location = args.location || "Jharkhand, India";
 
+    // Helper to generate mock history based on current price
+    const generateHistory = (basePrice: number) => {
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+      return months.map((month, i) => ({
+        date: month,
+        price: Math.round(basePrice * (1 + (Math.random() * 0.2 - 0.1))) // +/- 10% variation
+      }));
+    };
+
     // Fallback data defined first so it can be used in catch block
     const fallbackCrops: MarketItem[] = [
-      { name: "गेहूँ (Wheat)", min: 2100, max: 2400, avg: 2250, current: 2250 },
-      { name: "चावल (Rice)", min: 2800, max: 3200, avg: 3000, current: 3000 },
-      { name: "मक्का (Maize)", min: 1800, max: 2100, avg: 1950, current: 1950 },
-      { name: "गन्ना (Sugarcane)", min: 300, max: 350, avg: 325, current: 325 },
-      { name: "सोयाबीन (Soybean)", min: 4500, max: 5200, avg: 4850, current: 4850 },
-      { name: "सरसों (Mustard)", min: 5000, max: 5600, avg: 5300, current: 5300 },
-      { name: "आलू (Potato)", min: 800, max: 1200, avg: 1000, current: 1000 },
-      { name: "प्याज (Onion)", min: 1500, max: 2500, avg: 2000, current: 2000 },
-      { name: "टमाटर (Tomato)", min: 1000, max: 2000, avg: 1500, current: 1500 },
-    ];
+      { name: "गेहूँ (Wheat)", min: 2100, max: 2400, avg: 2250, current: 2250, history: [] },
+      { name: "चावल (Rice)", min: 2800, max: 3200, avg: 3000, current: 3000, history: [] },
+      { name: "मक्का (Maize)", min: 1800, max: 2100, avg: 1950, current: 1950, history: [] },
+      { name: "गन्ना (Sugarcane)", min: 300, max: 350, avg: 325, current: 325, history: [] },
+      { name: "सोयाबीन (Soybean)", min: 4500, max: 5200, avg: 4850, current: 4850, history: [] },
+      { name: "सरसों (Mustard)", min: 5000, max: 5600, avg: 5300, current: 5300, history: [] },
+      { name: "आलू (Potato)", min: 800, max: 1200, avg: 1000, current: 1000, history: [] },
+      { name: "प्याज (Onion)", min: 1500, max: 2500, avg: 2000, current: 2000, history: [] },
+      { name: "टमाटर (Tomato)", min: 1000, max: 2000, avg: 1500, current: 1500, history: [] },
+    ].map(crop => ({ ...crop, history: generateHistory(crop.avg) }));
 
     try {
       const prompt = `
