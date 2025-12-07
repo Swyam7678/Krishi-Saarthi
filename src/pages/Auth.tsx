@@ -223,7 +223,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       {error}
                     </p>
                   )}
-                  <p className="text-sm text-muted-foreground text-center mt-4">
+                  <div className="text-sm text-muted-foreground text-center mt-4">
                     Code not received?{" "}
                     <Button
                       variant="link"
@@ -232,7 +232,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     >
                       {t('resend')}
                     </Button>
-                  </p>
+                  </div>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
                   <Button

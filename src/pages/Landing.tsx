@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Sprout, CloudSun, TrendingUp, BrainCircuit } from "lucide-react";
 import { Link } from "react-router";
 import { useLanguage } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 export default function Landing() {
   const { t } = useLanguage();
@@ -15,11 +16,9 @@ export default function Landing() {
           <Sprout className="h-8 w-8" />
           {t('app_name')}
         </div>
-        <Button asChild>
-          <Link to="/auth">
-            {t('login_title')}
-          </Link>
-        </Button>
+        <Link to="/auth" className={buttonVariants({ variant: "default" })}>
+          {t('login_title')}
+        </Link>
       </header>
 
       <main className="flex-1">
@@ -31,11 +30,9 @@ export default function Landing() {
             {t('hero_desc')}
           </p>
           <div className="flex justify-center gap-4 pt-4">
-            <Button asChild size="lg" className="gap-2">
-              <Link to="/auth">
-                {t('get_started')} <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
+            <Link to="/auth" className={cn(buttonVariants({ size: "lg" }), "gap-2")}>
+              {t('get_started')} <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </section>
 
