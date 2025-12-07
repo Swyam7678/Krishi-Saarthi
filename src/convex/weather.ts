@@ -27,8 +27,8 @@ export const getWeather = action({
         }
       }
 
-      // Weather API Fetch (Open-Meteo)
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`;
+      // Weather API Fetch (Open-Meteo) - Added past_days=30 and precipitation_sum
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum&timezone=auto&past_days=30`;
       
       const weatherRes = await fetch(weatherUrl);
       if (!weatherRes.ok) throw new Error("Weather API failed");
@@ -48,30 +48,49 @@ export const getWeather = action({
 
       const current = weatherData.current;
       const daily = weatherData.daily;
+      const todayStr = new Date().toISOString().split('T')[0];
 
-      const forecast = daily.time.map((time: string, index: number) => {
+      const forecast: any[] = [];
+      const history: any[] = [];
+
+      daily.time.forEach((time: string, index: number) => {
         const date = new Date(time);
         const dayName = date.toLocaleDateString('hi-IN', { weekday: 'long' });
+        const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
         const code = daily.weather_code[index];
         const maxTemp = daily.temperature_2m_max[index];
         const minTemp = daily.temperature_2m_min[index];
         const avgTemp = (maxTemp + minTemp) / 2;
-        
-        return {
+        const rainSum = daily.precipitation_sum[index];
+        const rainProb = daily.precipitation_probability_max?.[index];
+
+        const item = {
+          date: time,
           day: dayName,
+          shortDate,
           temp: Math.round(avgTemp),
+          maxTemp: Math.round(maxTemp),
+          minTemp: Math.round(minTemp),
+          rain: rainSum,
           condition: getCondition(code)
         };
+
+        if (time < todayStr) {
+          history.push(item);
+        } else {
+          forecast.push(item);
+        }
       });
 
       return {
         temp: Math.round(current.temperature_2m),
         humidity: Math.round(current.relative_humidity_2m),
         windSpeed: Math.round(current.wind_speed_10m),
-        rainChance: Math.round(daily.precipitation_probability_max?.[0] ?? 0),
+        rainChance: Math.round(daily.precipitation_probability_max?.[forecast.length > 0 ? daily.time.indexOf(forecast[0].date) : 0] ?? 0),
         condition: getCondition(current.weather_code),
         location: locationName,
-        forecast: forecast
+        forecast: forecast.slice(0, 7), // Next 7 days
+        history: history // Past 30 days
       };
 
     } catch (error: any) {
@@ -86,23 +105,31 @@ export const getWeather = action({
       const wind = 5 + Math.random() * 10;
       const rain = Math.random() * 30;
 
-      const forecast = Array.from({ length: 7 }).map((_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() + i);
-        const dayName = date.toLocaleDateString('hi-IN', { weekday: 'long' });
-        const fTemp = 24 + Math.random() * 10 - 5; 
-        const fRain = Math.random() * 100;
-        
-        let condition = "धूप";
-        if (fRain > 60) condition = "बारिश";
-        else if (fRain > 30) condition = "बादल";
+      const generateDays = (count: number, isPast: boolean) => {
+        return Array.from({ length: count }).map((_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() + (isPast ? -count + i : i));
+          const dayName = date.toLocaleDateString('hi-IN', { weekday: 'long' });
+          const shortDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+          const fTemp = 24 + Math.random() * 10 - 5; 
+          const fRain = Math.random() * 20;
+          
+          let condition = "धूप";
+          if (fRain > 10) condition = "बारिश";
+          else if (fRain > 5) condition = "बादल";
 
-        return {
-          day: dayName,
-          temp: Math.round(fTemp),
-          condition: condition
-        };
-      });
+          return {
+            date: date.toISOString().split('T')[0],
+            day: dayName,
+            shortDate,
+            temp: Math.round(fTemp),
+            maxTemp: Math.round(fTemp + 5),
+            minTemp: Math.round(fTemp - 5),
+            rain: Math.round(fRain),
+            condition: condition
+          };
+        });
+      };
 
       return {
         temp: Math.round(temp * 10) / 10,
@@ -111,7 +138,8 @@ export const getWeather = action({
         rainChance: Math.round(rain),
         condition: rain > 20 ? "बादल छाए रहेंगे" : "धूप",
         location: args.location || "IIT Dhanbad, Jharkhand",
-        forecast: forecast
+        forecast: generateDays(7, false),
+        history: generateDays(30, true)
       };
     }
   },

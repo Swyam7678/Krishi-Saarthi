@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake, MapPin } from "lucide-react";
+import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake, MapPin, CalendarDays, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,10 +12,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 interface ForecastDay {
   day: string;
+  shortDate: string;
   temp: number;
+  maxTemp: number;
+  minTemp: number;
+  rain: number;
   condition: string;
 }
 
@@ -27,6 +33,7 @@ interface WeatherData {
   condition: string;
   location: string;
   forecast?: ForecastDay[];
+  history?: ForecastDay[];
 }
 
 interface WeatherCardProps {
@@ -46,7 +53,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
     }
 
     if (onLocationChange && newLocation.trim()) {
-      onLocationChange(newLocation);
+      onLocationChange(newLocation.trim());
       setOpen(false);
       setNewLocation("");
       setError("");
@@ -74,7 +81,10 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
     <Card className="h-full flex flex-col border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center text-lg">
-          <span>मौसम का हाल</span>
+          <div className="flex items-center gap-2">
+            <Sun className="h-5 w-5 text-blue-600" />
+            <span>मौसम का हाल</span>
+          </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-normal text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]" title={data.location}>
               {data.location}
@@ -118,54 +128,128 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-              <Thermometer className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <div className="text-3xl font-bold">{data.temp}°C</div>
-              <div className="text-sm text-muted-foreground">{data.condition}</div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
-            <Droplets className="h-4 w-4 mb-1 text-blue-500" />
-            <span className="text-sm font-semibold">{data.humidity}%</span>
-            <span className="text-xs text-muted-foreground">नमी</span>
-          </div>
-          <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
-            <CloudRain className="h-4 w-4 mb-1 text-blue-500" />
-            <span className="text-sm font-semibold">{data.rainChance}%</span>
-            <span className="text-xs text-muted-foreground">बारिश</span>
-          </div>
-          <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
-            <Wind className="h-4 w-4 mb-1 text-blue-500" />
-            <span className="text-sm font-semibold">{data.windSpeed} km/h</span>
-            <span className="text-xs text-muted-foreground">हवा</span>
-          </div>
-        </div>
+      <CardContent className="flex-1 flex flex-col min-h-0">
+        <Tabs defaultValue="current" className="flex-1 flex flex-col min-h-0">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="current" className="gap-2">
+              <CalendarDays className="h-4 w-4" />
+              पूर्वानुमान
+            </TabsTrigger>
+            <TabsTrigger value="history" className="gap-2">
+              <History className="h-4 w-4" />
+              इतिहास
+            </TabsTrigger>
+          </TabsList>
 
-        {data.forecast && (
-          <div className="flex-1 flex flex-col min-h-0">
-            <h4 className="text-sm font-semibold text-muted-foreground mb-2">आगामी 7 दिन</h4>
-            <div className="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-1">
-              {data.forecast.map((day, index) => (
-                <div key={index} className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-muted/50 transition-colors">
-                  <span className="w-24 font-medium">{day.day}</span>
-                  <div className="flex items-center gap-2">
-                    {getWeatherIcon(day.condition)}
-                    <span className="text-muted-foreground">{day.condition}</span>
-                  </div>
-                  <span className="font-bold">{day.temp}°C</span>
+          <TabsContent value="current" className="flex-1 flex flex-col min-h-0 mt-0 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                  <Thermometer className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 </div>
-              ))}
+                <div>
+                  <div className="text-3xl font-bold">{data.temp}°C</div>
+                  <div className="text-sm text-muted-foreground">{data.condition}</div>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+            
+            <div className="grid grid-cols-3 gap-4">
+              <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
+                <Droplets className="h-4 w-4 mb-1 text-blue-500" />
+                <span className="text-sm font-semibold">{data.humidity}%</span>
+                <span className="text-xs text-muted-foreground">नमी</span>
+              </div>
+              <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
+                <CloudRain className="h-4 w-4 mb-1 text-blue-500" />
+                <span className="text-sm font-semibold">{data.rainChance}%</span>
+                <span className="text-xs text-muted-foreground">बारिश</span>
+              </div>
+              <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
+                <Wind className="h-4 w-4 mb-1 text-blue-500" />
+                <span className="text-sm font-semibold">{data.windSpeed} km/h</span>
+                <span className="text-xs text-muted-foreground">हवा</span>
+              </div>
+            </div>
+
+            {data.forecast && (
+              <div className="flex-1 flex flex-col min-h-0">
+                <h4 className="text-sm font-semibold text-muted-foreground mb-2">आगामी 7 दिन</h4>
+                <div className="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-1">
+                  {data.forecast.map((day, index) => (
+                    <div key={index} className="flex items-center justify-between text-sm p-2 rounded-md hover:bg-muted/50 transition-colors">
+                      <span className="w-24 font-medium">{day.day}</span>
+                      <div className="flex items-center gap-2">
+                        {getWeatherIcon(day.condition)}
+                        <span className="text-muted-foreground">{day.condition}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold">{day.maxTemp}°</span>
+                        <span className="text-muted-foreground text-xs">{day.minTemp}°</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="history" className="flex-1 flex flex-col min-h-0 mt-0">
+            <div className="flex-1 w-full min-h-[250px]">
+              {data.history && data.history.length > 0 ? (
+                <div className="h-full flex flex-col gap-4">
+                  <div className="h-1/2 w-full">
+                    <p className="text-xs text-muted-foreground mb-2 text-center">पिछले 30 दिनों का तापमान (°C)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                        <XAxis dataKey="shortDate" fontSize={10} tickLine={false} axisLine={false} interval={6} />
+                        <YAxis fontSize={10} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
+                        <Tooltip 
+                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                          formatter={(value: number) => [`${value}°C`, 'Temp']}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="temp" 
+                          stroke="#f97316" 
+                          fillOpacity={1} 
+                          fill="url(#colorTemp)" 
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="h-1/2 w-full">
+                    <p className="text-xs text-muted-foreground mb-2 text-center">वर्षा (mm)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                        <XAxis dataKey="shortDate" fontSize={10} tickLine={false} axisLine={false} interval={6} />
+                        <YAxis fontSize={10} tickLine={false} axisLine={false} />
+                        <Tooltip 
+                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                          formatter={(value: number) => [`${value} mm`, 'Rain']}
+                          cursor={{fill: 'transparent'}}
+                        />
+                        <Bar dataKey="rain" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground">
+                  <p>इतिहास उपलब्ध नहीं है</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
