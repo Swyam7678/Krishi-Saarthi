@@ -91,7 +91,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div key={language} className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -116,7 +116,9 @@ export default function Dashboard() {
                      language === 'hi' ? 'हिंदी' :
                      language === 'pa' ? 'ਪੰਜਾਬੀ' :
                      language === 'mr' ? 'मराठी' :
-                     language === 'ta' ? 'தமிழ்' : 'English'}
+                     language === 'ta' ? 'தமிழ்' :
+                     language === 'gu' ? 'ગુજરાતી' :
+                     language === 'bn' ? 'বাংলা' : 'English'}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
@@ -126,6 +128,8 @@ export default function Dashboard() {
                 <DropdownMenuItem onClick={() => setLanguage('pa')}>ਪੰਜਾਬੀ</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage('mr')}>मराठी</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage('ta')}>தமிழ்</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage('gu')}>ગુજરાતી</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage('bn')}>বাংলা</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -163,7 +167,7 @@ export default function Dashboard() {
           <CropRecommendation />
         </div>
       </div>
-      
+
       {/* Chatbot Widget */}
       <ChatbotWidget npkData={npk} />
     </div>

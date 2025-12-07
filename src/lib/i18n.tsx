@@ -10,30 +10,25 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Initialize state from localStorage to avoid re-render on mount
-  const [language, setLanguage] = useState<Language>(() => {
-    try {
-      const savedLang = localStorage.getItem('app-language') as Language;
-      if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn'].includes(savedLang)) {
-        return savedLang;
-      }
-    } catch (e) {
-      console.error("Failed to read language from localStorage", e);
-    }
-    return 'hi'; // Default to Hindi
-  });
+  const [language, setLanguage] = useState<Language>('hi'); // Default to Hindi
 
-  const handleSetLanguage = useCallback((lang: Language) => {
-    setLanguage(lang);
-    try {
-      localStorage.setItem('app-language', lang);
-    } catch (e) {
-      console.error("Failed to save language to localStorage", e);
+  useEffect(() => {
+    const savedLang = localStorage.getItem('app-language') as Language;
+    // Allow any valid language from the Language type
+    if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn'].includes(savedLang)) {
+      setLanguage(savedLang);
     }
   }, []);
 
+  const handleSetLanguage = useCallback((lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem('app-language', lang);
+  }, []);
+
   const t = useCallback((key: keyof typeof translations['en']) => {
-    return translations[language]?.[key] || translations['en'][key] || key;
+    // Safely access translations, fallback to English if language not found
+    const langTranslations = translations[language] || translations['en'];
+    return langTranslations[key] || translations['en'][key] || key;
   }, [language]);
 
   const value = useMemo(() => ({
