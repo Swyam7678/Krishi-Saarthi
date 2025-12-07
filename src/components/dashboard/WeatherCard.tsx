@@ -1,5 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake } from "lucide-react";
+import { Cloud, CloudRain, Droplets, Sun, Thermometer, Wind, CloudFog, CloudLightning, Snowflake, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface ForecastDay {
   day: string;
@@ -17,7 +29,23 @@ interface WeatherData {
   forecast?: ForecastDay[];
 }
 
-export function WeatherCard({ data }: { data: WeatherData | null }) {
+interface WeatherCardProps {
+  data: WeatherData | null;
+  onLocationChange?: (location: string) => void;
+}
+
+export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
+  const [newLocation, setNewLocation] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleUpdate = () => {
+    if (onLocationChange && newLocation.trim()) {
+      onLocationChange(newLocation);
+      setOpen(false);
+      setNewLocation("");
+    }
+  };
+
   if (!data) return (
     <Card className="h-full animate-pulse">
       <CardHeader><CardTitle>मौसम का हाल</CardTitle></CardHeader>
@@ -40,7 +68,43 @@ export function WeatherCard({ data }: { data: WeatherData | null }) {
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center text-lg">
           <span>मौसम का हाल</span>
-          <span className="text-sm font-normal text-muted-foreground">{data.location}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-normal text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]" title={data.location}>
+              {data.location}
+            </span>
+            {onLocationChange && (
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 hover:bg-muted">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>स्थान बदलें</DialogTitle>
+                    <DialogDescription>
+                      अपने क्षेत्र का मौसम देखने के लिए शहर का नाम दर्ज करें।
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Input
+                        id="location"
+                        placeholder="शहर का नाम (उदा. दिल्ली)"
+                        className="col-span-4"
+                        value={newLocation}
+                        onChange={(e) => setNewLocation(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleUpdate()}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button onClick={handleUpdate}>अपडेट करें</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">

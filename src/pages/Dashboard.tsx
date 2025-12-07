@@ -22,11 +22,12 @@ export default function Dashboard() {
   const [npk, setNpk] = useState<any>(null);
   const [market, setMarket] = useState<any>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [location, setLocation] = useState<string | undefined>(undefined);
 
   const fetchData = async () => {
     try {
       const [w, n, m] = await Promise.all([
-        getWeather({}),
+        getWeather({ location }),
         getNPK({}),
         getMarket({})
       ]);
@@ -44,7 +45,11 @@ export default function Dashboard() {
     fetchData();
     const interval = setInterval(fetchData, 10000); // Auto update every 10s
     return () => clearInterval(interval);
-  }, []);
+  }, [location]); // Re-fetch when location changes
+
+  const handleLocationChange = (newLocation: string) => {
+    setLocation(newLocation);
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -76,7 +81,7 @@ export default function Dashboard() {
         {/* Top Grid: Weather, NPK, Market */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="h-full">
-            <WeatherCard data={weather} />
+            <WeatherCard data={weather} onLocationChange={handleLocationChange} />
           </div>
           <div className="h-full">
             <NPKCard data={npk} />
