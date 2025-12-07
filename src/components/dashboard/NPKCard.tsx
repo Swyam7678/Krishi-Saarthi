@@ -54,9 +54,9 @@ export function NPKCard({ data }: { data: NPKData | null }) {
         <div className="space-y-6 mt-2">
           {/* Nitrogen */}
           <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="font-medium">नाइट्रोजन (N)</span>
-              <span className={getTextColor(data.status.n)}>{data.n} mg/kg ({data.status.n})</span>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">नाइट्रोजन (N)</span>
+              <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
@@ -68,9 +68,9 @@ export function NPKCard({ data }: { data: NPKData | null }) {
 
           {/* Phosphorus */}
           <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="font-medium">फॉस्फोरस (P)</span>
-              <span className={getTextColor(data.status.p)}>{data.p} mg/kg ({data.status.p})</span>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">फॉस्फोरस (P)</span>
+              <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
@@ -82,9 +82,9 @@ export function NPKCard({ data }: { data: NPKData | null }) {
 
           {/* Potassium */}
           <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="font-medium">पोटैशियम (K)</span>
-              <span className={getTextColor(data.status.k)}>{data.k} mg/kg ({data.status.k})</span>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">पोटैशियम (K)</span>
+              <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
