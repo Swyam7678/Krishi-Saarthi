@@ -1,3 +1,4 @@
+"use node";
 import { Vly } from "@vly-ai/integrations";
 
 export const vly = new Vly({

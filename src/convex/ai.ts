@@ -1,7 +1,7 @@
 "use node";
 import { action } from "./_generated/server";
 import { v } from "convex/values";
-import { vly } from '../src/lib/vly-integrations';
+import { vly } from '../lib/vly-integrations';
 
 export const generateCropRecommendation = action({
   args: {
