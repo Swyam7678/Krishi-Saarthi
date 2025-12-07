@@ -9,6 +9,7 @@ import { LayoutDashboard, LogOut, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
@@ -35,9 +36,12 @@ export default function Dashboard() {
       setNpk(n);
       setMarket(m);
       setLastUpdated(new Date());
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching dashboard data:", error);
-      // Optionally show a toast or partial data
+      if (error.message && error.message.includes("Location not found")) {
+        toast.error("स्थान नहीं मिला। कृपया सही शहर का नाम दर्ज करें।");
+        setLocation(undefined); // Reset to default
+      }
     }
   };
 

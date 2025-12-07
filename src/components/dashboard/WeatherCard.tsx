@@ -37,12 +37,19 @@ interface WeatherCardProps {
 export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
   const [newLocation, setNewLocation] = useState("");
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const handleUpdate = () => {
+    if (!newLocation.trim()) {
+      setError("कृपया शहर का नाम दर्ज करें");
+      return;
+    }
+
     if (onLocationChange && newLocation.trim()) {
       onLocationChange(newLocation);
       setOpen(false);
       setNewLocation("");
+      setError("");
     }
   };
 
@@ -93,10 +100,14 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
                         placeholder="शहर का नाम (उदा. दिल्ली)"
                         className="col-span-4"
                         value={newLocation}
-                        onChange={(e) => setNewLocation(e.target.value)}
+                        onChange={(e) => {
+                          setNewLocation(e.target.value);
+                          if (error) setError("");
+                        }}
                         onKeyDown={(e) => e.key === 'Enter' && handleUpdate()}
                       />
                     </div>
+                    {error && <p className="text-sm text-red-500">{error}</p>}
                   </div>
                   <DialogFooter>
                     <Button onClick={handleUpdate}>अपडेट करें</Button>

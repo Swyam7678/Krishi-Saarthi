@@ -22,6 +22,8 @@ export const getWeather = action({
           lat = geoData.results[0].latitude;
           lon = geoData.results[0].longitude;
           locationName = `${geoData.results[0].name}, ${geoData.results[0].country}`;
+        } else {
+          throw new Error("Location not found");
         }
       }
 
@@ -72,7 +74,10 @@ export const getWeather = action({
         forecast: forecast
       };
 
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === "Location not found") {
+        throw new Error("Location not found");
+      }
       console.error("Weather API Error, falling back to simulation:", error);
       
       // Fallback Simulation
