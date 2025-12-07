@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Sprout, TrendingDown, TrendingUp, Settings, Link as LinkIcon, RotateCcw } from "lucide-react";
+import { Activity, Sprout, TrendingDown, TrendingUp, Settings, Link as LinkIcon, RotateCcw, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,6 +28,8 @@ interface NPKData {
     p: "up" | "down";
     k: "up" | "down";
   };
+  isFallback?: boolean;
+  error?: string;
 }
 
 interface NPKCardProps {
@@ -101,10 +103,17 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
             <span>मिट्टी के पोषक तत्व (NPK)</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
-              <Activity className="h-3 w-3 animate-pulse" />
-              लाइव सेंसर
-            </div>
+            {data.isFallback && currentUrl ? (
+              <div className="flex items-center gap-1 text-xs font-normal bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-1 rounded-full" title={data.error}>
+                <AlertTriangle className="h-3 w-3" />
+                सिमुलेशन (त्रुटि)
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
+                <Activity className="h-3 w-3 animate-pulse" />
+                {data.isFallback ? "सिमुलेशन" : "लाइव सेंसर"}
+              </div>
+            )}
             {onSheetUrlChange && (
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>

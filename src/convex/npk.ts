@@ -66,6 +66,14 @@ export const getLiveNPK = action({
       const p = parseFloat(lastRow[pIndex]);
       const k = parseFloat(lastRow[kIndex]);
 
+      // Validate values
+      if (isNaN(n) || isNaN(p) || isNaN(k)) {
+        throw new Error("Invalid number format in NPK columns");
+      }
+      if (n < 0 || p < 0 || k < 0) {
+        throw new Error("NPK values cannot be negative");
+      }
+
       // Calculate trend if previous row exists
       let trendN: "up" | "down" = "up";
       let trendP: "up" | "down" = "up";
@@ -95,10 +103,11 @@ export const getLiveNPK = action({
           n: trendN,
           p: trendP,
           k: trendK,
-        }
+        },
+        isFallback: false
       };
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching sheet data, falling back to simulation:", error);
       
       // Fallback Simulation
@@ -122,7 +131,9 @@ export const getLiveNPK = action({
           n: getTrend(),
           p: getTrend(),
           k: getTrend(),
-        }
+        },
+        isFallback: true,
+        error: error.message || "Failed to fetch data"
       };
     }
   },
