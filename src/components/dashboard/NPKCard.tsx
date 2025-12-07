@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Sprout, TrendingDown, TrendingUp, Settings, Link as LinkIcon, RotateCcw, AlertTriangle } from "lucide-react";
+import { Sprout, Activity, AlertCircle, Droplets } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -11,33 +12,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState, useEffect } from "react";
-import { FileSpreadsheet, Info } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useState } from "react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useLanguage } from "@/lib/i18n";
 
 interface NPKData {
   n: number;
   p: number;
   k: number;
+  moisture?: number;
+  timestamp: number;
   status: {
     n: string;
     p: string;
     k: string;
+    moisture?: string;
   };
-  trend?: {
+  trend: {
     n: "up" | "down";
     p: "up" | "down";
     k: "up" | "down";
   };
-  history?: {
-    n: number;
-    p: number;
-    k: number;
-    time: string;
-  }[];
-  isFallback?: boolean;
+  history: any[];
+  isFallback: boolean;
   error?: string;
 }
 
@@ -52,49 +49,11 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
   const [open, setOpen] = useState(false);
   const { t } = useLanguage();
 
-  useEffect(() => {
-    if (open) {
-      setNewUrl(currentUrl || "");
-    }
-  }, [open, currentUrl]);
-
   const handleUpdate = () => {
-    if (onSheetUrlChange && newUrl.trim()) {
-      onSheetUrlChange(newUrl.trim());
-      setOpen(false);
-    }
-  };
-
-  const handleReset = () => {
     if (onSheetUrlChange) {
-      onSheetUrlChange(undefined);
+      onSheetUrlChange(newUrl.trim() || undefined);
       setOpen(false);
     }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Optimal": return "bg-green-500";
-      case "Moderate": return "bg-yellow-500";
-      default: return "bg-red-500";
-    }
-  };
-
-  const getTextColor = (status: string) => {
-    switch (status) {
-      case "Optimal": return "text-green-600 dark:text-green-400";
-      case "Moderate": return "text-yellow-600 dark:text-yellow-400";
-      default: return "text-red-600 dark:text-red-400";
-    }
-  };
-
-  const TrendIcon = ({ direction }: { direction?: "up" | "down" }) => {
-    if (!direction) return null;
-    return direction === "up" ? (
-      <TrendingUp className="h-3 w-3 text-green-500 ml-1" />
-    ) : (
-      <TrendingDown className="h-3 w-3 text-red-500 ml-1" />
-    );
   };
 
   if (!data) return (
@@ -113,73 +72,45 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
             <span>{t('npk_title')}</span>
           </div>
           <div className="flex items-center gap-2">
-            {data.isFallback && currentUrl ? (
-              <div className="flex items-center gap-1 text-xs font-normal bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-1 rounded-full" title={data.error}>
-                <AlertTriangle className="h-3 w-3" />
-                {t('simulation_error')}
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
-                <Activity className="h-3 w-3 animate-pulse" />
-                {data.isFallback ? t('simulation') : t('live_sensor')}
-              </div>
-            )}
+            <Badge variant={data.isFallback ? "secondary" : "default"} className="text-xs">
+              {data.isFallback ? (data.error ? t('simulation_error') : t('simulation')) : t('live_sensor')}
+            </Badge>
             {onSheetUrlChange && (
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-6 w-6 hover:bg-muted">
-                    <Settings className="h-4 w-4 text-muted-foreground" />
+                    <Activity className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>{t('data_source')}</DialogTitle>
                     <DialogDescription>
-                      {t('sheet_url')}
+                      {t('sheet_instruction')} <code>Nitrogen, Phosphorus, Potassium, Moisture, Timestamp</code>
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">{t('sheet_url')}</label>
                       <Input
-                        id="url"
-                        placeholder="Google Sheet URL..."
-                        className="col-span-4"
+                        placeholder="https://docs.google.com/spreadsheets/d/..."
                         value={newUrl}
                         onChange={(e) => setNewUrl(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleUpdate()}
                       />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {t('current_source')}: {currentUrl ? t('custom_sheet') : t('default_source')}
-                    </p>
-                    
-                    <div className="bg-muted/50 p-3 rounded-md text-xs space-y-2 border border-border">
-                      <div className="flex items-center gap-2 font-medium text-foreground">
-                        <FileSpreadsheet className="h-3.5 w-3.5" />
-                        {t('required_format')}
-                      </div>
-                      <p>{t('sheet_instruction')}</p>
-                      <div className="grid grid-cols-3 gap-2 font-mono bg-background p-2 rounded border text-center">
-                        <div className="bg-muted/30 rounded px-1">Nitrogen</div>
-                        <div className="bg-muted/30 rounded px-1">Phosphorus</div>
-                        <div className="bg-muted/30 rounded px-1">Potassium</div>
-                      </div>
-                      <div className="flex gap-2 items-start text-muted-foreground">
-                        <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-                        <span>
-                          {t('share_instruction')}
-                        </span>
-                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {t('share_instruction')}
+                      </p>
                     </div>
                   </div>
                   <DialogFooter>
-                    {currentUrl && (
-                        <Button variant="outline" onClick={handleReset} className="mr-auto gap-2">
-                            <RotateCcw className="h-4 w-4" />
-                            {t('reset')}
-                        </Button>
-                    )}
-                    <Button onClick={handleUpdate}>{t('update_btn')}</Button>
+                    <Button variant="outline" onClick={() => {
+                      setNewUrl("");
+                      if (onSheetUrlChange) {
+                        onSheetUrlChange(undefined);
+                        setOpen(false);
+                      }
+                    }}>{t('reset')}</Button>
+                    <Button onClick={handleUpdate}>{t('save')}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -188,91 +119,97 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
-        <Tabs defaultValue="overview" className="flex-1 flex flex-col min-h-0">
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="overview">{t('overview')}</TabsTrigger>
-            <TabsTrigger value="history">{t('history')}</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview" className="flex-1 flex flex-col justify-center space-y-6 mt-0">
-            {/* Nitrogen */}
-            <div className="space-y-1">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">{t('nitrogen')}</span>
-                <div className="flex items-center">
-                  <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
-                  {data.trend && <TrendIcon direction={data.trend.n} />}
-                </div>
-              </div>
-              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                <div 
-                  className={`h-full ${getStatusColor(data.status.n)} transition-all duration-1000`} 
-                  style={{ width: `${Math.min(data.n / 2, 100)}%` }}
-                />
-              </div>
-            </div>
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+            <span className="text-xs font-medium text-muted-foreground mb-1">N</span>
+            <span className="text-2xl font-bold text-green-700 dark:text-green-400">{data.n}</span>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+              data.status.n === 'Optimal' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
+            }`}>
+              {data.status.n}
+            </span>
+          </div>
+          <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+            <span className="text-xs font-medium text-muted-foreground mb-1">P</span>
+            <span className="text-2xl font-bold text-green-700 dark:text-green-400">{data.p}</span>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+              data.status.p === 'Optimal' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
+            }`}>
+              {data.status.p}
+            </span>
+          </div>
+          <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+            <span className="text-xs font-medium text-muted-foreground mb-1">K</span>
+            <span className="text-2xl font-bold text-green-700 dark:text-green-400">{data.k}</span>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+              data.status.k === 'Optimal' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
+            }`}>
+              {data.status.k}
+            </span>
+          </div>
+        </div>
 
-            {/* Phosphorus */}
-            <div className="space-y-1">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">{t('phosphorus')}</span>
-                <div className="flex items-center">
-                  <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
-                  {data.trend && <TrendIcon direction={data.trend.p} />}
-                </div>
-              </div>
-              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                <div 
-                  className={`h-full ${getStatusColor(data.status.p)} transition-all duration-1000`} 
-                  style={{ width: `${Math.min(data.p / 2, 100)}%` }}
-                />
-              </div>
+        {data.moisture !== undefined && (
+          <div className="mb-4 flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+            <div className="flex items-center gap-2">
+              <Droplets className="h-5 w-5 text-blue-500" />
+              <span className="text-sm font-medium">{t('moisture')}</span>
             </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-blue-700 dark:text-blue-400">{data.moisture}%</span>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                data.status.moisture === 'Optimal' ? 'bg-blue-200 text-blue-800' : 'bg-yellow-200 text-yellow-800'
+              }`}>
+                {data.status.moisture}
+              </span>
+            </div>
+          </div>
+        )}
 
-            {/* Potassium */}
-            <div className="space-y-1">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">{t('potassium')}</span>
-                <div className="flex items-center">
-                  <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
-                  {data.trend && <TrendIcon direction={data.trend.k} />}
-                </div>
-              </div>
-              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                <div 
-                  className={`h-full ${getStatusColor(data.status.k)} transition-all duration-1000`} 
-                  style={{ width: `${Math.min(data.k / 3, 100)}%` }}
-                />
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="history" className="flex-1 min-h-0 mt-0">
-            <div className="h-full w-full min-h-[200px]">
-              {data.history && data.history.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                    <XAxis dataKey="time" hide />
-                    <YAxis fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                      labelStyle={{ color: '#666', marginBottom: '4px' }}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                    <Line type="monotone" dataKey="n" stroke="#22c55e" strokeWidth={2} dot={false} name="Nitrogen" />
-                    <Line type="monotone" dataKey="p" stroke="#eab308" strokeWidth={2} dot={false} name="Phosphorus" />
-                    <Line type="monotone" dataKey="k" stroke="#3b82f6" strokeWidth={2} dot={false} name="Potassium" />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                  {t('no_history')}
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
+        <div className="flex-1 min-h-[150px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorN" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+              <XAxis dataKey="time" fontSize={10} tickLine={false} axisLine={false} interval={4} />
+              <YAxis fontSize={10} tickLine={false} axisLine={false} />
+              <Tooltip 
+                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="n" 
+                stackId="1" 
+                stroke="#22c55e" 
+                fill="url(#colorN)" 
+                name="Nitrogen"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="p" 
+                stackId="1" 
+                stroke="#eab308" 
+                fill="#eab308" 
+                fillOpacity={0.3}
+                name="Phosphorus"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="k" 
+                stackId="1" 
+                stroke="#f97316" 
+                fill="#f97316" 
+                fillOpacity={0.3}
+                name="Potassium"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );

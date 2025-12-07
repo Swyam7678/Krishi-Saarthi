@@ -52,6 +52,7 @@ export const translations = {
     nitrogen: "Nitrogen (N)",
     phosphorus: "Phosphorus (P)",
     potassium: "Potassium (K)",
+    moisture: "Soil Moisture",
     
     // Market
     market_title: "Mandi Prices",
@@ -156,6 +157,7 @@ export const translations = {
     nitrogen: "नाइट्रोजन (N)",
     phosphorus: "फॉस्फोरस (P)",
     potassium: "पोटैशियम (K)",
+    moisture: "मिट्टी की नमी",
 
     // Market
     market_title: "मंडी भाव",

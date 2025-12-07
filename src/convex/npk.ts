@@ -33,6 +33,7 @@ export const getLiveNPK = action({
       const nIndex = headers.findIndex(h => h.includes('nitrogen'));
       const pIndex = headers.findIndex(h => h.includes('phosphorus'));
       const kIndex = headers.findIndex(h => h.includes('potassium'));
+      const moistureIndex = headers.findIndex(h => h.includes('moisture') || h.includes('water'));
       const timeIndex = headers.findIndex(h => h.includes('timestamp') || h.includes('date') || h.includes('time'));
       
       if (nIndex === -1 || pIndex === -1 || kIndex === -1) {
@@ -54,6 +55,7 @@ export const getLiveNPK = action({
             const nVal = parseFloat(row[nIndex]);
             const pVal = parseFloat(row[pIndex]);
             const kVal = parseFloat(row[kIndex]);
+            const moistureVal = moistureIndex !== -1 ? parseFloat(row[moistureIndex]) : undefined;
             
             let timeLabel = `Reading ${i}`;
             if (timeIndex !== -1 && row[timeIndex]) {
@@ -75,6 +77,7 @@ export const getLiveNPK = action({
                     n: Math.round(nVal * 10) / 10,
                     p: Math.round(pVal * 10) / 10,
                     k: Math.round(kVal * 10) / 10,
+                    moisture: moistureVal !== undefined ? Math.round(moistureVal * 10) / 10 : undefined,
                     time: timeLabel
                  });
             }
@@ -90,6 +93,7 @@ export const getLiveNPK = action({
       const n = latest.n;
       const p = latest.p;
       const k = latest.k;
+      const moisture = latest.moisture;
 
       // Calculate trend if previous row exists
       let trendN: "up" | "down" = "up";
@@ -107,11 +111,13 @@ export const getLiveNPK = action({
         n,
         p,
         k,
+        moisture,
         timestamp: Date.now(),
         status: {
           n: n < 100 ? "Low" : n > 200 ? "High" : "Optimal",
           p: p < 100 ? "Low" : p > 200 ? "High" : "Optimal",
           k: k < 150 ? "Low" : k > 300 ? "High" : "Optimal",
+          moisture: moisture !== undefined ? (moisture < 30 ? "Low" : moisture > 70 ? "High" : "Optimal") : undefined,
         },
         trend: {
           n: trendN,
@@ -129,6 +135,7 @@ export const getLiveNPK = action({
       const n = 173 + (Math.random() * 4 - 2); 
       const p = 192 + (Math.random() * 4 - 2); 
       const k = 240 + (Math.random() * 4 - 2); 
+      const moisture = 45 + (Math.random() * 10 - 5);
 
       const getTrend = () => Math.random() > 0.5 ? "up" : "down";
 
@@ -137,6 +144,7 @@ export const getLiveNPK = action({
         n: Math.round((173 + (Math.random() * 20 - 10)) * 10) / 10,
         p: Math.round((192 + (Math.random() * 20 - 10)) * 10) / 10,
         k: Math.round((240 + (Math.random() * 20 - 10)) * 10) / 10,
+        moisture: Math.round((45 + (Math.random() * 10 - 5)) * 10) / 10,
         time: `T-${9-i}`
       }));
       
@@ -145,6 +153,7 @@ export const getLiveNPK = action({
           n: Math.round(n * 10) / 10,
           p: Math.round(p * 10) / 10,
           k: Math.round(k * 10) / 10,
+          moisture: Math.round(moisture * 10) / 10,
           time: "Now"
       };
 
@@ -152,11 +161,13 @@ export const getLiveNPK = action({
         n: Math.round(n * 10) / 10,
         p: Math.round(p * 10) / 10,
         k: Math.round(k * 10) / 10,
+        moisture: Math.round(moisture * 10) / 10,
         timestamp: Date.now(),
         status: {
           n: n < 100 ? "Low" : n > 200 ? "High" : "Optimal",
           p: p < 100 ? "Low" : p > 200 ? "High" : "Optimal",
           k: k < 150 ? "Low" : k > 300 ? "High" : "Optimal",
+          moisture: moisture < 30 ? "Low" : moisture > 70 ? "High" : "Optimal",
         },
         trend: {
           n: getTrend(),

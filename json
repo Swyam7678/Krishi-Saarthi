@@ -1,8 +1,6 @@
 {
   "file_paths": [
-    "src/convex/npk.ts",
-    "src/components/dashboard/NPKCard.tsx",
-    "src/lib/translations.ts"
+    "src/convex/npk.ts"
   ],
   "replace_files_in_context": false
 }
