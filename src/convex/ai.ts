@@ -16,31 +16,39 @@ export const generateCropRecommendation = action({
   },
   handler: async (ctx, args) => {
     const prompt = `
-      As an expert agriculturalist, recommend the best crops to grow based on the following soil and environmental conditions:
-      
-      Nitrogen (N): ${args.nitrogen}
-      Phosphorus (P): ${args.phosphorus}
-      Potassium (K): ${args.potassium}
-      Soil Type: ${args.soilType}
-      pH Level: ${args.ph}
-      Rainfall: ${args.rainfall} mm
-      Temperature: ${args.temperature}°C
-      Humidity: ${args.humidity}%
+      Act as a senior agricultural scientist and expert farmer (Krishi Vigyanik) for Indian agriculture.
+      Analyze the following field conditions to recommend the most suitable crops:
 
-      Please provide:
-      1. Top 3 recommended crops.
-      2. A brief reasoning for why these crops are suitable, specifically referencing the NPK, pH, and soil values provided.
-      3. Fertilizer suggestions to improve yield.
-      
-      IMPORTANT: Provide the response in HINDI language.
-      Format the response clearly in Markdown.
+      **Soil & Environment Profile:**
+      - Nitrogen (N): ${args.nitrogen} mg/kg
+      - Phosphorus (P): ${args.phosphorus} mg/kg
+      - Potassium (K): ${args.potassium} mg/kg
+      - Soil Type: ${args.soilType}
+      - pH Level: ${args.ph}
+      - Rainfall: ${args.rainfall} mm (Average)
+      - Temperature: ${args.temperature}°C
+      - Humidity: ${args.humidity}%
+
+      **Task:**
+      Recommend the top 3 most viable crops for these specific conditions.
+
+      **Response Format (in Hindi):**
+      For each crop, provide:
+      1. **Crop Name**: (Hindi Name / English Name)
+      2. **Suitability Analysis**: Why this crop fits the NPK, pH, and weather data. Mention specific matches (e.g., "High Nitrogen suits leafy growth...").
+      3. **Water Management**: Irrigation needs based on the rainfall provided.
+      4. **Fertilizer Guide**: Specific dosage corrections for the N, P, K levels provided (e.g., "Add Urea for low N").
+      5. **Disease Warning**: Potential risks given the Temperature/Humidity (e.g., "High humidity may cause fungal issues").
+
+      **Tone:** Professional, encouraging, and practical for a farmer.
+      **Format:** Clean Markdown with bold headers and bullet points. Use emojis where appropriate.
     `;
 
     try {
       const result = await vly.ai.completion({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
-        maxTokens: 1000
+        maxTokens: 2000
       });
 
       if (result.success && result.data) {
@@ -232,7 +240,22 @@ export const generateCropRecommendation = action({
             ? `मिट्टी में पोषक तत्वों की कमी है। ${tips.join(", ")} का प्रयोग करें।` 
             : "मिट्टी का स्वास्थ्य अच्छा है। संतुलित जैविक खाद का प्रयोग करें।";
 
-          response += `   - **सुझाव:** ${tipStr}\n\n`;
+          response += `   - **खाद सुझाव:** ${tipStr}\n`;
+
+          // Dynamic Water Tip
+          let waterTip = "सामान्य सिंचाई की आवश्यकता है।";
+          if (crop.minRain && args.rainfall < crop.minRain) waterTip = "वर्षा कम है, अतिरिक्त सिंचाई की व्यवस्था करें।";
+          if (crop.maxRain && args.rainfall > crop.maxRain) waterTip = "जल निकासी का उचित प्रबंध करें, अधिक पानी से बचें।";
+          response += `   - **जल प्रबंधन:** ${waterTip}\n`;
+
+          // Dynamic Disease Warning
+          let diseaseWarning = "";
+          if (args.humidity > 80) diseaseWarning = "⚠️ उच्च नमी के कारण फफूंद (Fungus) का खतरा। समय पर कीटनाशक का प्रयोग करें।";
+          else if (args.temperature > 35) diseaseWarning = "⚠️ उच्च तापमान से फसल को बचाने के लिए हल्की सिंचाई करें।";
+          
+          if (diseaseWarning) response += `   - **सावधानी:** ${diseaseWarning}\n`;
+          
+          response += `\n`;
       });
 
       response += `*नोट: यह एक स्वचालित अनुमान है (सिमुलेशन मोड)। कृपया कृषि विशेषज्ञ से सलाह लें।*`;
