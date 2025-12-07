@@ -1,2 +1,1 @@
-grep -r "react-router-dom" src
-grep -r "react-router" src
+npx convex run test_features:testAll && npx tsc -b --noEmit
