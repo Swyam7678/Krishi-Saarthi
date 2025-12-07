@@ -105,6 +105,19 @@ export const translations = {
     feature_market_desc: "Live rates from local markets.",
     feature_ai: "AI Advisor",
     feature_ai_desc: "Personalized crop suggestions.",
+    
+    // Chatbot
+    chatbot_title: "KrishiSaarthi AI Assistant",
+    chatbot_welcome: "Hello! I am your farming assistant. Here is your soil analysis:",
+    soil_healthy: "✅ Your soil is healthy and balanced!",
+    low_n: "⚠️ Nitrogen is low.",
+    low_p: "⚠️ Phosphorus is low.",
+    low_k: "⚠️ Potassium is low.",
+    rec_fertilizer: "Recommended Fertilizer:",
+    rec_crops: "Recommended Crops (Low Cost):",
+    rec_healthy_crops: "Recommended Crops:",
+    ask_me: "Ask me anything about farming...",
+    send: "Send",
   },
   hi: {
     // General
@@ -210,6 +223,19 @@ export const translations = {
     feature_market_desc: "स्थानीय बाजारों से लाइव रेट।",
     feature_ai: "AI सलाहकार",
     feature_ai_desc: "व्यक्तिगत फसल सुझाव।",
+
+    // Chatbot
+    chatbot_title: "कृषि सारथी AI सहायक",
+    chatbot_welcome: "नमस्ते! मैं आपका कृषि सहायक हूँ। यहाँ आपकी मिट्टी का विश्लेषण है:",
+    soil_healthy: "✅ आपकी मिट्टी स्वस्थ और संतुलित है!",
+    low_n: "⚠️ नाइट्रोजन कम है।",
+    low_p: "⚠️ फॉस्फोरस कम है।",
+    low_k: "⚠️ पोटैशियम कम है।",
+    rec_fertilizer: "अनुशंसित खाद:",
+    rec_crops: "अनुशंसित फसलें (कम लागत):",
+    rec_healthy_crops: "अनुशंसित फसलें:",
+    ask_me: "खेती के बारे में कुछ भी पूछें...",
+    send: "भेजें",
   },
   pa: {
     // Punjabi
@@ -309,6 +335,19 @@ export const translations = {
     feature_market_desc: "ਸਥਾਨਕ ਬਾਜ਼ਾਰਾਂ ਤੋਂ ਲਾਈਵ ਰੇਟ।",
     feature_ai: "AI ਸਲਾਹਕਾਰ",
     feature_ai_desc: "ਨਿੱਜੀ ਫਸਲ ਸੁਝਾਅ।",
+
+    // Chatbot
+    chatbot_title: "ਕ੍ਰਿਸ਼ੀ ਸਾਰਥੀ AI ਸਹਾਇਕ",
+    chatbot_welcome: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਤੁਹਾਡਾ ਖੇਤੀ ਸਹਾਇਕ ਹਾਂ। ਇੱਥੇ ਤੁਹਾਡੀ ਮਿੱਟੀ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਹੈ:",
+    soil_healthy: "✅ ਤੁਹਾਡੀ ਮਿੱਟੀ ਸਿਹਤਮੰਦ ਅਤੇ ਸੰਤੁਲਿਤ ਹੈ!",
+    low_n: "⚠️ ਨਾਈਟ੍ਰੋਜਨ ਘੱਟ ਹੈ।",
+    low_p: "⚠️ ਫਾਸਫੋਰਸ ਘੱਟ ਹੈ।",
+    low_k: "⚠️ ਪੋਟਾਸ਼ੀਅਮ ਘੱਟ ਹੈ।",
+    rec_fertilizer: "ਸਿਫਾਰਸ਼ ਕੀਤੀ ਖਾਦ:",
+    rec_crops: "ਸਿਫਾਰਸ਼ ਕੀਤੀਆਂ ਫਸਲਾਂ (ਘੱਟ ਲਾਗਤ):",
+    rec_healthy_crops: "ਸਿਫਾਰਸ਼ ਕੀਤੀਆਂ ਫਸਲਾਂ:",
+    ask_me: "ਖੇਤੀ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ...",
+    send: "ਭੇਜੋ",
   },
   mr: {
     // Marathi
@@ -408,6 +447,19 @@ export const translations = {
     feature_market_desc: "स्थानिक बाजारातील थेट दर.",
     feature_ai: "AI सल्लागार",
     feature_ai_desc: "वैयक्तिक पीक सल्ला.",
+    
+    // Chatbot
+    chatbot_title: "कृषी सारथी AI सहाय्यक",
+    chatbot_welcome: "नमस्कार! मी तुमचा कृषी सहाय्यक आहे. येथे तुमचे माती विश्लेषण आहे:",
+    soil_healthy: "✅ तुमची माती निरोगी आणि संतुलित आहे!",
+    low_n: "⚠️ नायट्रोजन कमी आहे.",
+    low_p: "⚠️ फॉस्फरस कमी आहे.",
+    low_k: "⚠️ पोटॅशियम कमी आहे.",
+    rec_fertilizer: "शिफारस केलेले खत:",
+    rec_crops: "शिफारस केलेली पिके (कमी खर्च):",
+    rec_healthy_crops: "शिफारस केलेली पिके:",
+    ask_me: "शेतीबद्दल काहीही विचारा...",
+    send: "पाठवा",
   },
   ta: {
     // Tamil
@@ -507,6 +559,19 @@ export const translations = {
     feature_market_desc: "உள்ளூர் சந்தைகளிலிருந்து நேரடி விலைகள்.",
     feature_ai: "AI ஆலோசகர்",
     feature_ai_desc: "தனிப்பயனாக்கப்பட்ட பயிர் பரிந்துரைகள்.",
+    
+    // Chatbot
+    chatbot_title: "கிருஷி சாரதி AI உதவியாளர்",
+    chatbot_welcome: "வணக்கம்! நான் உங்கள் விவசாய உதவியாளர். உங்கள் மண் பகுப்பாய்வு இங்கே:",
+    soil_healthy: "✅ உங்கள் மண் ஆரோக்கியமாகவும் சமநிலையாகவும் உள்ளது!",
+    low_n: "⚠️ நைட்ரஜன் குறைவாக உள்ளது.",
+    low_p: "⚠️ பாஸ்பரஸ் குறைவாக உள்ளது.",
+    low_k: "⚠️ பொட்டாசியம் குறைவாக உள்ளது.",
+    rec_fertilizer: "பரிந்துரைக்கப்பட்ட உரம்:",
+    rec_crops: "பரிந்துரைக்கப்பட்ட பயிர்கள் (குறைந்த விலை):",
+    rec_healthy_crops: "பரிந்துரைக்கப்பட்ட பயிர்கள்:",
+    ask_me: "விவசாயம் பற்றி எதையும் கேளுங்கள்...",
+    send: "அனுப்பு",
   },
   gu: {
     // Gujarati
@@ -606,6 +671,19 @@ export const translations = {
     feature_market_desc: "સ્થાનિક બજારોમાંથી લાઇવ ભાવ.",
     feature_ai: "AI સલાહકાર",
     feature_ai_desc: "વ્યક્તિગત પાક સલાહ.",
+    
+    // Chatbot
+    chatbot_title: "કૃષિ સારથી AI સહાયક",
+    chatbot_welcome: "નમસ્તે! હું તમારો ખેતી સહાયક છું. અહીં તમારું જમીન વિશ્લેષણ છે:",
+    soil_healthy: "✅ તમારી જમીન સ્વસ્થ અને સંતુલિત છે!",
+    low_n: "⚠️ નાઇટ્રોજન ઓછું છે.",
+    low_p: "⚠️ ફોસ્ફરસ ઓછું છે.",
+    low_k: "⚠️ પોટેશિયમ ઓછું છે.",
+    rec_fertilizer: "ભલામણ કરેલ ખાતર:",
+    rec_crops: "ભલામણ કરેલ પાક (ઓછો ખર્ચ):",
+    rec_healthy_crops: "ભલામણ કરેલ પાક:",
+    ask_me: "ખેતી વિશે કંઈપણ પૂછો...",
+    send: "મોકલો",
   },
   bn: {
     // Bengali
@@ -705,5 +783,18 @@ export const translations = {
     feature_market_desc: "স্থানীয় বাজার থেকে লাইভ রেট।",
     feature_ai: "AI পরামর্শদাতা",
     feature_ai_desc: "ব্যক্তিগত ফসল পরামর্শ।",
+
+    // Chatbot
+    chatbot_title: "কৃষি সারথি AI সহকারী",
+    chatbot_welcome: "হ্যালো! আমি আপনার কৃষি সহকারী। এখানে আপনার মাটি বিশ্লেষণ:",
+    soil_healthy: "✅ আপনার মাটি স্বাস্থ্যকর এবং সুষম!",
+    low_n: "⚠️ নাইট্রোজেন কম।",
+    low_p: "⚠️ ফসফরাস কম।",
+    low_k: "⚠️ পটাশিয়াম কম।",
+    rec_fertilizer: "সুপারিশকৃত সার:",
+    rec_crops: "সুপারিশকৃত ফসল (কম খরচ):",
+    rec_healthy_crops: "সুপারিশকৃত ফসল:",
+    ask_me: "কৃষি সম্পর্কে কিছু জিজ্ঞাসা করুন...",
+    send: "পাঠান",
   }
 };

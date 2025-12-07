@@ -12,6 +12,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useLanguage } from "@/lib/i18n";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChatbotWidget } from "@/components/ChatbotWidget";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
@@ -164,6 +165,9 @@ export default function Dashboard() {
           <CropRecommendation />
         </div>
       </div>
+
+      {/* Chatbot Widget */}
+      <ChatbotWidget npkData={npk} />
     </div>
   );
 }
