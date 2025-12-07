@@ -18,7 +18,7 @@ export const getWeather = action({
       windSpeed: Math.round(wind * 10) / 10,
       rainChance: Math.round(rain),
       condition: rain > 20 ? "बादल छाए रहेंगे" : "धूप",
-      location: "नई दिल्ली, भारत"
+      location: "IIT Dhanbad, Jharkhand"
     };
   },
 });
