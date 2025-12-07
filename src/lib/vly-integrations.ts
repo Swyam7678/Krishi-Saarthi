@@ -1,25 +1,23 @@
 import { VlyIntegrations } from "@vly-ai/integrations";
 
-// Lazy initialization to avoid build-time errors when env vars are missing
-// The library validates the key in the constructor, so we must delay creation
-let instance: VlyIntegrations | undefined;
+// Lazy initialization to avoid build-time errors if env vars are missing
+class LazyVly {
+  private instance: VlyIntegrations | null = null;
 
-function getInstance() {
-  if (!instance) {
-    // Use a fallback key if env var is missing to prevent runtime crashes in dev
-    // In production, the env var should be set
-    instance = new VlyIntegrations({
-      token: process.env.VLY_INTEGRATION_KEY || "sk-proj-build-placeholder-key",
-    });
+  get ai() {
+    return this.getInstance().ai;
   }
-  return instance;
+
+  private getInstance() {
+    if (!this.instance) {
+      // Cast to any to avoid TS errors with different versions of the library
+      const config: any = {
+        token: process.env.VLY_INTEGRATION_KEY || "sk-proj-build-placeholder-key",
+      };
+      this.instance = new VlyIntegrations(config);
+    }
+    return this.instance;
+  }
 }
 
-export const vly = {
-  get ai() {
-    return getInstance().ai;
-  },
-  get email() {
-    return getInstance().email;
-  }
-};
+export const vly = new LazyVly();
