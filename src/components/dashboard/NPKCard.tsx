@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Sprout } from "lucide-react";
+import { Activity, Sprout, TrendingDown, TrendingUp } from "lucide-react";
 
 interface NPKData {
   n: number;
@@ -9,6 +9,11 @@ interface NPKData {
     n: string;
     p: string;
     k: string;
+  };
+  trend?: {
+    n: "up" | "down";
+    p: "up" | "down";
+    k: "up" | "down";
   };
 }
 
@@ -27,6 +32,15 @@ export function NPKCard({ data }: { data: NPKData | null }) {
       case "Moderate": return "text-yellow-600 dark:text-yellow-400";
       default: return "text-red-600 dark:text-red-400";
     }
+  };
+
+  const TrendIcon = ({ direction }: { direction?: "up" | "down" }) => {
+    if (!direction) return null;
+    return direction === "up" ? (
+      <TrendingUp className="h-3 w-3 text-green-500 ml-1" />
+    ) : (
+      <TrendingDown className="h-3 w-3 text-red-500 ml-1" />
+    );
   };
 
   if (!data) return (
@@ -56,7 +70,10 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           <div className="space-y-1">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">नाइट्रोजन (N)</span>
-              <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
+              <div className="flex items-center">
+                <span className={`text-xs font-medium ${getTextColor(data.status.n)}`}>{data.n} mg/kg ({data.status.n})</span>
+                {data.trend && <TrendIcon direction={data.trend.n} />}
+              </div>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
@@ -70,7 +87,10 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           <div className="space-y-1">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">फॉस्फोरस (P)</span>
-              <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
+              <div className="flex items-center">
+                <span className={`text-xs font-medium ${getTextColor(data.status.p)}`}>{data.p} mg/kg ({data.status.p})</span>
+                {data.trend && <TrendIcon direction={data.trend.p} />}
+              </div>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
@@ -84,7 +104,10 @@ export function NPKCard({ data }: { data: NPKData | null }) {
           <div className="space-y-1">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">पोटैशियम (K)</span>
-              <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
+              <div className="flex items-center">
+                <span className={`text-xs font-medium ${getTextColor(data.status.k)}`}>{data.k} mg/kg ({data.status.k})</span>
+                {data.trend && <TrendIcon direction={data.trend.k} />}
+              </div>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
               <div 
