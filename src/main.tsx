@@ -8,6 +8,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeProvider } from "next-themes";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./index.css";
 import "./types/global.d.ts";
 
@@ -53,24 +54,26 @@ function RouteSyncer() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <VlyToolbar />
     <InstrumentationProvider>
       <ConvexAuthProvider client={convex}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <LanguageProvider>
-            <BrowserRouter>
-              <VlyToolbar />
-              <RouteSyncer />
-              <Suspense fallback={<RouteLoading />}>
-                <Routes>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
+          <TooltipProvider>
+            <LanguageProvider>
+              <BrowserRouter>
+                <RouteSyncer />
+                <Suspense fallback={<RouteLoading />}>
+                  <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </BrowserRouter>
               <Toaster />
-            </BrowserRouter>
-          </LanguageProvider>
+            </LanguageProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </ConvexAuthProvider>
     </InstrumentationProvider>
