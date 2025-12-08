@@ -117,35 +117,35 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen flex flex-col relative bg-gradient-to-b from-green-50 to-white dark:from-green-950/20 dark:to-background">
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
       
       {/* Auth Content */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="flex items-center justify-center h-full flex-col">
-        <Card className="min-w-[350px] pb-0 border shadow-md">
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex items-center justify-center h-full flex-col w-full max-w-md">
+        <Card className="w-full pb-0 border shadow-lg">
           {step === "signIn" ? (
             <>
-              <CardHeader className="text-center">
+              <CardHeader className="text-center pb-2">
               <div className="flex justify-center">
                     <img
                       src="/logo.svg"
                       alt="App Logo"
                       width={64}
                       height={64}
-                      className="rounded-lg mb-4 mt-4 cursor-pointer hover:opacity-80 transition-opacity"
+                      className="rounded-lg mb-4 mt-2 cursor-pointer hover:opacity-80 transition-opacity"
                       onClick={() => navigate("/")}
                     />
                   </div>
-                <CardTitle className="text-xl">{t('login_title')}</CardTitle>
-                <CardDescription>
-                  {t('login_desc')}
+                <CardTitle className="text-2xl font-bold text-green-900 dark:text-green-100">Get Started</CardTitle>
+                <CardDescription className="text-base">
+                  Enter your email to login or sign up
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleEmailSubmit}>
-                <CardContent>
+                <CardContent className="space-y-4">
                   
                   <div className="relative flex items-center gap-2">
                     <div className="relative flex-1">
@@ -155,7 +155,7 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
                         placeholder="name@example.com"
                         type="email"
                         autoComplete="email"
-                        className="pl-9"
+                        className="pl-9 h-11 bg-background"
                         disabled={isLoading}
                         required
                       />
@@ -164,6 +164,7 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       type="submit"
                       variant="outline"
                       size="icon"
+                      className="h-11 w-11 shrink-0 bg-green-50 hover:bg-green-100 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -174,16 +175,16 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     </Button>
                   </div>
                   {error && (
-                    <p className="mt-2 text-sm text-red-500">{error}</p>
+                    <p className="text-sm text-red-500 text-center bg-red-50 p-2 rounded border border-red-100 dark:bg-red-900/10 dark:border-red-900/20">{error}</p>
                   )}
                   
-                  <div className="mt-4">
+                  <div className="mt-6">
                     <div className="relative">
                       <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
+                        <span className="w-full border-t border-green-100 dark:border-green-900/30" />
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground">
+                        <span className="bg-card px-2 text-muted-foreground">
                           OR
                         </span>
                       </div>
@@ -192,12 +193,12 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full mt-4"
+                      className="w-full mt-6 h-11 bg-green-50 text-green-700 hover:bg-green-100 border-green-200 hover:border-green-300 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-900/30"
                       onClick={handleGuestLogin}
                       disabled={isLoading}
                     >
                       <UserX className="mr-2 h-4 w-4" />
-                      {t('continue_guest')}
+                      Continue as Guest
                     </Button>
                   </div>
                 </CardContent>
@@ -206,13 +207,13 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
           ) : (
             <>
               <CardHeader className="text-center mt-4">
-                <CardTitle>{t('verify_code')}</CardTitle>
+                <CardTitle className="text-xl">{t('verify_code')}</CardTitle>
                 <CardDescription>
-                  {t('code_sent')} {step.email}
+                  {t('code_sent')} <span className="font-medium text-foreground">{step.email}</span>
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleOtpSubmit}>
-                <CardContent className="pb-4">
+                <CardContent className="pb-4 space-y-6">
                   <input type="hidden" name="email" value={step.email} />
                   <input type="hidden" name="code" value={otp} />
 
@@ -234,31 +235,31 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     >
                       <InputOTPGroup>
                         {Array.from({ length: 6 }).map((_, index) => (
-                          <InputOTPSlot key={index} index={index} />
+                          <InputOTPSlot key={index} index={index} className="h-12 w-10 sm:w-12" />
                         ))}
                       </InputOTPGroup>
                     </InputOTP>
                   </div>
                   {error && (
-                    <p className="mt-2 text-sm text-red-500 text-center">
+                    <p className="text-sm text-red-500 text-center bg-red-50 p-2 rounded border border-red-100">
                       {error}
                     </p>
                   )}
-                  <div className="text-sm text-muted-foreground text-center mt-4">
+                  <div className="text-sm text-muted-foreground text-center">
                     Code not received?{" "}
                     <Button
                       variant="link"
-                      className="p-0 h-auto"
+                      className="p-0 h-auto text-green-600 hover:text-green-700"
                       onClick={() => setStep("signIn")}
                     >
                       {t('resend')}
                     </Button>
                   </div>
                 </CardContent>
-                <CardFooter className="flex-col gap-2">
+                <CardFooter className="flex-col gap-3 pb-6">
                   <Button
                     type="submit"
-                    className="w-full"
+                    className="w-full h-11 bg-green-600 hover:bg-green-700 text-white"
                     disabled={isLoading || otp.length !== 6}
                   >
                     {isLoading ? (
@@ -287,13 +288,13 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
             </>
           )}
 
-          <div className="py-4 px-6 text-xs text-center text-muted-foreground bg-muted border-t rounded-b-lg">
+          <div className="py-4 px-6 text-xs text-center text-green-800 bg-green-50 border-t border-green-100 rounded-b-lg dark:bg-green-900/30 dark:text-green-300 dark:border-green-900/50">
             Secured by{" "}
             <a
               href="https://vly.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-primary transition-colors"
+              className="font-semibold hover:underline"
             >
               vly.ai
             </a>
