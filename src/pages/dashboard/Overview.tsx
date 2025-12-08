@@ -9,6 +9,7 @@ import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
 import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
 import { toast } from "sonner";
+import { Link } from "react-router";
 
 export default function Overview() {
   const { user } = useAuth();
@@ -90,28 +91,28 @@ export default function Overview() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold tracking-tight">{t('dashboard')}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="h-full">
+        <Link to="/dashboard/weather" className="h-full block hover:ring-2 hover:ring-primary/20 rounded-xl transition-all">
           <WeatherCard data={weather} onLocationChange={handleLocationChange} />
-        </div>
-        <div className="h-full">
+        </Link>
+        <Link to="/dashboard/soil" className="h-full block hover:ring-2 hover:ring-primary/20 rounded-xl transition-all">
           <NPKCard data={npk} onSheetUrlChange={handleSheetUrlChange} currentUrl={sheetUrl} />
-        </div>
-        <div className="h-full">
+        </Link>
+        <Link to="/dashboard/market" className="h-full block hover:ring-2 hover:ring-primary/20 rounded-xl transition-all">
           <MarketCard 
             data={market} 
             location={location} 
             selectedCrops={selectedCrops} 
             onCropsChange={handleCropsChange}
           />
-        </div>
+        </Link>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+        <Link to="/dashboard/advisory" className="lg:col-span-2 block hover:ring-2 hover:ring-primary/20 rounded-xl transition-all">
           <CropRecommendation npkData={npk} />
-        </div>
-        <div className="h-full">
+        </Link>
+        <Link to="/dashboard/schemes" className="h-full block hover:ring-2 hover:ring-primary/20 rounded-xl transition-all">
           <SchemesCard />
-        </div>
+        </Link>
       </div>
     </div>
   );

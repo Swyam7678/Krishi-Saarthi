@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, Link } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/lib/i18n";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -91,84 +89,80 @@ export default function DashboardLayout() {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main className="w-full flex flex-col min-h-screen">
-        <div className="p-4 border-b flex justify-between items-center bg-background sticky top-0 z-10">
-            <div className="flex items-center gap-2">
-                <SidebarTrigger />
-                <h1 className="font-semibold text-lg hidden sm:block">{t('app_name')}</h1>
-            </div>
-            <div className="flex items-center gap-2">
-                <LanguageSwitcher />
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-2">
-                      <UserCircle className="h-4 w-4" />
-                      <span className="hidden sm:inline">{user?.name || "Profile"}</span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80" align="end">
-                    <div className="grid gap-4">
-                        <div className="space-y-2">
-                            <h4 className="font-medium leading-none">Farmer Profile</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Your registered farm details.
-                            </p>
-                        </div>
-                        <div className="grid gap-2 text-sm">
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <span className="font-medium">Name:</span>
-                                <span className={cn("col-span-2 truncate", !user?.name && "text-muted-foreground italic")}>
-                                    {user?.name || "Not set"}
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <span className="font-medium">Phone:</span>
-                                <span className={cn("col-span-2 truncate", !user?.phoneNumber && "text-muted-foreground italic")}>
-                                    {user?.phoneNumber || "Not set"}
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <span className="font-medium">Location:</span>
-                                <span className={cn("col-span-2 truncate", (!user?.farmLocation && !user?.location) && "text-muted-foreground italic")}>
-                                    {user?.farmLocation || user?.location || "Not set"}
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <span className="font-medium">Size:</span>
-                                <span className={cn("col-span-2 truncate", !user?.farmSize && "text-muted-foreground italic")}>
-                                    {user?.farmSize || "Not set"}
-                                </span>
-                            </div>
-                        </div>
-                        <Button onClick={() => setShowProfileModal(true)} size="sm" className="w-full">
-                            Edit Profile
-                        </Button>
+    <div className="min-h-screen flex flex-col bg-background">
+      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
+        <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity">
+          {t('app_name')}
+        </Link>
+        <div className="ml-auto flex items-center gap-2">
+            <LanguageSwitcher />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <UserCircle className="h-4 w-4" />
+                  <span className="hidden sm:inline">{user?.name || "Profile"}</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" align="end">
+                <div className="grid gap-4">
+                    <div className="space-y-2">
+                        <h4 className="font-medium leading-none">Farmer Profile</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Your registered farm details.
+                        </p>
                     </div>
-                  </PopoverContent>
-                </Popover>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleResetProfile}
-                  className="gap-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50 hidden md:flex"
-                  title="Reset Profile (Test)"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  <span className="hidden sm:inline text-xs">Reset (Test)</span>
-                </Button>
-                <Button variant="ghost" size="sm" onClick={handleSignOut} disabled={isSigningOut}>
-                    {isSigningOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
-                </Button>
-            </div>
+                    <div className="grid gap-2 text-sm">
+                        <div className="grid grid-cols-3 items-center gap-4">
+                            <span className="font-medium">Name:</span>
+                            <span className={cn("col-span-2 truncate", !user?.name && "text-muted-foreground italic")}>
+                                {user?.name || "Not set"}
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-3 items-center gap-4">
+                            <span className="font-medium">Phone:</span>
+                            <span className={cn("col-span-2 truncate", !user?.phoneNumber && "text-muted-foreground italic")}>
+                                {user?.phoneNumber || "Not set"}
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-3 items-center gap-4">
+                            <span className="font-medium">Location:</span>
+                            <span className={cn("col-span-2 truncate", (!user?.farmLocation && !user?.location) && "text-muted-foreground italic")}>
+                                {user?.farmLocation || user?.location || "Not set"}
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-3 items-center gap-4">
+                            <span className="font-medium">Size:</span>
+                            <span className={cn("col-span-2 truncate", !user?.farmSize && "text-muted-foreground italic")}>
+                                {user?.farmSize || "Not set"}
+                            </span>
+                        </div>
+                    </div>
+                    <Button onClick={() => setShowProfileModal(true)} size="sm" className="w-full">
+                        Edit Profile
+                    </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleResetProfile}
+              className="gap-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50 hidden md:flex"
+              title="Reset Profile (Test)"
+            >
+              <RotateCcw className="h-4 w-4" />
+              <span className="hidden sm:inline text-xs">Reset (Test)</span>
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleSignOut} disabled={isSigningOut}>
+                {isSigningOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+            </Button>
         </div>
-        <div className="flex-1 p-4 md:p-8 overflow-auto">
-            <Outlet />
-        </div>
-        <ChatbotWidget npkData={npk} />
-        <CompleteProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} user={user} />
+      </header>
+      <main className="flex-1 p-4 md:p-8 overflow-auto">
+        <Outlet />
       </main>
-    </SidebarProvider>
+      <ChatbotWidget npkData={npk} />
+      <CompleteProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} user={user} />
+    </div>
   );
 }
