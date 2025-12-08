@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/lib/i18n";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
+import { SchemesCard } from "@/components/dashboard/SchemesCard";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
@@ -162,9 +163,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Bottom Section: AI Recommendation */}
-        <div className="w-full">
-          <CropRecommendation />
+        {/* Bottom Section: AI Recommendation and Schemes */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <CropRecommendation />
+          </div>
+          <div className="h-full">
+            <SchemesCard />
+          </div>
         </div>
       </div>
 

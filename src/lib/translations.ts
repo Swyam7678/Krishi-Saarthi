@@ -119,6 +119,18 @@ export const translations = {
     share_whatsapp: "Share on WhatsApp",
     read_aloud: "Read Aloud",
     stop_reading: "Stop Reading",
+    
+    // Schemes
+    schemes_title: "Government Schemes",
+    view_details: "View Details",
+    scheme_pm_kisan_title: "PM Kisan Samman Nidhi",
+    scheme_pm_kisan_desc: "Income support of ₹6,000 per year for farmers.",
+    scheme_pmfby_title: "PM Fasal Bima Yojana",
+    scheme_pmfby_desc: "Crop insurance scheme for financial support.",
+    scheme_shc_title: "Soil Health Card",
+    scheme_shc_desc: "Crop-wise recommendations of nutrients and fertilizers.",
+    scheme_pkvy_title: "Paramparagat Krishi Vikas Yojana",
+    scheme_pkvy_desc: "Promotion of organic farming and soil health.",
   },
   hi: {
     // General
@@ -238,6 +250,18 @@ export const translations = {
     share_whatsapp: "व्हाट्सएप पर साझा करें",
     read_aloud: "सुनें",
     stop_reading: "रुकें",
+    
+    // Schemes
+    schemes_title: "सरकारी योजनाएं",
+    view_details: "विवरण देखें",
+    scheme_pm_kisan_title: "पीएम किसान सम्मान निधि",
+    scheme_pm_kisan_desc: "किसानों के लिए ₹6,000 प्रति वर्ष की आय सहायता।",
+    scheme_pmfby_title: "पीएम फसल बीमा योजना",
+    scheme_pmfby_desc: "वित्तीय सहायता के लिए फसल बीमा योजना।",
+    scheme_shc_title: "मृदा स्वास्थ्य कार्ड",
+    scheme_shc_desc: "पोषक तत्वों और उर्वरकों की फसल-वार सिफारिशें।",
+    scheme_pkvy_title: "परंपरागत कृषि विकास योजना",
+    scheme_pkvy_desc: "जैविक खेती और मिट्टी के स्वास्थ्य को बढ़ावा देना।",
   },
   pa: {
     // Punjabi
@@ -351,6 +375,18 @@ export const translations = {
     share_whatsapp: "ਵਟਸਐਪ 'ਤੇ ਸਾਂਝਾ ਕਰੋ",
     read_aloud: "ਸੁਣੋ",
     stop_reading: "ਰੁਕੋ",
+    
+    // Schemes
+    schemes_title: "ਸਰਕਾਰੀ ਸਕੀਮਾਂ",
+    view_details: "ਵੇਰਵੇ ਵੇਖੋ",
+    scheme_pm_kisan_title: "ਪੀਐਮ ਕਿਸਾਨ ਸਨਮਾਨ ਨਿਧੀ",
+    scheme_pm_kisan_desc: "ਕਿਸਾਨਾਂ ਲਈ ₹6,000 ਪ੍ਰਤੀ ਸਾਲ ਦੀ ਆਮਦਨ ਸਹਾਇਤਾ।",
+    scheme_pmfby_title: "ਪੀਐਮ ਫਸਲ ਬੀਮਾ ਯੋਜਨਾ",
+    scheme_pmfby_desc: "ਵਿੱਤੀ ਸਹਾਇਤਾ ਲਈ ਫਸਲ ਬੀਮਾ ਯੋਜਨਾ।",
+    scheme_shc_title: "ਮਿੱਟੀ ਸਿਹਤ ਕਾਰਡ",
+    scheme_shc_desc: "ਪੌਸ਼ਟਿਕ ਤੱਤਾਂ ਅਤੇ ਖਾਦਾਂ ਦੀ ਫਸਲ-ਵਾਰ ਸਿਫਾਰਸ਼ਾਂ।",
+    scheme_pkvy_title: "ਪਰੰਪਰਾਗਤ ਕ੍ਰਿਸ਼ੀ ਵਿਕਾਸ ਯੋਜਨਾ",
+    scheme_pkvy_desc: "ਜੈਵਿਕ ਖੇਤੀ ਅਤੇ ਮਿੱਟੀ ਦੀ ਸਿਹਤ ਨੂੰ ਉਤਸ਼ਾਹਿਤ ਕਰਨਾ।",
   },
   mr: {
     // Marathi
@@ -464,6 +500,18 @@ export const translations = {
     share_whatsapp: "व्हॉट्सअॅपवर शेअर करा",
     read_aloud: "ऐका",
     stop_reading: "थांबा",
+    
+    // Schemes
+    schemes_title: "सरकारी योजना",
+    view_details: "तपशील पहा",
+    scheme_pm_kisan_title: "पीएम किसान सन्मान निधी",
+    scheme_pm_kisan_desc: "शेतकऱ्यांसाठी वर्षाला ₹6,000 ची आर्थिक मदत.",
+    scheme_pmfby_title: "पीएम पीक विमा योजना",
+    scheme_pmfby_desc: "आर्थिक मदतीसाठी पीक विमा योजना.",
+    scheme_shc_title: "मृदा आरोग्य कार्ड",
+    scheme_shc_desc: "पोषक तत्वे आणि खतांच्या पीकनिहाय शिफारसी.",
+    scheme_pkvy_title: "परंपरागत कृषी विकास योजना",
+    scheme_pkvy_desc: "सेंद्रिय शेती आणि मृदा आरोग्याला प्रोत्साहन.",
   },
   ta: {
     // Tamil
@@ -577,6 +625,18 @@ export const translations = {
     share_whatsapp: "வாட்ஸ்அப்பில் பகிரவும்",
     read_aloud: "கேளுங்கள்",
     stop_reading: "நிறுத்து",
+    
+    // Schemes
+    schemes_title: "அரசு திட்டங்கள்",
+    view_details: "விவரங்களைப் பார்க்க",
+    scheme_pm_kisan_title: "பிஎம் கிசான் சம்மான் நிதி",
+    scheme_pm_kisan_desc: "விவசாயிகளுக்கு ஆண்டுக்கு ₹6,000 வருமான ஆதரவு.",
+    scheme_pmfby_title: "பிஎம் பயிர் காப்பீட்டுத் திட்டம்",
+    scheme_pmfby_desc: "நிதி ஆதரவுக்கான பயிர் காப்பீட்டுத் திட்டம்.",
+    scheme_shc_title: "மண் சுகாதார அட்டை",
+    scheme_shc_desc: "ஊட்டச்சத்துக்கள் மற்றும் உரங்களின் பயிர் வாரியான பரிந்துரைகள்.",
+    scheme_pkvy_title: "பாரம்பரிய விவசாய மேம்பாட்டுத் திட்டம்",
+    scheme_pkvy_desc: "இயற்கை விவசாயம் மற்றும் மண் ஆரோக்கியத்தை ஊக்குவித்தல்.",
   },
   gu: {
     // Gujarati
@@ -690,6 +750,18 @@ export const translations = {
     share_whatsapp: "WhatsApp પર શેર કરો",
     read_aloud: "સાંભળો",
     stop_reading: "બંધ કરો",
+    
+    // Schemes
+    schemes_title: "સરકારી યોજનાઓ",
+    view_details: "વિગતો જુઓ",
+    scheme_pm_kisan_title: "પીએમ કિસાન સન્માન નિધિ",
+    scheme_pm_kisan_desc: "ખેડૂતો માટે વર્ષે ₹6,000 ની આવક સહાય.",
+    scheme_pmfby_title: "પીએમ પાક વીમા યોજના",
+    scheme_pmfby_desc: "આર્થિક સહાય માટે પાક વીમા યોજના.",
+    scheme_shc_title: "સોઈલ હેલ્થ કાર્ડ",
+    scheme_shc_desc: "પોષક તત્વો અને ખાતરોની પાક મુજબ ભલામણો.",
+    scheme_pkvy_title: "પરંપરાગત કૃષિ વિકાસ યોજના",
+    scheme_pkvy_desc: "જૈવિક ખેતી અને જમીનના સ્વાસ્થ્યને પ્રોત્સાહન.",
   },
   bn: {
     // Bengali
@@ -803,5 +875,17 @@ export const translations = {
     share_whatsapp: "হোয়াটসঅ্যাপে শেয়ার করুন",
     read_aloud: "শুনুন",
     stop_reading: "থামুন",
+    
+    // Schemes
+    schemes_title: "সরকারি প্রকল্প",
+    view_details: "বিস্তারিত দেখুন",
+    scheme_pm_kisan_title: "পিএম কিষান সম্মান নিধি",
+    scheme_pm_kisan_desc: "কৃষকদের জন্য বছরে ৬,০০০ টাকা আয় সহায়তা।",
+    scheme_pmfby_title: "পিএম ফসল বিমা যোজনা",
+    scheme_pmfby_desc: "আর্থিক সহায়তার জন্য ফসল বিমা প্রকল্প।",
+    scheme_shc_title: "মাটির স্বাস্থ্য কার্ড",
+    scheme_shc_desc: "পুষ্টি এবং সারের ফসল-ভিত্তিক সুপারিশ।",
+    scheme_pkvy_title: "পরম্পরাগত কৃষি বিকাশ যোজনা",
+    scheme_pkvy_desc: "জৈব চাষ এবং মাটির স্বাস্থ্যের প্রচার।",
   }
 };
