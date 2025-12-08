@@ -21,7 +21,10 @@ export const chat = action({
       mr: 'Marathi', 
       ta: 'Tamil',
       gu: 'Gujarati',
-      bn: 'Bengali'
+      bn: 'Bengali',
+      kn: 'Kannada',
+      bho: 'Bhojpuri',
+      sat: 'Santali'
     };
     const targetLang = langName[lang] || 'Hindi';
 
@@ -86,7 +89,10 @@ export const generateCropRecommendation = action({
       mr: 'Marathi', 
       ta: 'Tamil',
       gu: 'Gujarati',
-      bn: 'Bengali'
+      bn: 'Bengali',
+      kn: 'Kannada',
+      bho: 'Bhojpuri',
+      sat: 'Santali'
     };
     const targetLang = langName[lang] || 'Hindi';
 

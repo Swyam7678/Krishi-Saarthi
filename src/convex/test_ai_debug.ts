@@ -1,27 +1,44 @@
 "use node";
 import { action } from "./_generated/server";
-import { vly } from "../lib/vly-integrations";
+import { v } from "convex/values";
+import { api } from "./_generated/api";
 
-export const debugAI = action({
+export const testLanguageCompliance = action({
   args: {},
   handler: async (ctx) => {
-    console.log("Testing Vly AI connection...");
-    try {
-      const result = await vly.ai.completion({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: "Hello, are you working?" }],
-        maxTokens: 50
-      });
-      
-      console.log("Vly AI Result:", JSON.stringify(result, null, 2));
-      
-      if (!result.success) {
-        console.error("Vly AI Failed:", result.error);
+    const languages = [
+      { code: 'hi', name: 'Hindi' },
+      { code: 'pa', name: 'Punjabi' },
+      { code: 'ta', name: 'Tamil' }
+    ];
+
+    const results: any[] = [];
+
+    for (const lang of languages) {
+      console.log(`Testing ${lang.name} (${lang.code})...`);
+      try {
+        // Explicitly cast the response or define the type if possible, 
+        // but for now we know it returns a string.
+        const response = await ctx.runAction(api.ai.chat, {
+            message: "Hello, how are you?",
+            history: [],
+            lang: lang.code
+        }) as string;
+
+        results.push({
+            language: lang.name,
+            code: lang.code,
+            response: response.substring(0, 100) + "..." // Log first 100 chars
+        });
+      } catch (e: any) {
+        results.push({
+            language: lang.name,
+            code: lang.code,
+            error: e.message
+        });
       }
-      return result;
-    } catch (e: any) {
-      console.error("Vly AI Exception:", e);
-      return { success: false, error: e.message };
     }
-  },
+
+    return results;
+  }
 });
