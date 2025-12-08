@@ -6,13 +6,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { api } from "@/convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "convex/react";
-import { BrainCircuit, Loader2, Sprout, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { BrainCircuit, Loader2, Sprout, RotateCcw, Zap } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import ReactMarkdown from 'react-markdown';
 import { useLanguage } from "@/lib/i18n";
+
+interface CropRecommendationProps {
+  npkData?: {
+    n: number;
+    p: number;
+    k: number;
+    moisture?: number;
+  } | null;
+}
 
 const formSchema = z.object({
   nitrogen: z.coerce.number().min(0).max(200),
@@ -25,7 +34,7 @@ const formSchema = z.object({
   humidity: z.coerce.number().min(0).max(100),
 });
 
-export function CropRecommendation() {
+export function CropRecommendation({ npkData }: CropRecommendationProps) {
   const [result, setResult] = useState<string | null>(null);
   const generateRecommendation = useAction(api.ai.generateCropRecommendation);
   const { t, language } = useLanguage();
@@ -44,6 +53,19 @@ export function CropRecommendation() {
     },
   });
 
+  const handleUseLiveData = () => {
+    if (npkData) {
+      form.setValue("nitrogen", npkData.n);
+      form.setValue("phosphorus", npkData.p);
+      form.setValue("potassium", npkData.k);
+      if (npkData.moisture) {
+        // Map moisture to humidity as a proxy if needed, or just keep it separate
+        // For now, we'll just set NPK as that's the core data
+      }
+      toast.success(t('success'));
+    }
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setResult(null); // Clear previous result while loading
@@ -59,10 +81,23 @@ export function CropRecommendation() {
   return (
     <Card className="h-full border-l-4 border-l-purple-500 shadow-sm hover:shadow-md transition-all duration-300">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <BrainCircuit className="h-5 w-5 text-purple-600" />
-          <span>{t('ai_title')}</span>
-        </CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <BrainCircuit className="h-5 w-5 text-purple-600" />
+            <span>{t('ai_title')}</span>
+          </CardTitle>
+          {npkData && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleUseLiveData}
+              className="gap-2 text-xs h-8 bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:text-green-800 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
+            >
+              <Zap className="h-3 w-3" />
+              {t('use_live_data')}
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="grid md:grid-cols-2 gap-6">
