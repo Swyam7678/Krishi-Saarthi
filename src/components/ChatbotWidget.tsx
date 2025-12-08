@@ -8,6 +8,7 @@ import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ReportTab, NPKData } from "@/components/chatbot/ReportTab";
 import { ChatTab } from "@/components/chatbot/ChatTab";
+import { toast } from "sonner";
 
 interface ChatbotWidgetProps {
   npkData: NPKData | null;
@@ -32,6 +33,71 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   const [isChatLoading, setIsChatLoading] = useState(false);
   const chatAction = useAction(api.ai.chat);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Voice Input State
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput((prev) => (prev ? prev + " " : "") + transcript);
+        setIsListening(false);
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error("Speech recognition error", event.error);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (recognitionRef.current) {
+        const langMap: Record<string, string> = {
+            'en': 'en-IN',
+            'hi': 'hi-IN',
+            'pa': 'pa-IN',
+            'mr': 'mr-IN',
+            'ta': 'ta-IN',
+            'gu': 'gu-IN',
+            'bn': 'bn-IN'
+        };
+        recognitionRef.current.lang = langMap[language] || 'en-IN';
+    }
+  }, [language]);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      toast.error("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error("Error starting speech recognition:", e);
+        setIsListening(false);
+      }
+    }
+  };
 
   // Recommendation Logic
   const getRecommendations = () => {
@@ -249,6 +315,8 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
                 onSendMessage={handleSendMessage}
                 scrollRef={scrollRef}
                 onSpeak={speakText}
+                isListening={isListening}
+                onToggleListening={toggleListening}
               />
             </TabsContent>
           </Tabs>

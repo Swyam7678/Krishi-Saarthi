@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send, User, Bot, Volume2 } from "lucide-react";
+import { Loader2, Send, User, Bot, Volume2, Mic, MicOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RefObject } from "react";
 
@@ -18,6 +18,8 @@ interface ChatTabProps {
   onSendMessage: (e?: React.FormEvent) => void;
   scrollRef: RefObject<HTMLDivElement | null>;
   onSpeak: (text: string) => void;
+  isListening: boolean;
+  onToggleListening: () => void;
 }
 
 export function ChatTab({
@@ -27,7 +29,9 @@ export function ChatTab({
   isChatLoading,
   onSendMessage,
   scrollRef,
-  onSpeak
+  onSpeak,
+  isListening,
+  onToggleListening
 }: ChatTabProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -84,8 +88,18 @@ export function ChatTab({
       
       <div className="p-3 bg-background border-t shrink-0">
         <form onSubmit={onSendMessage} className="flex gap-2">
+          <Button 
+            type="button" 
+            variant={isListening ? "destructive" : "outline"} 
+            size="icon" 
+            onClick={onToggleListening}
+            title={isListening ? "Stop listening" : "Start listening"}
+            className={isListening ? "animate-pulse" : ""}
+          >
+            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </Button>
           <Input 
-            placeholder="Type your question..." 
+            placeholder={isListening ? "Listening..." : "Type your question..."}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isChatLoading}
