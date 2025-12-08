@@ -9,7 +9,7 @@ export default function Landing() {
   const { t, language } = useLanguage();
 
   return (
-    <div key={language} className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Hero Section */}
       <header className="w-full py-6 px-4 md:px-8 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2 font-bold text-2xl text-primary">
@@ -26,9 +26,9 @@ export default function Landing() {
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary">
             {t('hero_title')}
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-xl text-muted-foreground max-w-2xl mx-auto">
             {t('hero_desc')}
-          </p>
+          </div>
           <div className="flex justify-center gap-4 pt-4">
             <Link to="/auth" className={cn(buttonVariants({ size: "lg" }), "gap-2")}>
               {t('get_started')} <ArrowRight className="h-4 w-4" />
@@ -83,7 +83,7 @@ function FeatureCard({ icon, title, desc }: { icon: React.ReactNode, title: stri
         <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">{desc}</p>
+        <div className="text-muted-foreground">{desc}</div>
       </CardContent>
     </Card>
   );
