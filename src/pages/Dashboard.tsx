@@ -1,7 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+export default function Dashboard() {
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+  const { t, language } = useLanguage();
+=======
+export default function Dashboard() {
+  const { signOut, user } = useAuth();
+  const { t, language } = useLanguage();
 import { useLanguage } from "@/lib/i18n";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import { SchemesCard } from "@/components/dashboard/SchemesCard";
