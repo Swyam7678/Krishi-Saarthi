@@ -310,6 +310,12 @@ export function CropRecommendation({ npkData }: CropRecommendationProps) {
                             <span className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 px-2 py-0.5 rounded">
                               K: {item.potassium}
                             </span>
+                            <span className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 px-2 py-0.5 rounded">
+                              {item.temperature}°C
+                            </span>
+                            <span className="bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300 px-2 py-0.5 rounded">
+                              {item.humidity}%
+                            </span>
                           </div>
                         </div>
                       </CardHeader>
