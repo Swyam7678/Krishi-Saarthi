@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, X, RefreshCw, Loader2, VolumeX } from "lucide-react";
+import { MessageCircle, X, RefreshCw, Loader2, VolumeX, Volume2, Volume1 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAction } from "convex/react";
@@ -9,6 +9,7 @@ import { api } from "@/convex/_generated/api";
 import { ReportTab, NPKData } from "@/components/chatbot/ReportTab";
 import { ChatTab } from "@/components/chatbot/ChatTab";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface ChatbotWidgetProps {
   npkData: NPKData | null;
@@ -25,6 +26,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   const [isOpen, setIsOpen] = useState(false);
   const { t, language } = useLanguage();
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState(false);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
   
   // Chat State
@@ -221,8 +223,9 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
 
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
       
-      // Auto-speak the response if desired, or just let user click. 
-      // For now, we won't auto-speak to avoid annoyance, but the infrastructure is there.
+      if (autoSpeak) {
+        speakText(response);
+      }
     } catch (error) {
       console.error("Chat failed:", error);
       setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error. Please try again." }]);
@@ -257,6 +260,19 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
               <CardTitle className="text-base">{t('chatbot_title')}</CardTitle>
             </div>
             <div className="flex items-center gap-1">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={cn("h-8 w-8 hover:bg-white/20 text-primary-foreground transition-all", autoSpeak ? "bg-white/20" : "opacity-70")}
+                onClick={() => {
+                  setAutoSpeak(!autoSpeak);
+                  toast.info(autoSpeak ? "Auto-speak disabled" : "Auto-speak enabled");
+                }}
+                title={autoSpeak ? "Disable auto-speak" : "Enable auto-speak"}
+              >
+                {autoSpeak ? <Volume2 className="h-4 w-4" /> : <Volume1 className="h-4 w-4" />}
+              </Button>
+
               {isSpeaking && (
                 <Button 
                   variant="ghost" 
