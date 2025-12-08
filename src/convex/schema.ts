@@ -35,6 +35,11 @@ const schema = defineSchema(
       sheetUrl: v.optional(v.string()),
       location: v.optional(v.string()),
       selectedCrops: v.optional(v.array(v.string())),
+
+      // Profile Information
+      farmLocation: v.optional(v.string()),
+      farmSize: v.optional(v.string()),
+      phoneNumber: v.optional(v.string()),
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
     // Store crop recommendations history

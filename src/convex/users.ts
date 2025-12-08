@@ -38,6 +38,10 @@ export const updateUser = mutation({
     sheetUrl: v.optional(v.string()),
     location: v.optional(v.string()),
     selectedCrops: v.optional(v.array(v.string())),
+    name: v.optional(v.string()),
+    farmLocation: v.optional(v.string()),
+    farmSize: v.optional(v.string()),
+    phoneNumber: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -49,6 +53,10 @@ export const updateUser = mutation({
     if (args.sheetUrl !== undefined) patchData.sheetUrl = args.sheetUrl;
     if (args.location !== undefined) patchData.location = args.location;
     if (args.selectedCrops !== undefined) patchData.selectedCrops = args.selectedCrops;
+    if (args.name !== undefined) patchData.name = args.name;
+    if (args.farmLocation !== undefined) patchData.farmLocation = args.farmLocation;
+    if (args.farmSize !== undefined) patchData.farmSize = args.farmSize;
+    if (args.phoneNumber !== undefined) patchData.phoneNumber = args.phoneNumber;
 
     await ctx.db.patch(userId, patchData);
   },

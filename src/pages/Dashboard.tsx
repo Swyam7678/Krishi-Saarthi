@@ -13,7 +13,8 @@ import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
-import { LayoutDashboard, LogOut, Loader2 } from "lucide-react";
+import { LayoutDashboard, LogOut, Loader2, UserCircle } from "lucide-react";
+import { CompleteProfileModal } from "@/components/CompleteProfileModal";
 
 export default function Dashboard() {
   const { signOut, user, isAuthenticated, isLoading } = useAuth();
@@ -34,6 +35,7 @@ export default function Dashboard() {
   const [selectedCrops, setSelectedCrops] = useState<string[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -46,12 +48,19 @@ export default function Dashboard() {
     }
   }, [isLoading, isAuthenticated, navigate, user]);
 
-  // Load user preferences
+  // Load user preferences and check profile completion
   useEffect(() => {
     if (user) {
       if (user.location && location === undefined) setLocation(user.location);
       if (user.sheetUrl && sheetUrl === undefined) setSheetUrl(user.sheetUrl);
       if (user.selectedCrops) setSelectedCrops(user.selectedCrops);
+
+      // Check if profile is incomplete
+      if (!user.farmLocation || !user.farmSize || !user.phoneNumber) {
+        // Small delay to ensure UI is ready
+        const timer = setTimeout(() => setShowProfileModal(true), 1000);
+        return () => clearTimeout(timer);
+      }
     }
   }, [user]);
 
@@ -175,6 +184,16 @@ export default function Dashboard() {
             
             <LanguageSwitcher />
 
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowProfileModal(true)}
+              className="gap-2"
+            >
+              <UserCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </Button>
+
             <Button 
               variant="ghost" 
               size="sm" 
@@ -219,6 +238,13 @@ export default function Dashboard() {
 
       {/* Chatbot Widget */}
       <ChatbotWidget npkData={npk} onRefresh={fetchData} isLoading={isRefreshing} />
+      
+      {/* Profile Modal */}
+      <CompleteProfileModal 
+        isOpen={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+        user={user} 
+      />
     </div>
   );
 }
