@@ -63,8 +63,8 @@ export default function Dashboard() {
       if (user.sheetUrl && sheetUrl === undefined) setSheetUrl(user.sheetUrl);
       if (user.selectedCrops) setSelectedCrops(user.selectedCrops);
 
-      // Check if profile is incomplete
-      if (!user.farmLocation || !user.farmSize || !user.phoneNumber) {
+      // Check if profile is incomplete (including name)
+      if (!user.name || !user.farmLocation || !user.farmSize || !user.phoneNumber) {
         console.log("Profile incomplete, triggering modal in 1s...");
         // Small delay to ensure UI is ready
         const timer = setTimeout(() => {
@@ -154,6 +154,23 @@ export default function Dashboard() {
     toast.success(t('success'));
   };
 
+  const handleResetProfile = async () => {
+    if (confirm("This will clear your profile details to test the completion modal. Continue?")) {
+      try {
+        await updateUser({
+          name: "",
+          phoneNumber: "",
+          farmLocation: "",
+          farmSize: "",
+        });
+        toast.success("Profile cleared. Modal should appear shortly.");
+      } catch (error) {
+        console.error("Error resetting profile:", error);
+        toast.error("Failed to reset profile");
+      }
+    }
+  };
+
   const handleSignOut = async () => {
     console.log("Sign out initiated...");
     setIsSigningOut(true);
@@ -206,6 +223,17 @@ export default function Dashboard() {
             >
               <UserCircle className="h-4 w-4" />
               <span className="hidden sm:inline">Profile</span>
+            </Button>
+
+            {/* Dev Tool: Reset Profile for Testing */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleResetProfile}
+              className="gap-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50"
+              title="Reset Profile (Test)"
+            >
+              <span className="text-xs">Reset (Test)</span>
             </Button>
 
             <Button 
