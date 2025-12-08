@@ -111,10 +111,6 @@ export default function Dashboard() {
             
             <LanguageSwitcher />
 
-            <Button variant="outline" size="sm" onClick={fetchData}>
-              <RefreshCw className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">{t('refresh')}</span>
-            </Button>
             <Button variant="ghost" size="sm" onClick={() => signOut()}>
               <LogOut className="h-4 w-4 mr-2" />
               {t('sign_out')}
