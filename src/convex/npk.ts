@@ -4,8 +4,11 @@ import { v } from "convex/values";
 
 function generateSimulationData(errorMsg?: string) {
   // Randomly select a scenario to test different recommendations
-  // 0: Optimal, 1: Low Nitrogen, 2: Low Phosphorus, 3: Low Potassium
-  const scenario = Math.floor(Math.random() * 4);
+  // 0: Optimal
+  // 1-3: Single Deficiency (Low N, P, or K)
+  // 4-6: Single Excess (High N, P, or K)
+  // 7-9: Mixed Deficiencies
+  const scenario = Math.floor(Math.random() * 10);
   
   let n, p, k;
   
@@ -26,6 +29,36 @@ function generateSimulationData(errorMsg?: string) {
       p = 192 + (Math.random() * 20 - 10);
       k = 120 + (Math.random() * 20 - 10);
       break;
+    case 4: // High Nitrogen (> 200)
+      n = 220 + (Math.random() * 30);
+      p = 192 + (Math.random() * 20 - 10);
+      k = 240 + (Math.random() * 20 - 10);
+      break;
+    case 5: // High Phosphorus (> 200)
+      n = 173 + (Math.random() * 20 - 10);
+      p = 220 + (Math.random() * 30);
+      k = 240 + (Math.random() * 20 - 10);
+      break;
+    case 6: // High Potassium (> 300)
+      n = 173 + (Math.random() * 20 - 10);
+      p = 192 + (Math.random() * 20 - 10);
+      k = 330 + (Math.random() * 40);
+      break;
+    case 7: // Low N + Low P
+      n = 80 + (Math.random() * 20 - 10);
+      p = 80 + (Math.random() * 20 - 10);
+      k = 240 + (Math.random() * 20 - 10);
+      break;
+    case 8: // Low N + Low K
+      n = 80 + (Math.random() * 20 - 10);
+      p = 192 + (Math.random() * 20 - 10);
+      k = 120 + (Math.random() * 20 - 10);
+      break;
+    case 9: // Low P + Low K
+      n = 173 + (Math.random() * 20 - 10);
+      p = 80 + (Math.random() * 20 - 10);
+      k = 120 + (Math.random() * 20 - 10);
+      break;
     default: // Optimal
       n = 173 + (Math.random() * 20 - 10);
       p = 192 + (Math.random() * 20 - 10);
@@ -33,27 +66,42 @@ function generateSimulationData(errorMsg?: string) {
       break;
   }
 
-  const moisture = 45 + (Math.random() * 10 - 5);
+  const moisture = 45 + (Math.random() * 40 - 20); // Range 25-65
 
   const getTrend = () => Math.random() > 0.5 ? "up" : "down";
 
-  // Generate fake history based on the current scenario values
-  const history = Array.from({ length: 10 }).map((_, i) => ({
-    n: Math.round((n + (Math.random() * 20 - 10)) * 10) / 10,
-    p: Math.round((p + (Math.random() * 20 - 10)) * 10) / 10,
-    k: Math.round((k + (Math.random() * 20 - 10)) * 10) / 10,
-    moisture: Math.round((45 + (Math.random() * 10 - 5)) * 10) / 10,
-    time: `T-${9-i}`
-  }));
-  
-  // Ensure the last point matches current
-  history[history.length - 1] = {
-      n: Math.round(n * 10) / 10,
-      p: Math.round(p * 10) / 10,
-      k: Math.round(k * 10) / 10,
-      moisture: Math.round(moisture * 10) / 10,
-      time: "Now"
-  };
+  // Generate realistic history using a random walk backwards from current values
+  const history = [];
+  let currN = n;
+  let currP = p;
+  let currK = k;
+  let currM = moisture;
+
+  // Add current as the last point
+  history.push({
+    n: Math.round(n * 10) / 10,
+    p: Math.round(p * 10) / 10,
+    k: Math.round(k * 10) / 10,
+    moisture: Math.round(moisture * 10) / 10,
+    time: "Now"
+  });
+
+  // Generate 9 previous points
+  for (let i = 1; i < 10; i++) {
+    // Random small fluctuation
+    currN += (Math.random() * 10 - 5);
+    currP += (Math.random() * 10 - 5);
+    currK += (Math.random() * 10 - 5);
+    currM += (Math.random() * 6 - 3);
+
+    history.unshift({
+      n: Math.round(Math.max(0, currN) * 10) / 10,
+      p: Math.round(Math.max(0, currP) * 10) / 10,
+      k: Math.round(Math.max(0, currK) * 10) / 10,
+      moisture: Math.round(Math.max(0, Math.min(100, currM)) * 10) / 10,
+      time: `T-${i}`
+    });
+  }
 
   return {
     n: Math.round(n * 10) / 10,
