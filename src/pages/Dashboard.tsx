@@ -15,6 +15,11 @@ import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
 import { LayoutDashboard, LogOut, Loader2, UserCircle } from "lucide-react";
 import { CompleteProfileModal } from "@/components/CompleteProfileModal";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function Dashboard() {
   const { signOut, user, isAuthenticated, isLoading } = useAuth();
@@ -215,15 +220,45 @@ export default function Dashboard() {
             
             <LanguageSwitcher />
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowProfileModal(true)}
-              className="gap-2"
-            >
-              <UserCircle className="h-4 w-4" />
-              <span className="hidden sm:inline">Profile</span>
-            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <UserCircle className="h-4 w-4" />
+                  <span className="hidden sm:inline">{user?.name || "Profile"}</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" align="end">
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium leading-none">Farmer Profile</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Your registered farm details.
+                    </p>
+                  </div>
+                  <div className="grid gap-2">
+                    <div className="grid grid-cols-3 items-center gap-4">
+                      <span className="text-sm font-medium">Name:</span>
+                      <span className="col-span-2 text-sm truncate">{user?.name || "-"}</span>
+                    </div>
+                    <div className="grid grid-cols-3 items-center gap-4">
+                      <span className="text-sm font-medium">Phone:</span>
+                      <span className="col-span-2 text-sm truncate">{user?.phoneNumber || "-"}</span>
+                    </div>
+                    <div className="grid grid-cols-3 items-center gap-4">
+                      <span className="text-sm font-medium">Location:</span>
+                      <span className="col-span-2 text-sm truncate">{user?.farmLocation || user?.location || "-"}</span>
+                    </div>
+                    <div className="grid grid-cols-3 items-center gap-4">
+                      <span className="text-sm font-medium">Size:</span>
+                      <span className="col-span-2 text-sm truncate">{user?.farmSize || "-"}</span>
+                    </div>
+                  </div>
+                  <Button onClick={() => setShowProfileModal(true)} size="sm" className="w-full">
+                    Edit Profile
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
 
             {/* Dev Tool: Reset Profile for Testing */}
             <Button
