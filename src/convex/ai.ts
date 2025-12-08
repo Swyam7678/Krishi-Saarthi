@@ -2,6 +2,7 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { vly } from "../lib/vly-integrations";
+import { internal } from "./_generated/api";
 
 export const chat = action({
   args: {
@@ -124,7 +125,24 @@ export const generateCropRecommendation = action({
       });
 
       if (result.success && result.data) {
-        return result.data.choices[0]?.message?.content || "सिफारिश उत्पन्न नहीं की जा सकी।";
+        const content = result.data.choices[0]?.message?.content || "सिफारिश उत्पन्न नहीं की जा सकी।";
+        
+        // Save to DB (Success path)
+        const identity = await ctx.auth.getUserIdentity();
+        if (identity && identity.email) {
+            await ctx.runMutation(internal.recommendations.saveRecommendation, {
+                email: identity.email,
+                nitrogen: args.nitrogen,
+                phosphorus: args.phosphorus,
+                potassium: args.potassium,
+                soilType: args.soilType,
+                ph: args.ph,
+                rainfall: args.rainfall,
+                recommendation: content,
+                reasoning: "AI Analysis (GPT-4o)",
+            });
+        }
+        return content;
       }
       // Log error and fall through to catch block
       console.error("Vly AI Error:", result.error);
@@ -270,6 +288,22 @@ export const generateCropRecommendation = action({
       response += lang === 'en' 
         ? `*Note: This is an automated estimate (Simulation Mode). Please consult an expert.*`
         : `*नोट: यह एक स्वचालित अनुमान है (सिमुलेशन मोड)। कृपया कृषि विशेषज्ञ से सलाह लें।*`;
+
+      // Save to DB (Fallback path)
+      const identity = await ctx.auth.getUserIdentity();
+      if (identity && identity.email) {
+        await ctx.runMutation(internal.recommendations.saveRecommendation, {
+            email: identity.email,
+            nitrogen: args.nitrogen,
+            phosphorus: args.phosphorus,
+            potassium: args.potassium,
+            soilType: args.soilType,
+            ph: args.ph,
+            rainfall: args.rainfall,
+            recommendation: response,
+            reasoning: "AI Simulation (Fallback)",
+        });
+      }
 
       return response;
     }
