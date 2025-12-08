@@ -54,10 +54,10 @@ function RouteSyncer() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <LanguageProvider>
-      <InstrumentationProvider>
-        <ConvexAuthProvider client={convex}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <InstrumentationProvider>
+      <ConvexAuthProvider client={convex}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <LanguageProvider>
             <TooltipProvider>
               <BrowserRouter>
                 <RouteSyncer />
@@ -73,9 +73,9 @@ createRoot(document.getElementById("root")!).render(
                 <Toaster />
               </BrowserRouter>
             </TooltipProvider>
-          </ThemeProvider>
-        </ConvexAuthProvider>
-      </InstrumentationProvider>
-    </LanguageProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </ConvexAuthProvider>
+    </InstrumentationProvider>
   </StrictMode>,
 );
