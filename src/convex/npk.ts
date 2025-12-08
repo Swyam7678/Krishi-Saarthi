@@ -2,16 +2,70 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 
+function generateSimulationData(errorMsg?: string) {
+  const n = 173 + (Math.random() * 4 - 2); 
+  const p = 192 + (Math.random() * 4 - 2); 
+  const k = 240 + (Math.random() * 4 - 2); 
+  const moisture = 45 + (Math.random() * 10 - 5);
+
+  const getTrend = () => Math.random() > 0.5 ? "up" : "down";
+
+  // Generate fake history
+  const history = Array.from({ length: 10 }).map((_, i) => ({
+    n: Math.round((173 + (Math.random() * 20 - 10)) * 10) / 10,
+    p: Math.round((192 + (Math.random() * 20 - 10)) * 10) / 10,
+    k: Math.round((240 + (Math.random() * 20 - 10)) * 10) / 10,
+    moisture: Math.round((45 + (Math.random() * 10 - 5)) * 10) / 10,
+    time: `T-${9-i}`
+  }));
+  
+  // Ensure the last point matches current
+  history[history.length - 1] = {
+      n: Math.round(n * 10) / 10,
+      p: Math.round(p * 10) / 10,
+      k: Math.round(k * 10) / 10,
+      moisture: Math.round(moisture * 10) / 10,
+      time: "Now"
+  };
+
+  return {
+    n: Math.round(n * 10) / 10,
+    p: Math.round(p * 10) / 10,
+    k: Math.round(k * 10) / 10,
+    moisture: Math.round(moisture * 10) / 10,
+    timestamp: Date.now(),
+    status: {
+      n: n < 100 ? "Low" : n > 200 ? "High" : "Optimal",
+      p: p < 100 ? "Low" : p > 200 ? "High" : "Optimal",
+      k: k < 150 ? "Low" : k > 300 ? "High" : "Optimal",
+      moisture: moisture < 30 ? "Low" : moisture > 70 ? "High" : "Optimal",
+    },
+    trend: {
+      n: getTrend(),
+      p: getTrend(),
+      k: getTrend(),
+    },
+    history,
+    isFallback: true,
+    error: errorMsg
+  };
+}
+
 export const getLiveNPK = action({
   args: {
     sheetUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Explicit simulation mode
+    if (args.sheetUrl === "simulation") {
+        return generateSimulationData();
+    }
+
     // Default to the provided sheet if no URL is passed
     let SHEET_CSV_URL = args.sheetUrl || "https://docs.google.com/spreadsheets/d/1zPrbxe8NP2tovaqZLKKj0edoGIZGvjwXyZ_fbmMEefw/export?format=csv";
     
     // Helper to convert standard Google Sheet URL to CSV export URL
-    if (args.sheetUrl) {
+    if (args.sheetUrl && args.sheetUrl !== "simulation") {
        const match = args.sheetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
        if (match && match[1]) {
          SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${match[1]}/export?format=csv`;
@@ -130,54 +184,7 @@ export const getLiveNPK = action({
 
     } catch (error: any) {
       console.error("Error fetching sheet data, falling back to simulation:", error);
-      
-      // Fallback Simulation
-      const n = 173 + (Math.random() * 4 - 2); 
-      const p = 192 + (Math.random() * 4 - 2); 
-      const k = 240 + (Math.random() * 4 - 2); 
-      const moisture = 45 + (Math.random() * 10 - 5);
-
-      const getTrend = () => Math.random() > 0.5 ? "up" : "down";
-
-      // Generate fake history
-      const history = Array.from({ length: 10 }).map((_, i) => ({
-        n: Math.round((173 + (Math.random() * 20 - 10)) * 10) / 10,
-        p: Math.round((192 + (Math.random() * 20 - 10)) * 10) / 10,
-        k: Math.round((240 + (Math.random() * 20 - 10)) * 10) / 10,
-        moisture: Math.round((45 + (Math.random() * 10 - 5)) * 10) / 10,
-        time: `T-${9-i}`
-      }));
-      
-      // Ensure the last point matches current
-      history[history.length - 1] = {
-          n: Math.round(n * 10) / 10,
-          p: Math.round(p * 10) / 10,
-          k: Math.round(k * 10) / 10,
-          moisture: Math.round(moisture * 10) / 10,
-          time: "Now"
-      };
-
-      return {
-        n: Math.round(n * 10) / 10,
-        p: Math.round(p * 10) / 10,
-        k: Math.round(k * 10) / 10,
-        moisture: Math.round(moisture * 10) / 10,
-        timestamp: Date.now(),
-        status: {
-          n: n < 100 ? "Low" : n > 200 ? "High" : "Optimal",
-          p: p < 100 ? "Low" : p > 200 ? "High" : "Optimal",
-          k: k < 150 ? "Low" : k > 300 ? "High" : "Optimal",
-          moisture: moisture < 30 ? "Low" : moisture > 70 ? "High" : "Optimal",
-        },
-        trend: {
-          n: getTrend(),
-          p: getTrend(),
-          k: getTrend(),
-        },
-        history,
-        isFallback: true,
-        error: error.message || "Failed to fetch data"
-      };
+      return generateSimulationData(error.message || "Failed to fetch data");
     }
   },
 });

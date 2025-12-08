@@ -92,11 +92,20 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
                   <div className="grid gap-4 py-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">{t('sheet_url')}</label>
-                      <Input
-                        placeholder="https://docs.google.com/spreadsheets/d/..."
-                        value={newUrl}
-                        onChange={(e) => setNewUrl(e.target.value)}
-                      />
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="https://docs.google.com/spreadsheets/d/..."
+                          value={newUrl}
+                          onChange={(e) => setNewUrl(e.target.value)}
+                        />
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setNewUrl("simulation")}
+                          title="Use Simulation Data"
+                        >
+                          Test
+                        </Button>
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         {t('share_instruction')}
                       </p>
