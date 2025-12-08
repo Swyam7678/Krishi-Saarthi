@@ -38,6 +38,7 @@ export default function Dashboard() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
+      console.log("User not authenticated, redirecting to home...");
       navigate("/");
     }
   }, [isLoading, isAuthenticated, navigate]);

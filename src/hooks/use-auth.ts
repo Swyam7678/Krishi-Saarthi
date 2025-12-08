@@ -8,7 +8,8 @@ export function useAuth() {
   const { signIn, signOut } = useAuthActions();
 
   // Derive isLoading directly from the dependencies instead of managing separate state
-  const isLoading = isAuthLoading || user === undefined;
+  // If not authenticated, we don't need to wait for user data
+  const isLoading = isAuthLoading || (isAuthenticated && user === undefined);
 
   return {
     isLoading,
