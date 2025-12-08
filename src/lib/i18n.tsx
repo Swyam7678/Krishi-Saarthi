@@ -22,6 +22,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   });
 
   const handleSetLanguage = useCallback((lang: Language) => {
+    console.log("Language switching to:", lang);
     setLanguage(lang);
     localStorage.setItem('app-language', lang);
   }, []);
