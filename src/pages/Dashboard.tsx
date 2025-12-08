@@ -31,6 +31,7 @@ export default function Dashboard() {
   const [sheetUrl, setSheetUrl] = useState<string | undefined>(undefined);
   const [selectedCrops, setSelectedCrops] = useState<string[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   // Load user preferences
   useEffect(() => {
@@ -94,6 +95,16 @@ export default function Dashboard() {
     toast.success(t('success'));
   };
 
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Sign out error:", error);
+      setIsSigningOut(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -114,9 +125,15 @@ export default function Dashboard() {
             
             <LanguageSwitcher />
 
-            <Button variant="ghost" size="sm" onClick={() => signOut()}>
-              <LogOut className="h-4 w-4 mr-2" />
-              {t('sign_out')}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleSignOut}
+              disabled={isSigningOut}
+              className="gap-2"
+            >
+              {isSigningOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+              <span className="hidden sm:inline">{t('sign_out')}</span>
             </Button>
           </div>
         </div>
