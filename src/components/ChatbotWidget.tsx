@@ -188,8 +188,17 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
     utterance.lang = targetLang;
 
     // Attempt to find a matching voice for better pronunciation
-    const matchingVoice = voices.find(v => v.lang === targetLang) || 
-                          voices.find(v => v.lang.startsWith(language));
+    // First try exact match (e.g., pa-IN)
+    // Then try language match (e.g., pa)
+    // Then try Hindi as a fallback for Indian languages (better phonemes than English)
+    let matchingVoice = voices.find(v => v.lang === targetLang) || 
+                        voices.find(v => v.lang.startsWith(language));
+    
+    if (!matchingVoice && language !== 'en') {
+        // Fallback to Hindi voice for Indian languages if specific voice missing
+        // This often sounds better than English voice reading Indian script
+        matchingVoice = voices.find(v => v.lang.startsWith('hi'));
+    }
     
     if (matchingVoice) {
       utterance.voice = matchingVoice;
@@ -294,7 +303,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
       {isOpen && (
-        <Card className="w-[350px] h-[550px] mb-4 shadow-2xl border-2 border-primary/20 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300 overflow-hidden">
+        <Card className="w-[calc(100vw-2rem)] sm:w-[400px] h-[calc(100vh-120px)] sm:h-[600px] mb-4 shadow-2xl border-2 border-primary/20 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300 overflow-hidden">
           <CardHeader className="bg-primary text-primary-foreground py-3 px-4 flex flex-row justify-between items-center shrink-0">
             <div className="flex items-center gap-2">
               <div className="bg-white/20 p-1.5 rounded-full">
