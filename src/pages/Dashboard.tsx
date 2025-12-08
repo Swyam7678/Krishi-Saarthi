@@ -6,16 +6,6 @@ import { useLanguage } from "@/lib/i18n";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import { SchemesCard } from "@/components/dashboard/SchemesCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
->>>>>>> REPLACE
-<<<<<<< SEARCH
-          <div className="h-full space-y-6">
-            <SchemesCard />
-            <ResourcesCard />
-          </div>
-=======
-          <div className="h-full space-y-6">
-            <SchemesCard />
-          </div>
 import { MarketCard } from "@/components/dashboard/MarketCard";
 import { NPKCard } from "@/components/dashboard/NPKCard";
 import { WeatherCard } from "@/components/dashboard/WeatherCard";
@@ -158,7 +148,6 @@ export default function Dashboard() {
           </div>
           <div className="h-full space-y-6">
             <SchemesCard />
-            <ResourcesCard />
           </div>
         </div>
       </div>

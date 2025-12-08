@@ -134,54 +134,6 @@ export const translations = {
     scheme_pkvy_desc: "Promotion of organic farming and soil health.",
     
     // Pricing
->>>>>>> REPLACE
-<<<<<<< SEARCH
-    // Resources
-    resources_title: "कृषि संसाधन",
-    
-    // Pricing
-=======
-    // Pricing
->>>>>>> REPLACE
-<<<<<<< SEARCH
-    // Resources
-    resources_title: "ਖੇਤੀ ਸਰੋਤ",
-    
-    // Pricing
-=======
-    // Pricing
->>>>>>> REPLACE
-<<<<<<< SEARCH
-    // Resources
-    resources_title: "शेती संसाधने",
-    
-    // Pricing
-=======
-    // Pricing
->>>>>>> REPLACE
-<<<<<<< SEARCH
-    // Resources
-    resources_title: "விவசாய வளங்கள்",
-    
-    // Pricing
-=======
-    // Pricing
->>>>>>> REPLACE
-<<<<<<< SEARCH
-    // Resources
-    resources_title: "ખેતી સંસાધનો",
-    
-    // Pricing
-=======
-    // Pricing
->>>>>>> REPLACE
-<<<<<<< SEARCH
-    // Resources
-    resources_title: "কৃষি সম্পদ",
-    
-    // Pricing
-=======
-    // Pricing
     pricing_title: "Subscription Plans",
     choose_plan: "Choose Plan",
     
