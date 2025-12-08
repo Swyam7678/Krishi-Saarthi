@@ -3,6 +3,54 @@ import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { vly } from "../lib/vly-integrations";
 
+export const chat = action({
+  args: {
+    message: v.string(),
+    history: v.array(v.object({ role: v.string(), content: v.string() })),
+    context: v.optional(v.string()),
+    lang: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const lang = args.lang || 'hi';
+    
+    const systemPrompt = `
+      You are KrishiSaarthi, an expert AI agricultural assistant for Indian farmers.
+      Language: Respond in ${lang === 'en' ? 'English' : 'the requested Indian language (Hindi/Regional)'}.
+      
+      Context:
+      ${args.context || "No specific soil data provided."}
+
+      Role:
+      - Answer questions about farming, crops, fertilizers, weather, and government schemes.
+      - Be helpful, encouraging, and practical.
+      - Keep answers concise and easy to understand for a farmer.
+      - If the user asks about the soil data provided in context, analyze it.
+    `;
+
+    const messages: { role: 'system' | 'user' | 'assistant'; content: string; }[] = [
+      { role: 'system', content: systemPrompt },
+      ...args.history.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+      { role: 'user', content: args.message }
+    ];
+
+    try {
+      const result = await vly.ai.completion({
+        model: 'gpt-4o',
+        messages: messages,
+        maxTokens: 1000,
+      });
+
+      if (result.success && result.data) {
+        return result.data.choices[0]?.message?.content || "Error generating response.";
+      }
+      return "Sorry, I am unable to process your request at the moment.";
+    } catch (e) {
+      console.error("Chat Error:", e);
+      return "Error connecting to AI service.";
+    }
+  },
+});
+
 export const generateCropRecommendation = action({
   args: {
     nitrogen: v.number(),
