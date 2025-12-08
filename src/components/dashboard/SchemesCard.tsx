@@ -39,7 +39,7 @@ export function SchemesCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-[300px] px-6 pb-6">
+        <ScrollArea className="h-[400px] px-6 pb-6">
           <div className="space-y-4">
             {schemes.map((scheme) => (
               <div key={scheme.id} className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors group">

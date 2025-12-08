@@ -146,7 +146,7 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <CropRecommendation npkData={npk} />
           </div>
-          <div className="h-full space-y-6">
+          <div className="h-full">
             <SchemesCard />
           </div>
         </div>
