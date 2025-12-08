@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/lib/i18n";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import { SchemesCard } from "@/components/dashboard/SchemesCard";
+import { ResourcesCard } from "@/components/dashboard/ResourcesCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MarketCard } from "@/components/dashboard/MarketCard";
 import { NPKCard } from "@/components/dashboard/NPKCard";
@@ -141,13 +142,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Bottom Section: AI Recommendation and Schemes */}
+        {/* Bottom Section: AI Recommendation, Schemes, Resources */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <CropRecommendation npkData={npk} />
           </div>
-          <div className="h-full">
+          <div className="h-full space-y-6">
             <SchemesCard />
+            <ResourcesCard />
           </div>
         </div>
       </div>

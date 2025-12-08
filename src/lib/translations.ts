@@ -133,6 +133,9 @@ export const translations = {
     scheme_pkvy_title: "Paramparagat Krishi Vikas Yojana",
     scheme_pkvy_desc: "Promotion of organic farming and soil health.",
     
+    // Resources
+    resources_title: "Farming Resources",
+    
     // Pricing
     pricing_title: "Subscription Plans",
     choose_plan: "Choose Plan",
@@ -305,7 +308,10 @@ export const translations = {
     scheme_pkvy_title: "परंपरागत कृषि विकास योजना",
     scheme_pkvy_desc: "जैविक खेती और मिट्टी के स्वास्थ्य को बढ़ावा देना।",
     
-    // Pricing (Hindi)
+    // Resources
+    resources_title: "कृषि संसाधन",
+    
+    // Pricing
     pricing_title: "सदस्यता योजनाएं",
     choose_plan: "योजना चुनें",
     
@@ -471,6 +477,9 @@ export const translations = {
     scheme_pkvy_title: "ਪਰੰਪਰਾਗਤ ਕ੍ਰਿਸ਼ੀ ਵਿਕਾਸ ਯੋਜਨਾ",
     scheme_pkvy_desc: "ਜੈਵਿਕ ਖੇਤੀ ਅਤੇ ਮਿੱਟੀ ਦੀ ਸਿਹਤ ਨੂੰ ਉਤਸ਼ਾਹਿਤ ਕਰਨਾ।",
     
+    // Resources
+    resources_title: "ਖੇਤੀ ਸਰੋਤ",
+    
     // Pricing (Punjabi - using English fallback for now to ensure consistency)
     pricing_title: "Subscription Plans",
     choose_plan: "Choose Plan",
@@ -632,6 +641,9 @@ export const translations = {
     scheme_shc_desc: "पोषक तत्वे आणि खतांच्या पीकनिहाय शिफारसी.",
     scheme_pkvy_title: "परंपरागत कृषी विकास योजना",
     scheme_pkvy_desc: "सेंद्रिय शेती आणि मृदा आरोग्याला प्रोत्साहन.",
+    
+    // Resources
+    resources_title: "शेती संसाधने",
     
     // Pricing (Marathi - using English fallback)
     pricing_title: "Subscription Plans",
@@ -795,6 +807,9 @@ export const translations = {
     scheme_pkvy_title: "பாரம்பரிய விவசாய மேம்பாட்டுத் திட்டம்",
     scheme_pkvy_desc: "இயற்கை விவசாயம் மற்றும் மண் ஆரோக்கியத்தை ஊக்குவித்தல்.",
     
+    // Resources
+    resources_title: "விவசாய வளங்கள்",
+    
     // Pricing (Tamil - using English fallback)
     pricing_title: "Subscription Plans",
     choose_plan: "Choose Plan",
@@ -957,6 +972,9 @@ export const translations = {
     scheme_pkvy_title: "પરંપરાગત કૃષિ વિકાસ યોજના",
     scheme_pkvy_desc: "જૈવિક ખેતી અને જમીનના સ્વાસ્થ્યને પ્રોત્સાહન.",
     
+    // Resources
+    resources_title: "ખેતી સંસાધનો",
+    
     // Pricing (Gujarati - using English fallback)
     pricing_title: "Subscription Plans",
     choose_plan: "Choose Plan",
@@ -1118,6 +1136,9 @@ export const translations = {
     scheme_shc_desc: "পুষ্টি এবং সারের ফসল-ভিত্তিক সুপারিশ।",
     scheme_pkvy_title: "পরম্পরাগত কৃষি বিকাশ যোজনা",
     scheme_pkvy_desc: "জৈব চাষ এবং মাটির স্বাস্থ্যের প্রচার।",
+    
+    // Resources
+    resources_title: "কৃষি সম্পদ",
     
     // Pricing (Bengali - using English fallback)
     pricing_title: "Subscription Plans",
