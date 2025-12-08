@@ -1,1 +1,1 @@
-npx convex run schemes:seed
+npx convex run debug_vly:debug

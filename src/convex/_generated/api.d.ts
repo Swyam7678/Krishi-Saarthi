@@ -11,6 +11,7 @@
 import type * as ai from "../ai.js";
 import type * as auth from "../auth.js";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
+import type * as debug_vly from "../debug_vly.js";
 import type * as http from "../http.js";
 import type * as market from "../market.js";
 import type * as npk from "../npk.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   auth: typeof auth;
   "auth/emailOtp": typeof auth_emailOtp;
+  debug_vly: typeof debug_vly;
   http: typeof http;
   market: typeof market;
   npk: typeof npk;
