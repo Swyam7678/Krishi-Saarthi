@@ -1,3 +1,3 @@
 {
-  "plan": "1. Verify that the updated components work correctly in the dashboard.\n2. Test AI chat functionality.\n3. Verify NPK recommendations accuracy."
+  "plan": "1. Verify the fix by checking if the Auth page loads without errors.\n2. Ensure language switching still works correctly on the Auth page.\n3. Check if any other pages have similar redundant Suspense wrappers."
 }
