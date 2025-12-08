@@ -1,3 +1,11 @@
+import { useEffect, useState, useCallback } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
+import { useLanguage } from "@/lib/i18n";
+import { ChatbotWidget } from "@/components/ChatbotWidget";
+import { SchemesCard } from "@/components/dashboard/SchemesCard";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MarketCard } from "@/components/dashboard/MarketCard";
 import { NPKCard } from "@/components/dashboard/NPKCard";
 import { WeatherCard } from "@/components/dashboard/WeatherCard";
@@ -5,21 +13,12 @@ import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
-import { LayoutDashboard, LogOut, RefreshCw, Languages } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
-import { useAuth } from "@/hooks/use-auth";
-import { useNavigate } from "react-router";
-import { toast } from "sonner";
-import { useLanguage } from "@/lib/i18n";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ChatbotWidget } from "@/components/ChatbotWidget";
-import { SchemesCard } from "@/components/dashboard/SchemesCard";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { LayoutDashboard, LogOut, Loader2 } from "lucide-react";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
-  const { t, language, setLanguage } = useLanguage();
+  const { t, language } = useLanguage();
   
   const getWeather = useAction(api.weather.getWeather);
   const getNPK = useAction(api.npk.getLiveNPK);
@@ -33,6 +32,7 @@ export default function Dashboard() {
   const [location, setLocation] = useState<string | undefined>(undefined);
   const [sheetUrl, setSheetUrl] = useState<string | undefined>(undefined);
   const [selectedCrops, setSelectedCrops] = useState<string[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Load user preferences
   useEffect(() => {
@@ -44,6 +44,8 @@ export default function Dashboard() {
   }, [user]);
 
   const fetchData = useCallback(async () => {
+    setIsRefreshing(true);
+    console.log("Refreshing dashboard data...");
     try {
       const [w, n, m] = await Promise.all([
         getWeather({ location, lang: language }),
@@ -60,6 +62,8 @@ export default function Dashboard() {
         toast.error(t('error'));
         setLocation(undefined); // Reset to default
       }
+    } finally {
+      setIsRefreshing(false);
     }
   }, [getWeather, getNPK, getMarket, location, sheetUrl, language, t]);
 
@@ -105,6 +109,7 @@ export default function Dashboard() {
             <p className="text-muted-foreground">{t('subtitle')} • {t('welcome')}, {user?.name || t('farmer')}</p>
           </div>
           <div className="flex items-center gap-2">
+            {isRefreshing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
             <span className="text-xs text-muted-foreground hidden md:inline">
               {lastUpdated.toLocaleTimeString()}
             </span>
