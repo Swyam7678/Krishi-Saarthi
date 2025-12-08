@@ -1,16 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
->>>>>>> REPLACE
-<<<<<<< SEARCH
-export default function Dashboard() {
-  const { signOut, user } = useAuth();
-  const navigate = useNavigate();
-  const { t, language } = useLanguage();
-=======
-export default function Dashboard() {
-  const { signOut, user } = useAuth();
-  const { t, language } = useLanguage();
 import { useLanguage } from "@/lib/i18n";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import { SchemesCard } from "@/components/dashboard/SchemesCard";
@@ -26,7 +16,6 @@ import { LayoutDashboard, LogOut, Loader2 } from "lucide-react";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
-  const navigate = useNavigate();
   const { t, language } = useLanguage();
   
   const getWeather = useAction(api.weather.getWeather);
@@ -150,7 +139,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Bottom Section: AI Recommendation, Schemes, Resources */}
+        {/* Bottom Section: AI Recommendation, Schemes */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <CropRecommendation npkData={npk} />
