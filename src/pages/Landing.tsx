@@ -76,6 +76,11 @@ export default function Landing() {
 
       <footer className="py-6 text-center text-sm text-muted-foreground border-t">
         © {new Date().getFullYear()} {t('app_name')}. All rights reserved.
+        <div className="mt-2">
+          <Link to="/test-voice" className="underline hover:text-primary text-xs">
+            Test Voice Features
+          </Link>
+        </div>
       </footer>
     </div>
   );
