@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { useLanguage } from "@/lib/i18n";
@@ -15,7 +16,8 @@ import { useAction, useMutation } from "convex/react";
 import { LayoutDashboard, LogOut, Loader2 } from "lucide-react";
 
 export default function Dashboard() {
-  const { signOut, user } = useAuth();
+  const { signOut, user, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
   const { t, language } = useLanguage();
   
   const getWeather = useAction(api.weather.getWeather);
@@ -32,6 +34,13 @@ export default function Dashboard() {
   const [selectedCrops, setSelectedCrops] = useState<string[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/");
+    }
+  }, [isLoading, isAuthenticated, navigate]);
 
   // Load user preferences
   useEffect(() => {
@@ -99,6 +108,7 @@ export default function Dashboard() {
     setIsSigningOut(true);
     try {
       await signOut();
+      // Navigation handled by useEffect
     } catch (error) {
       console.error("Sign out error:", error);
       setIsSigningOut(false);
