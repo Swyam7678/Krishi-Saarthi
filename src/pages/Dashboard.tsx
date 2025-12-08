@@ -13,7 +13,7 @@ import { CropRecommendation } from "@/components/dashboard/CropRecommendation";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
-import { LayoutDashboard, LogOut, Loader2, UserCircle } from "lucide-react";
+import { LayoutDashboard, LogOut, Loader2, UserCircle, RotateCcw } from "lucide-react";
 import { CompleteProfileModal } from "@/components/CompleteProfileModal";
 import {
   Popover,
@@ -212,7 +212,7 @@ export default function Dashboard() {
             </h1>
             <p className="text-muted-foreground">{t('subtitle')} • {t('welcome')}, {user?.name || t('farmer')}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {isRefreshing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
             <span className="text-xs text-muted-foreground hidden md:inline">
               {lastUpdated.toLocaleTimeString()}
@@ -268,7 +268,8 @@ export default function Dashboard() {
               className="gap-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50"
               title="Reset Profile (Test)"
             >
-              <span className="text-xs">Reset (Test)</span>
+              <RotateCcw className="h-4 w-4" />
+              <span className="hidden sm:inline text-xs">Reset (Test)</span>
             </Button>
 
             <Button 

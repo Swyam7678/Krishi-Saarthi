@@ -56,7 +56,7 @@ export function CompleteProfileModal({ isOpen, onClose, user }: CompleteProfileM
             Please provide your farm details to get personalized recommendations.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+        <form key={isOpen ? 'open' : 'closed'} onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="name">Full Name</Label>
             <Input id="name" name="name" defaultValue={user?.name || ""} required placeholder="Enter your full name" />
