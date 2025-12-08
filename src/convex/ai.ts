@@ -60,9 +60,10 @@ export const chat = action({
       if (result.success && result.data) {
         return result.data.choices[0]?.message?.content || "Error generating response.";
       }
+      console.error("Vly AI Error Response:", result);
       return "Sorry, I am unable to process your request at the moment.";
     } catch (e) {
-      console.error("Chat Error:", e);
+      console.error("Chat Exception:", e);
       
       // Fallback responses based on language
       const fallbackResponses: Record<string, string> = {

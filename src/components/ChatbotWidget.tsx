@@ -303,7 +303,14 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end sm:bottom-6 sm:right-6">
       {isOpen && (
-        <Card className="w-[calc(100vw-2rem)] sm:w-[400px] h-[calc(80dvh)] sm:h-[600px] mb-4 shadow-2xl border-2 border-primary/20 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300 overflow-hidden bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
+        <Card className={cn(
+          "flex flex-col shadow-2xl border-2 border-primary/20 overflow-hidden bg-background/95 backdrop-blur-sm",
+          // Mobile: Fixed full screen, high z-index to cover everything
+          "fixed inset-0 z-[100] w-full h-[100dvh] rounded-none m-0",
+          // Desktop: Static (inside flex container), specific dimensions, rounded
+          "sm:static sm:z-auto sm:w-[400px] sm:h-[600px] sm:rounded-xl sm:mb-4",
+          "animate-in slide-in-from-bottom-10 fade-in duration-300"
+        )}>
           <CardHeader className="bg-primary text-primary-foreground py-3 px-4 flex flex-row justify-between items-center shrink-0">
             <div className="flex items-center gap-2">
               <div className="bg-white/20 p-1.5 rounded-full">
@@ -394,7 +401,11 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       <Button
         onClick={() => setIsOpen(!isOpen)}
         size="lg"
-        className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/90"
+        className={cn(
+          "h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/90",
+          // Hide toggle button on mobile when open (since it's full screen)
+          isOpen ? "hidden sm:flex" : "flex"
+        )}
       >
         {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
       </Button>

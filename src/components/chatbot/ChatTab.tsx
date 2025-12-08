@@ -104,7 +104,7 @@ export function ChatTab({
         </div>
       </ScrollArea>
       
-      <div className="p-3 bg-background border-t shrink-0">
+      <div className="p-3 bg-background border-t shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
         <form onSubmit={onSendMessage} className="flex gap-2">
           <Button 
             type="button" 
