@@ -14,9 +14,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // Lazy load route components for better code splitting
 const Landing = lazy(() => import("./pages/Landing.tsx"));
 const AuthPage = lazy(() => import("./pages/Auth.tsx"));
-const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const TestVoice = lazy(() => import("./pages/TestVoice.tsx"));
+
+// New Dashboard Components
+const DashboardLayout = lazy(() => import("./layouts/DashboardLayout.tsx"));
+const Overview = lazy(() => import("./pages/dashboard/Overview.tsx"));
+const WeatherPage = lazy(() => import("./pages/dashboard/Weather.tsx"));
+const SoilHealthPage = lazy(() => import("./pages/dashboard/SoilHealth.tsx"));
+const MarketPage = lazy(() => import("./pages/dashboard/Market.tsx"));
+const AdvisoryPage = lazy(() => import("./pages/dashboard/Advisory.tsx"));
+const SchemesPage = lazy(() => import("./pages/dashboard/Schemes.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -65,7 +73,17 @@ createRoot(document.getElementById("root")!).render(
                   <Routes>
                     <Route path="/" element={<Landing />} />
                     <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    
+                    {/* Dashboard Routes */}
+                    <Route path="/dashboard" element={<DashboardLayout />}>
+                      <Route index element={<Overview />} />
+                      <Route path="weather" element={<WeatherPage />} />
+                      <Route path="soil" element={<SoilHealthPage />} />
+                      <Route path="market" element={<MarketPage />} />
+                      <Route path="advisory" element={<AdvisoryPage />} />
+                      <Route path="schemes" element={<SchemesPage />} />
+                    </Route>
+
                     <Route path="/test-voice" element={<TestVoice />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>

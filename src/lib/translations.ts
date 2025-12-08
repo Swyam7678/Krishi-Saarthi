@@ -4,6 +4,7 @@ export const translations = {
   en: {
     // General
     app_name: "KrishiSaarthi",
+    dashboard: "Dashboard",
     subtitle: "Smart Farm Assist",
     welcome: "Welcome",
     farmer: "Farmer",
@@ -176,6 +177,7 @@ export const translations = {
   hi: {
     // General
     app_name: "कृषि सारथी",
+    dashboard: "डैशबोर्ड",
     subtitle: "स्मार्ट कृषि सहायक",
     welcome: "स्वागत है",
     farmer: "किसान",
@@ -351,6 +353,7 @@ export const translations = {
   pa: {
     // Punjabi
     app_name: "ਕ੍ਰਿਸ਼ੀ ਸਾਰਥੀ",
+    dashboard: "ਡੈਸ਼ਬੋਰਡ",
     subtitle: "ਸਮਾਰਟ ਖੇਤੀ ਸਹਾਇਕ",
     welcome: "ਜੀ ਆਇਆਂ ਨੂੰ",
     farmer: "ਕਿਸਾਨ",
@@ -516,6 +519,7 @@ export const translations = {
   mr: {
     // Marathi
     app_name: "कृषी सारथी",
+    dashboard: "डॅशबोर्ड",
     subtitle: "स्मार्ट शेती सहाय्यक",
     welcome: "स्वागत आहे",
     farmer: "शेतकरी",
@@ -681,6 +685,7 @@ export const translations = {
   ta: {
     // Tamil
     app_name: "கிருஷி சாரதி",
+    dashboard: "டாஷ்போர்டு",
     subtitle: "ஸ்மார்ட் விவசாய உதவியாளர்",
     welcome: "வரவேற்கிறோம்",
     farmer: "விவசாயி",
@@ -846,6 +851,7 @@ export const translations = {
   gu: {
     // Gujarati
     app_name: "કૃષિ સારથી",
+    dashboard: "ડેશબોર્ડ",
     subtitle: "સ્માર્ટ ખેતી સહાયક",
     welcome: "સ્વાગત છે",
     farmer: "ખેડૂત",
@@ -1011,6 +1017,7 @@ export const translations = {
   bn: {
     // Bengali
     app_name: "কৃষি সারথি",
+    dashboard: "ড্যাশবোর্ড",
     subtitle: "স্মার্ট কৃষি সহায়ক",
     welcome: "স্বাগতম",
     farmer: "কৃষক",
@@ -1176,6 +1183,7 @@ export const translations = {
   bho: {
     // Bhojpuri
     app_name: "कृषि सारथी",
+    dashboard: "डैशबोर्ड",
     subtitle: "स्मार्ट खेती सहायक",
     welcome: "स्वागत बा",
     farmer: "किसान",
@@ -1337,6 +1345,7 @@ export const translations = {
   sat: {
     // Santali (Using Devanagari script for broader compatibility)
     app_name: "कृषि सारथी",
+    dashboard: "डैशबोर्ड",
     subtitle: "स्मार्ट चास आबाद",
     welcome: "जोहार",
     farmer: "चासी",
@@ -1498,6 +1507,7 @@ export const translations = {
   kn: {
     // Kannada
     app_name: "ಕೃಷಿ ಸಾರಥಿ",
+    dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
     subtitle: "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಹಾಯಕ",
     welcome: "ಸ್ವಾಗತ",
     farmer: "ರೈತ",
