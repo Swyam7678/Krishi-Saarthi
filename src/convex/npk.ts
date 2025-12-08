@@ -3,18 +3,45 @@ import { action } from "./_generated/server";
 import { v } from "convex/values";
 
 function generateSimulationData(errorMsg?: string) {
-  const n = 173 + (Math.random() * 4 - 2); 
-  const p = 192 + (Math.random() * 4 - 2); 
-  const k = 240 + (Math.random() * 4 - 2); 
+  // Randomly select a scenario to test different recommendations
+  // 0: Optimal, 1: Low Nitrogen, 2: Low Phosphorus, 3: Low Potassium
+  const scenario = Math.floor(Math.random() * 4);
+  
+  let n, p, k;
+  
+  // Base values on scenario
+  switch (scenario) {
+    case 1: // Low Nitrogen (< 100)
+      n = 80 + (Math.random() * 20 - 10);
+      p = 192 + (Math.random() * 20 - 10);
+      k = 240 + (Math.random() * 20 - 10);
+      break;
+    case 2: // Low Phosphorus (< 100)
+      n = 173 + (Math.random() * 20 - 10);
+      p = 80 + (Math.random() * 20 - 10);
+      k = 240 + (Math.random() * 20 - 10);
+      break;
+    case 3: // Low Potassium (< 150)
+      n = 173 + (Math.random() * 20 - 10);
+      p = 192 + (Math.random() * 20 - 10);
+      k = 120 + (Math.random() * 20 - 10);
+      break;
+    default: // Optimal
+      n = 173 + (Math.random() * 20 - 10);
+      p = 192 + (Math.random() * 20 - 10);
+      k = 240 + (Math.random() * 20 - 10);
+      break;
+  }
+
   const moisture = 45 + (Math.random() * 10 - 5);
 
   const getTrend = () => Math.random() > 0.5 ? "up" : "down";
 
-  // Generate fake history
+  // Generate fake history based on the current scenario values
   const history = Array.from({ length: 10 }).map((_, i) => ({
-    n: Math.round((173 + (Math.random() * 20 - 10)) * 10) / 10,
-    p: Math.round((192 + (Math.random() * 20 - 10)) * 10) / 10,
-    k: Math.round((240 + (Math.random() * 20 - 10)) * 10) / 10,
+    n: Math.round((n + (Math.random() * 20 - 10)) * 10) / 10,
+    p: Math.round((p + (Math.random() * 20 - 10)) * 10) / 10,
+    k: Math.round((k + (Math.random() * 20 - 10)) * 10) / 10,
     moisture: Math.round((45 + (Math.random() * 10 - 5)) * 10) / 10,
     time: `T-${9-i}`
   }));
