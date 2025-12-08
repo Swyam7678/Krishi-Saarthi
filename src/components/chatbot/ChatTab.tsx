@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send, User, Bot, Volume2, Mic, MicOff } from "lucide-react";
+import { Loader2, Send, User, Bot, Volume2, Mic, MicOff, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RefObject } from "react";
+import { Link } from "react-router";
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -38,9 +39,26 @@ export function ChatTab({
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
-            <div className="text-center text-muted-foreground text-sm py-8">
+            <div className="text-center text-muted-foreground text-sm py-8 flex flex-col items-center gap-2">
               <p>Ask me anything about your farm!</p>
-              <p className="text-xs mt-2 opacity-70">Examples: "How to improve soil?", "Best crop for this season?"</p>
+              <p className="text-xs opacity-70">Examples: "How to improve soil?", "Best crop for this season?"</p>
+              
+              <div className="flex flex-wrap justify-center gap-2 mt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2 text-xs"
+                  onClick={() => onSpeak("Namaste! I am Krishi Saarthi, your farming assistant.")}
+                >
+                  <Volume2 className="h-3 w-3" /> Test Audio
+                </Button>
+                
+                <Link to="/test-voice" target="_blank">
+                  <Button variant="ghost" size="sm" className="gap-2 text-xs">
+                    <ExternalLink className="h-3 w-3" /> Troubleshoot Voice
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
           
