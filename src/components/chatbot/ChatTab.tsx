@@ -35,8 +35,8 @@ export function ChatTab({
   onToggleListening
 }: ChatTabProps) {
   return (
-    <div className="flex-1 flex flex-col overflow-hidden h-full">
-      <ScrollArea className="flex-1 p-4 h-full">
+    <div className="flex-1 flex flex-col overflow-hidden h-full relative">
+      <ScrollArea className="flex-1 p-4 h-full w-full">
         <div className="space-y-4 pb-4">
           {messages.length === 0 && (
             <div className="text-center text-muted-foreground text-sm py-8 flex flex-col items-center gap-2">

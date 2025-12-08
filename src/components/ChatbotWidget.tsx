@@ -301,9 +301,9 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   }, []);
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end sm:bottom-6 sm:right-6">
       {isOpen && (
-        <Card className="w-[calc(100vw-2rem)] sm:w-[400px] h-[calc(100vh-120px)] sm:h-[600px] mb-4 shadow-2xl border-2 border-primary/20 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300 overflow-hidden">
+        <Card className="w-[calc(100vw-2rem)] sm:w-[400px] h-[calc(80dvh)] sm:h-[600px] mb-4 shadow-2xl border-2 border-primary/20 flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300 overflow-hidden bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
           <CardHeader className="bg-primary text-primary-foreground py-3 px-4 flex flex-row justify-between items-center shrink-0">
             <div className="flex items-center gap-2">
               <div className="bg-white/20 p-1.5 rounded-full">
