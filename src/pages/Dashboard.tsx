@@ -37,11 +37,14 @@ export default function Dashboard() {
 
   // Redirect if not authenticated
   useEffect(() => {
+    // Debug logging for auth state transitions
+    console.log("Dashboard auth state:", { isLoading, isAuthenticated, hasUser: !!user });
+    
     if (!isLoading && !isAuthenticated) {
       console.log("User not authenticated, redirecting to home...");
       navigate("/");
     }
-  }, [isLoading, isAuthenticated, navigate]);
+  }, [isLoading, isAuthenticated, navigate, user]);
 
   // Load user preferences
   useEffect(() => {
@@ -129,9 +132,11 @@ export default function Dashboard() {
   };
 
   const handleSignOut = async () => {
+    console.log("Sign out initiated...");
     setIsSigningOut(true);
     try {
       await signOut();
+      console.log("Sign out completed.");
       // Navigation handled by useEffect
     } catch (error) {
       console.error("Sign out error:", error);
