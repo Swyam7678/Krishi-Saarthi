@@ -15,7 +15,7 @@ export default function Landing() {
       {/* Hero Section */}
       <header className="w-full py-6 px-4 md:px-8 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2 font-bold text-2xl text-primary">
-          <Sprout className="h-8 w-8" />
+          <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
           {t('app_name')}
         </div>
         <div className="flex items-center gap-4">

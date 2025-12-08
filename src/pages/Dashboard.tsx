@@ -122,7 +122,7 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
-              <LayoutDashboard className="h-8 w-8" />
+              <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
               {t('app_name')}
             </h1>
             <p className="text-muted-foreground">{t('subtitle')} • {t('welcome')}, {user?.name || t('farmer')}</p>
