@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { useLanguage } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { SubscriptionSection } from "@/components/SubscriptionSection";
 
 export default function Landing() {
   const { t, language } = useLanguage();
@@ -68,6 +69,9 @@ export default function Landing() {
             </div>
           </div>
         </section>
+
+        {/* Subscription Section */}
+        <SubscriptionSection />
       </main>
 
       <footer className="py-6 text-center text-sm text-muted-foreground border-t">
