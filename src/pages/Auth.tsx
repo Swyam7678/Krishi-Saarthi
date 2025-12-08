@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useLanguage } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { toast } from "sonner";
 
 interface AuthProps {
   redirectAfterAuth?: string;
@@ -41,6 +42,7 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       const redirect = redirectAfterAuth || "/";
+      console.log("User is authenticated, redirecting to:", redirect);
       navigate(redirect);
     }
   }, [authLoading, isAuthenticated, navigate, redirectAfterAuth]);
@@ -48,18 +50,23 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    console.log("Initiating email sign-in for:", email);
+
     try {
-      const formData = new FormData(event.currentTarget);
       await signIn("email-otp", formData);
-      setStep({ email: formData.get("email") as string });
+      console.log("OTP sent successfully to:", email);
+      toast.success(t('code_sent') + " " + email);
+      setStep({ email });
       setIsLoading(false);
     } catch (error) {
       console.error("Email sign-in error:", error);
-      setError(
-        error instanceof Error
+      const errorMessage = error instanceof Error
           ? error.message
-          : "सत्यापन कोड भेजने में विफल। कृपया पुनः प्रयास करें।",
-      );
+          : "सत्यापन कोड भेजने में विफल। कृपया पुनः प्रयास करें।";
+      setError(errorMessage);
+      toast.error(errorMessage);
       setIsLoading(false);
     }
   };
@@ -68,18 +75,24 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
+    const formData = new FormData(event.currentTarget);
+    const code = formData.get("code") as string;
+    console.log("Verifying OTP:", code);
+
     try {
-      const formData = new FormData(event.currentTarget);
       await signIn("email-otp", formData);
 
-      console.log("signed in");
+      console.log("OTP verified successfully. User signed in.");
+      toast.success(t('success'));
 
       const redirect = redirectAfterAuth || "/";
       navigate(redirect);
     } catch (error) {
       console.error("OTP verification error:", error);
 
-      setError("आपके द्वारा दर्ज किया गया सत्यापन कोड गलत है।");
+      const errorMessage = "आपके द्वारा दर्ज किया गया सत्यापन कोड गलत है।";
+      setError(errorMessage);
+      toast.error(errorMessage);
       setIsLoading(false);
 
       setOtp("");
