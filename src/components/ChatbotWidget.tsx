@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { MessageCircle, X, Send, Mic, Volume2, VolumeX, Share2, RefreshCw, AlertCircle, Droplets } from "lucide-react";
+import { MessageCircle, X, Send, Mic, Volume2, VolumeX, Share2, RefreshCw, AlertCircle, Droplets, Loader2 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -18,9 +18,10 @@ interface ChatbotWidgetProps {
     timestamp?: number;
   } | null;
   onRefresh?: () => void;
+  isLoading?: boolean;
 }
 
-export function ChatbotWidget({ npkData, onRefresh }: ChatbotWidgetProps) {
+export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: ChatbotWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { t, language } = useLanguage();
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -129,8 +130,15 @@ export function ChatbotWidget({ npkData, onRefresh }: ChatbotWidgetProps) {
             </div>
             <div className="flex items-center gap-1">
               {onRefresh && (
-                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/20 text-primary-foreground" onClick={onRefresh} title={t('refresh')}>
-                  <RefreshCw className="h-4 w-4" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 hover:bg-white/20 text-primary-foreground" 
+                  onClick={onRefresh} 
+                  title={t('refresh')}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                 </Button>
               )}
               <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/20 text-primary-foreground" onClick={() => setIsOpen(false)}>
@@ -192,7 +200,8 @@ export function ChatbotWidget({ npkData, onRefresh }: ChatbotWidgetProps) {
                       </div>
                       
                       {npkData.timestamp && (
-                        <p className="text-[10px] text-muted-foreground text-right">
+                        <p className="text-[10px] text-muted-foreground text-right flex justify-end items-center gap-1">
+                          {isLoading && <span className="text-primary animate-pulse">Updating...</span>}
                           {new Date(npkData.timestamp).toLocaleTimeString()}
                         </p>
                       )}
