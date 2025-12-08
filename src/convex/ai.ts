@@ -13,9 +13,20 @@ export const chat = action({
   handler: async (ctx, args) => {
     const lang = args.lang || 'hi';
     
+    const langName: Record<string, string> = { 
+      en: 'English', 
+      hi: 'Hindi', 
+      pa: 'Punjabi', 
+      mr: 'Marathi', 
+      ta: 'Tamil',
+      gu: 'Gujarati',
+      bn: 'Bengali'
+    };
+    const targetLang = langName[lang] || 'Hindi';
+
     const systemPrompt = `
       You are KrishiSaarthi, an expert AI agricultural assistant for Indian farmers.
-      Language: Respond in ${lang === 'en' ? 'English' : 'the requested Indian language (Hindi/Regional)'}.
+      Language: Respond in ${targetLang}.
       
       Context:
       ${args.context || "No specific soil data provided."}

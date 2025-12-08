@@ -28,6 +28,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   
   // Chat State
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -39,6 +40,25 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   // Voice Input State
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const updateVoices = () => {
+      if (typeof window !== 'undefined') {
+        setVoices(window.speechSynthesis.getVoices());
+      }
+    };
+    
+    updateVoices();
+    if (typeof window !== 'undefined') {
+      window.speechSynthesis.onvoiceschanged = updateVoices;
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -160,7 +180,16 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       'gu': 'gu-IN',
       'bn': 'bn-IN'
     };
-    utterance.lang = langMap[language] || 'en-IN';
+    const targetLang = langMap[language] || 'en-IN';
+    utterance.lang = targetLang;
+
+    // Attempt to find a matching voice for better pronunciation
+    const matchingVoice = voices.find(v => v.lang === targetLang) || 
+                          voices.find(v => v.lang.startsWith(language));
+    
+    if (matchingVoice) {
+      utterance.voice = matchingVoice;
+    }
 
     utterance.onend = () => setIsSpeaking(false);
     speechRef.current = utterance;
