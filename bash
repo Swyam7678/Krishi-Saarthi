@@ -1,1 +1,1 @@
-npx convex run debug_vly:debug
+npx convex run test_ai_debug:testLanguageCompliance
