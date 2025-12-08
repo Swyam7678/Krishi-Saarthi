@@ -1,1 +1,82 @@
-import { vly } from '../lib/vly-integrations';
+import { mutation, query } from "./_generated/server";
+import { v } from "convex/values";
+
+export const saveRecommendation = mutation({
+  args: {
+    nitrogen: v.number(),
+    phosphorus: v.number(),
+    potassium: v.number(),
+    soilType: v.string(),
+    ph: v.number(),
+    rainfall: v.number(),
+    recommendation: v.string(),
+    reasoning: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", identity.email!))
+      .first();
+
+    if (!user) throw new Error("User not found");
+
+    await ctx.db.insert("recommendations", {
+      userId: user._id,
+      ...args,
+    });
+  },
+});
+
+export const getHistory = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", identity.email!))
+      .first();
+
+    if (!user) return [];
+
+    return await ctx.db
+      .query("recommendations")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .order("desc")
+      .take(10);
+  },
+});
+
+export const schema = defineSchema({
+  users: defineTable({
+    email: v.email(),
+    name: v.optional(v.string()),
+    role: v.optional(v.string()),
+  }).index("email", ["email"]),
+
+  recommendations: defineTable({
+    userId: v.optional(v.id("users")),
+    nitrogen: v.number(),
+    phosphorus: v.number(),
+    potassium: v.number(),
+    soilType: v.string(),
+    ph: v.number(),
+    rainfall: v.number(),
+    recommendation: v.string(),
+    reasoning: v.string(),
+  }).index("by_user", ["userId"]),
+
+  schemes: defineTable({
+    schemeId: v.string(),
+    title: v.string(),
+    description: v.string(),
+    link: v.string(),
+    icon: v.string(),
+  }),
+}, {
+  schemaValidation: false,
+});

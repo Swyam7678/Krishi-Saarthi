@@ -1,1 +1,1 @@
-npx convex run test_features:testAll && npx tsc -b --noEmit
+npx convex run schemes:seed

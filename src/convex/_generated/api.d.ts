@@ -14,6 +14,7 @@ import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as http from "../http.js";
 import type * as market from "../market.js";
 import type * as npk from "../npk.js";
+import type * as schemes from "../schemes.js";
 import type * as test_ai_debug from "../test_ai_debug.js";
 import type * as test_chat from "../test_chat.js";
 import type * as test_features from "../test_features.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   market: typeof market;
   npk: typeof npk;
+  schemes: typeof schemes;
   test_ai_debug: typeof test_ai_debug;
   test_chat: typeof test_chat;
   test_features: typeof test_features;

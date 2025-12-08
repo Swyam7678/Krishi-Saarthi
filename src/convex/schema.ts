@@ -54,6 +54,15 @@ const schema = defineSchema(
       recommendation: v.string(),
       reasoning: v.string(),
     }).index("by_user", ["userId"]),
+
+    // Government Schemes
+    schemes: defineTable({
+      schemeId: v.string(), // ID for translation lookup
+      title: v.string(), // Fallback title
+      description: v.string(), // Fallback description
+      link: v.string(),
+      icon: v.string(), // Icon identifier
+    }),
   },
   {
     schemaValidation: false,
