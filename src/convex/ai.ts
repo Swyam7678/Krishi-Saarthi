@@ -138,6 +138,8 @@ export const generateCropRecommendation = action({
                 soilType: args.soilType,
                 ph: args.ph,
                 rainfall: args.rainfall,
+                temperature: args.temperature,
+                humidity: args.humidity,
                 recommendation: content,
                 reasoning: "AI Analysis (GPT-4o)",
             });
@@ -300,6 +302,8 @@ export const generateCropRecommendation = action({
             soilType: args.soilType,
             ph: args.ph,
             rainfall: args.rainfall,
+            temperature: args.temperature,
+            humidity: args.humidity,
             recommendation: response,
             reasoning: "AI Simulation (Fallback)",
         });

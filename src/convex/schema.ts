@@ -51,6 +51,8 @@ const schema = defineSchema(
       soilType: v.string(),
       ph: v.number(),
       rainfall: v.number(),
+      temperature: v.number(),
+      humidity: v.number(),
       recommendation: v.string(),
       reasoning: v.string(),
     }).index("by_user", ["userId"]),

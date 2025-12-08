@@ -10,6 +10,8 @@ export const saveRecommendation = internalMutation({
     soilType: v.string(),
     ph: v.number(),
     rainfall: v.number(),
+    temperature: v.number(),
+    humidity: v.number(),
     recommendation: v.string(),
     reasoning: v.string(),
   },
@@ -28,6 +30,8 @@ export const saveRecommendation = internalMutation({
         soilType: args.soilType,
         ph: args.ph,
         rainfall: args.rainfall,
+        temperature: args.temperature,
+        humidity: args.humidity,
         recommendation: args.recommendation,
         reasoning: args.reasoning,
     });
