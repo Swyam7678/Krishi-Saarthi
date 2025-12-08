@@ -19,6 +19,12 @@ export function CompleteProfileModal({ isOpen, onClose, user }: CompleteProfileM
   const updateUser = useMutation(api.users.updateUser);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      console.log("CompleteProfileModal is now OPEN");
+    }
+  }, [isOpen]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);

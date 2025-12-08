@@ -51,15 +51,29 @@ export default function Dashboard() {
   // Load user preferences and check profile completion
   useEffect(() => {
     if (user) {
+      // Debug log for user profile fields
+      console.log("Checking user profile for completion:", {
+        name: user.name,
+        farmLocation: user.farmLocation,
+        farmSize: user.farmSize,
+        phoneNumber: user.phoneNumber
+      });
+
       if (user.location && location === undefined) setLocation(user.location);
       if (user.sheetUrl && sheetUrl === undefined) setSheetUrl(user.sheetUrl);
       if (user.selectedCrops) setSelectedCrops(user.selectedCrops);
 
       // Check if profile is incomplete
       if (!user.farmLocation || !user.farmSize || !user.phoneNumber) {
+        console.log("Profile incomplete, triggering modal in 1s...");
         // Small delay to ensure UI is ready
-        const timer = setTimeout(() => setShowProfileModal(true), 1000);
+        const timer = setTimeout(() => {
+          console.log("Setting showProfileModal to true");
+          setShowProfileModal(true);
+        }, 1000);
         return () => clearTimeout(timer);
+      } else {
+        console.log("Profile is complete.");
       }
     }
   }, [user]);
