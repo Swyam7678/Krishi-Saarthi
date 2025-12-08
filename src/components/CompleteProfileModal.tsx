@@ -59,19 +59,46 @@ export function CompleteProfileModal({ isOpen, onClose, user }: CompleteProfileM
         <form key={isOpen ? 'open' : 'closed'} onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="name">Full Name</Label>
-            <Input id="name" name="name" defaultValue={user?.name || ""} required placeholder="Enter your full name" />
+            <Input 
+              id="name" 
+              name="name" 
+              defaultValue={user?.name || ""} 
+              required 
+              placeholder="Enter your full name"
+              autoComplete="name"
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="phoneNumber">Phone Number</Label>
-            <Input id="phoneNumber" name="phoneNumber" defaultValue={user?.phoneNumber || ""} required placeholder="Enter your phone number" />
+            <Input 
+              id="phoneNumber" 
+              name="phoneNumber" 
+              defaultValue={user?.phoneNumber || ""} 
+              required 
+              placeholder="Enter your phone number"
+              autoComplete="tel"
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="farmLocation">Farm Location</Label>
-            <Input id="farmLocation" name="farmLocation" defaultValue={user?.farmLocation || user?.location || ""} required placeholder="City, State" />
+            <Input 
+              id="farmLocation" 
+              name="farmLocation" 
+              defaultValue={user?.farmLocation || user?.location || ""} 
+              required 
+              placeholder="City, State"
+              autoComplete="address-level2"
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="farmSize">Total Land Area</Label>
-            <Input id="farmSize" name="farmSize" defaultValue={user?.farmSize || ""} required placeholder="e.g. 5 Acres" />
+            <Input 
+              id="farmSize" 
+              name="farmSize" 
+              defaultValue={user?.farmSize || ""} 
+              required 
+              placeholder="e.g. 5 Acres"
+            />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isLoading}>

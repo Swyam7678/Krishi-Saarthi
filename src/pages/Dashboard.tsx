@@ -15,6 +15,7 @@ import { api } from "@/convex/_generated/api";
 import { useAction, useMutation } from "convex/react";
 import { LayoutDashboard, LogOut, Loader2, UserCircle, RotateCcw } from "lucide-react";
 import { CompleteProfileModal } from "@/components/CompleteProfileModal";
+import { cn } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -238,19 +239,27 @@ export default function Dashboard() {
                   <div className="grid gap-2">
                     <div className="grid grid-cols-3 items-center gap-4">
                       <span className="text-sm font-medium">Name:</span>
-                      <span className="col-span-2 text-sm truncate">{user?.name || "-"}</span>
+                      <span className={cn("col-span-2 text-sm truncate", !user?.name && "text-muted-foreground italic")}>
+                        {user?.name || "Not set"}
+                      </span>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
                       <span className="text-sm font-medium">Phone:</span>
-                      <span className="col-span-2 text-sm truncate">{user?.phoneNumber || "-"}</span>
+                      <span className={cn("col-span-2 text-sm truncate", !user?.phoneNumber && "text-muted-foreground italic")}>
+                        {user?.phoneNumber || "Not set"}
+                      </span>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
                       <span className="text-sm font-medium">Location:</span>
-                      <span className="col-span-2 text-sm truncate">{user?.farmLocation || user?.location || "-"}</span>
+                      <span className={cn("col-span-2 text-sm truncate", (!user?.farmLocation && !user?.location) && "text-muted-foreground italic")}>
+                        {user?.farmLocation || user?.location || "Not set"}
+                      </span>
                     </div>
                     <div className="grid grid-cols-3 items-center gap-4">
                       <span className="text-sm font-medium">Size:</span>
-                      <span className="col-span-2 text-sm truncate">{user?.farmSize || "-"}</span>
+                      <span className={cn("col-span-2 text-sm truncate", !user?.farmSize && "text-muted-foreground italic")}>
+                        {user?.farmSize || "Not set"}
+                      </span>
                     </div>
                   </div>
                   <Button onClick={() => setShowProfileModal(true)} size="sm" className="w-full">
@@ -260,12 +269,12 @@ export default function Dashboard() {
               </PopoverContent>
             </Popover>
 
-            {/* Dev Tool: Reset Profile for Testing */}
+            {/* Dev Tool: Reset Profile for Testing - Hidden on mobile to save space */}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleResetProfile}
-              className="gap-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50"
+              className="gap-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50 hidden md:flex"
               title="Reset Profile (Test)"
             >
               <RotateCcw className="h-4 w-4" />
