@@ -4,6 +4,7 @@ import { ArrowRight, Sprout, CloudSun, TrendingUp, BrainCircuit } from "lucide-r
 import { Link } from "react-router";
 import { useLanguage } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function Landing() {
   const { t, language } = useLanguage();
@@ -16,9 +17,12 @@ export default function Landing() {
           <Sprout className="h-8 w-8" />
           {t('app_name')}
         </div>
-        <Link to="/auth" className={buttonVariants({ variant: "default" })}>
-          {t('login_title')}
-        </Link>
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
+          <Link to="/auth" className={buttonVariants({ variant: "default" })}>
+            {t('login_title')}
+          </Link>
+        </div>
       </header>
 
       <main className="flex-1">

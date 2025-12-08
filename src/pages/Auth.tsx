@@ -19,6 +19,7 @@ import { ArrowRight, Loader2, Mail, UserX } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useLanguage } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 interface AuthProps {
   redirectAfterAuth?: string;
@@ -99,8 +100,10 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-
+    <div className="min-h-screen flex flex-col relative">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       
       {/* Auth Content */}
       <div className="flex-1 flex items-center justify-center">

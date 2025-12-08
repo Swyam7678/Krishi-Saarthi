@@ -14,6 +14,7 @@ import { useLanguage } from "@/lib/i18n";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import { SchemesCard } from "@/components/dashboard/SchemesCard";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
@@ -108,31 +109,7 @@ export default function Dashboard() {
               {lastUpdated.toLocaleTimeString()}
             </span>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Languages className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">
-                    {language === 'en' ? 'English' : 
-                     language === 'hi' ? 'हिंदी' :
-                     language === 'pa' ? 'ਪੰਜਾਬੀ' :
-                     language === 'mr' ? 'मराठी' :
-                     language === 'ta' ? 'தமிழ்' :
-                     language === 'gu' ? 'ગુજરાતી' :
-                     language === 'bn' ? 'বাংলা' : 'English'}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setLanguage('en')}>English</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('hi')}>हिंदी</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('pa')}>ਪੰਜਾਬੀ</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('mr')}>मराठी</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('ta')}>தமிழ்</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('gu')}>ગુજરાતી</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('bn')}>বাংলা</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <LanguageSwitcher />
 
             <Button variant="outline" size="sm" onClick={fetchData}>
               <RefreshCw className="h-4 w-4 sm:mr-2" />
