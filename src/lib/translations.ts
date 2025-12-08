@@ -1093,6 +1093,20 @@ export const translations = {
     feature_ai: "AI পরামর্শদাতা",
     feature_ai_desc: "ব্যক্তিগত ফসল পরামর্শ।",
     
+    // Chatbot
+    chatbot_title: "কৃষি সারথি সহায়ক",
+    chatbot_welcome: "হ্যালো! আমি আপনার এআই কৃষি সহকারী। এখানে আপনার মাটি বিশ্লেষণ:",
+    live_npk: "লাইভ NPK মান",
+    fertilizer_rec: "সার সুপারিশ",
+    crop_rec: "ফসল সুপারিশ",
+    healthy_soil: "মাটি স্বাস্থ্যকর। সুষম জৈব সার ব্যবহার করুন।",
+    low_n_fert: "ইউরিয়া / অ্যামোনিয়াম সালফেট (কম নাইট্রোজেন)",
+    low_p_fert: "SSP (কম ফসফরাস)",
+    low_k_fert: "MOP (কম পটাশিয়াম)",
+    share_whatsapp: "হোয়াটসঅ্যাপে শেয়ার করুন",
+    read_aloud: "জোরে পড়ুন",
+    stop_reading: "পড়া বন্ধ করুন",
+    
     // Schemes
     schemes_title: "সরকারি প্রকল্প",
     view_details: "বিস্তারিত দেখুন",
