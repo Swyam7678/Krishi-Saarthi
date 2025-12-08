@@ -73,6 +73,7 @@ export function CompleteProfileModal({ isOpen, onClose, user }: CompleteProfileM
             <Input 
               id="phoneNumber" 
               name="phoneNumber" 
+              type="tel"
               defaultValue={user?.phoneNumber || ""} 
               required 
               placeholder="Enter your phone number"

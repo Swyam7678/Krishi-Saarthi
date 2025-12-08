@@ -154,6 +154,7 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
                         name="email"
                         placeholder="name@example.com"
                         type="email"
+                        autoComplete="email"
                         className="pl-9"
                         disabled={isLoading}
                         required
