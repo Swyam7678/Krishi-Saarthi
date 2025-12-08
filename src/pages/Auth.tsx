@@ -35,6 +35,10 @@ export default function Auth({ redirectAfterAuth }: AuthProps = {}) {
   const { t } = useLanguage();
 
   useEffect(() => {
+    console.log("Auth page mounted successfully");
+  }, []);
+
+  useEffect(() => {
     if (!authLoading && isAuthenticated) {
       const redirect = redirectAfterAuth || "/";
       navigate(redirect);
