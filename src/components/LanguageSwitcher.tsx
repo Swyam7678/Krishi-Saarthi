@@ -19,6 +19,8 @@ export function LanguageSwitcher() {
     { code: 'ta', label: 'தமிழ்' },
     { code: 'gu', label: 'ગુજરાતી' },
     { code: 'bn', label: 'বাংলা' },
+    { code: 'bho', label: 'भोजपुरी' },
+    { code: 'sat', label: 'संताली' },
   ] as const;
 
   const currentLabel = languages.find(l => l.code === language)?.label || 'English';

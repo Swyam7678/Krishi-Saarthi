@@ -14,7 +14,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('app-language') as Language;
-      if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn'].includes(savedLang)) {
+      if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn', 'bho', 'sat'].includes(savedLang)) {
         return savedLang;
       }
     }

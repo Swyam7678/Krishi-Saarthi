@@ -95,7 +95,9 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
             'mr': 'mr-IN',
             'ta': 'ta-IN',
             'gu': 'gu-IN',
-            'bn': 'bn-IN'
+            'bn': 'bn-IN',
+            'bho': 'hi-IN', // Fallback to Hindi as Bhojpuri specific might not exist
+            'sat': 'hi-IN'  // Fallback to Hindi/English as Santali specific might not exist
         };
         recognitionRef.current.lang = langMap[language] || 'en-IN';
     }
@@ -178,7 +180,9 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       'mr': 'mr-IN',
       'ta': 'ta-IN',
       'gu': 'gu-IN',
-      'bn': 'bn-IN'
+      'bn': 'bn-IN',
+      'bho': 'hi-IN', // Fallback
+      'sat': 'hi-IN'  // Fallback
     };
     const targetLang = langMap[language] || 'en-IN';
     utterance.lang = targetLang;
