@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, X, RefreshCw, Loader2 } from "lucide-react";
+import { MessageCircle, X, RefreshCw, Loader2, VolumeX } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAction } from "convex/react";
@@ -79,10 +79,35 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
 
   const { fertilizers, crops } = getRecommendations();
 
+  const speakText = (text: string) => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    const langMap: Record<string, string> = {
+      'en': 'en-IN',
+      'hi': 'hi-IN',
+      'pa': 'pa-IN',
+      'mr': 'mr-IN',
+      'ta': 'ta-IN',
+      'gu': 'gu-IN',
+      'bn': 'bn-IN'
+    };
+    utterance.lang = langMap[language] || 'en-IN';
+
+    utterance.onend = () => setIsSpeaking(false);
+    speechRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+  };
+
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  };
+
   const handleSpeak = () => {
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+      stopSpeaking();
       return;
     }
 
@@ -95,17 +120,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       ${t('crop_rec')}: ${crops.join(", ")}.
     `;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Try to set language
-    if (language === 'hi') utterance.lang = 'hi-IN';
-    else if (language === 'en') utterance.lang = 'en-IN';
-    // Add other languages if supported by browser
-
-    utterance.onend = () => setIsSpeaking(false);
-    speechRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
+    speakText(text);
   };
 
   const handleWhatsAppShare = () => {
@@ -139,6 +154,9 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       });
 
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      
+      // Auto-speak the response if desired, or just let user click. 
+      // For now, we won't auto-speak to avoid annoyance, but the infrastructure is there.
     } catch (error) {
       console.error("Chat failed:", error);
       setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error. Please try again." }]);
@@ -157,8 +175,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
   // Stop speaking when closed
   useEffect(() => {
     if (!isOpen) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+      stopSpeaking();
     }
   }, [isOpen]);
 
@@ -174,6 +191,17 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
               <CardTitle className="text-base">{t('chatbot_title')}</CardTitle>
             </div>
             <div className="flex items-center gap-1">
+              {isSpeaking && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 hover:bg-white/20 text-primary-foreground animate-pulse" 
+                  onClick={stopSpeaking}
+                  title="Stop Speaking"
+                >
+                  <VolumeX className="h-4 w-4" />
+                </Button>
+              )}
               {onRefresh && (
                 <Button 
                   variant="ghost" 
@@ -220,6 +248,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
                 isChatLoading={isChatLoading}
                 onSendMessage={handleSendMessage}
                 scrollRef={scrollRef}
+                onSpeak={speakText}
               />
             </TabsContent>
           </Tabs>

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send, User, Bot } from "lucide-react";
+import { Loader2, Send, User, Bot, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RefObject } from "react";
 
@@ -17,6 +17,7 @@ interface ChatTabProps {
   isChatLoading: boolean;
   onSendMessage: (e?: React.FormEvent) => void;
   scrollRef: RefObject<HTMLDivElement | null>;
+  onSpeak: (text: string) => void;
 }
 
 export function ChatTab({
@@ -25,7 +26,8 @@ export function ChatTab({
   setInput,
   isChatLoading,
   onSendMessage,
-  scrollRef
+  scrollRef,
+  onSpeak
 }: ChatTabProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -47,10 +49,21 @@ export function ChatTab({
                 {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
               </div>
               <div className={cn(
-                "p-3 shadow-sm text-sm max-w-[85%] rounded-2xl",
+                "p-3 shadow-sm text-sm max-w-[85%] rounded-2xl group relative",
                 msg.role === 'user' ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-white dark:bg-card border rounded-tl-none"
               )}>
                 <p className="whitespace-pre-wrap">{msg.content}</p>
+                {msg.role === 'assistant' && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="absolute -bottom-8 left-0 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                    onClick={() => onSpeak(msg.content)}
+                    title="Read aloud"
+                  >
+                    <Volume2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </div>
           ))}
