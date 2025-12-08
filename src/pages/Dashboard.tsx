@@ -54,22 +54,45 @@ export default function Dashboard() {
   const fetchData = useCallback(async () => {
     setIsRefreshing(true);
     console.log("Refreshing dashboard data...");
-    try {
-      const [w, n, m] = await Promise.all([
-        getWeather({ location, lang: language }),
-        getNPK({ sheetUrl }),
-        getMarket({ location, lang: language })
-      ]);
-      setWeather(w);
-      setNpk(n);
-      setMarket(m);
-      setLastUpdated(new Date());
-    } catch (error: any) {
-      console.error("Error fetching dashboard data:", error);
-      if (error.message && error.message.includes("Location not found")) {
-        toast.error(t('error'));
-        setLocation(undefined); // Reset to default
+    
+    // Fetch data independently to prevent one failure from blocking others
+    const fetchWeather = async () => {
+      try {
+        const w = await getWeather({ location, lang: language });
+        setWeather(w);
+      } catch (error: any) {
+        console.error("Error fetching weather:", error);
+        if (error.message && error.message.includes("Location not found")) {
+          toast.error(t('error'));
+          setLocation(undefined); // Reset to default
+        }
       }
+    };
+
+    const fetchNPK = async () => {
+      try {
+        const n = await getNPK({ sheetUrl });
+        setNpk(n);
+      } catch (error) {
+        console.error("Error fetching NPK:", error);
+        // Keep previous data or handle specific NPK errors if needed
+      }
+    };
+
+    const fetchMarket = async () => {
+      try {
+        const m = await getMarket({ location, lang: language });
+        setMarket(m);
+      } catch (error) {
+        console.error("Error fetching market:", error);
+      }
+    };
+
+    try {
+      await Promise.all([fetchWeather(), fetchNPK(), fetchMarket()]);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error("Unexpected error during refresh:", error);
     } finally {
       setIsRefreshing(false);
     }
