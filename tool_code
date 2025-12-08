@@ -1,0 +1,6 @@
+await callTool("readFilesToContextTool", {
+  "file_paths": [
+    "src/App.tsx"
+  ],
+  "replace_files_in_context": false
+});
