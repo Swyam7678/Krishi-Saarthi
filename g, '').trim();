@@ -16,6 +16,7 @@
       console.error("Error fetching market prices:", error);
     }
 
+    console.log("Returning fallback market data");
     return fallbackCrops;
   },
 });
