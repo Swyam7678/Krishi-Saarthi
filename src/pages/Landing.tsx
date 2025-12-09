@@ -57,11 +57,6 @@ export default function Landing() {
                 desc={t('feature_soil_desc')}
               />
               <FeatureCard 
-                icon={<TrendingUp className="h-10 w-10 text-orange-500" />}
-                title={t('feature_market')}
-                desc={t('feature_market_desc')}
-              />
-              <FeatureCard 
                 icon={<BrainCircuit className="h-10 w-10 text-purple-500" />}
                 title={t('feature_ai')}
                 desc={t('feature_ai_desc')}
