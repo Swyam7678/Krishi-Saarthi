@@ -1,22 +1,22 @@
-      if (result.success && result.data) {
-        const content = result.data.choices[0]?.message?.content;
-        if (content) {
-          // Clean up code blocks if present
-          const jsonStr = content.replace(/```json/g, '').replace(/```/g, '');
-          
-          const crops = JSON.parse(jsonStr) as MarketItem[];
-          
-          return crops.map((crop: MarketItem) => ({
-            ...crop,
-            current: Math.round(crop.avg + (Math.random() * 100 - 50))
-          }));
+          try {
+            const crops = JSON.parse(jsonStr) as MarketItem[];
+            return crops.map((crop: MarketItem) => ({
+                ...crop,
+                current: Math.round(crop.avg + (Math.random() * 100 - 50))
+            }));
+          } catch (parseError) {
+            console.error("JSON Parse Error:", parseError);
+            console.log("Raw content that failed to parse:", jsonStr);
+          }
         }
+      } else {
+        console.error("Vly AI request failed or returned no data:", result);
       }
     } catch (error) {
       console.error("Error fetching market prices:", error);
     }
-
-    console.log("Returning fallback market data");
+    
+    console.log("Returning fallback market data due to error or empty response");
     return fallbackCrops;
   },
 });

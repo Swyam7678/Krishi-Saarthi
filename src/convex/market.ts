@@ -108,14 +108,20 @@ export const getMarketPrices = action({
         Ensure the JSON is valid and contains no other text. Do not include markdown formatting.
       `;
 
+      console.log("Sending prompt to Vly AI:", prompt);
+
       const result = await vly.completion({
         model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         maxTokens: 1000,
       });
 
+      console.log("Vly AI Result:", JSON.stringify(result, null, 2));
+
       if (result.success && result.data) {
         const content = result.data.choices[0]?.message?.content;
+        console.log("AI Content:", content);
+        
         if (content) {
           // Clean up code blocks if present
           const jsonStr = content.replace(/```json/g, '').replace(/```/g, '').trim();
