@@ -28,8 +28,10 @@ export default function MarketPage() {
         const m = await getMarket({ location, lang: language });
         console.log("Market Data Received:", m);
         setMarket(m);
+        // toast.success(t('market_updated') || "Market data updated"); // Optional: might be too noisy
       } catch (error) {
         console.error(error);
+        toast.error(t('error_fetching_market') || "Failed to load market data");
       }
     };
     fetchMarket();
