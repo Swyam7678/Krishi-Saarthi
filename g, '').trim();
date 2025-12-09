@@ -1,42 +1,21 @@
-const result = await vly.completion({
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: prompt }],
-  maxTokens: 1000,
+          const crops = JSON.parse(jsonStr) as MarketItem[];
+          
+          return crops.map((crop: MarketItem) => ({
+            ...crop,
+            id: crop.id || crop.name.toLowerCase().replace(/\s+/g, '-'),
+            avg: Number(crop.avg) || 0,
+            min: Number(crop.min) || 0,
+            max: Number(crop.max) || 0,
+            current: Math.round((Number(crop.avg) || 0) + (Math.random() * 100 - 50)),
+            history: generateHistory(Number(crop.avg) || 0)
+          }));
+        }
+      }
+      console.log("AI Market Data Failed or Empty, using fallback");
+      return fallbackCrops;
+    } catch (error) {
+      console.error("Error fetching market prices:", error);
+      return fallbackCrops;
+    }
+  },
 });
-
-if (result.success && result.data) {
-  const content = result.data.choices[0]?.message?.content;
-  if (content) {
-    // Clean up code blocks if present
-    const jsonStr = content.replace(/```json/g, '').replace(/```/g, '');
-    
-    let crops: any[] = [];
-    try {
-      crops = JSON.parse(jsonStr);
-    } catch (e) {
-      console.error("Failed to parse AI response JSON:", e);
-      return fallbackCrops;
-    }
-
-    if (!Array.isArray(crops) || crops.length === 0) {
-      console.warn("AI response is not a valid array or is empty");
-      return fallbackCrops;
-    }
-    
-    return crops.map((crop: any) => {
-      const avg = Number(crop.avg) || 0;
-      // Ensure history exists for charts
-      const history = crop.history || generateHistory(avg);
-      
-      return {
-        id: crop.id || crop.name?.toLowerCase().replace(/\s+/g, '_') || 'unknown',
-        name: crop.name || 'Unknown Crop',
-        min: Number(crop.min) || avg,
-        max: Number(crop.max) || avg,
-        avg: avg,
-        current: Number(crop.current) || avg,
-        history: history
-      };
-    });
-  }
-}

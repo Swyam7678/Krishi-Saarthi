@@ -26,6 +26,7 @@ export default function MarketPage() {
     const fetchMarket = async () => {
       try {
         const m = await getMarket({ location, lang: language });
+        console.log("Market Data Received:", m);
         setMarket(m);
       } catch (error) {
         console.error(error);
