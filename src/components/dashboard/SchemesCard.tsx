@@ -31,7 +31,7 @@ export function SchemesCard() {
       <CardHeader>
         <CardTitle>{t('schemes_title')}</CardTitle>
         <CardDescription>
-          {t('schemes_desc' as any) || "Government schemes for farmers"}
+          {t('schemes_desc') || "Government schemes for farmers"}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 p-0">

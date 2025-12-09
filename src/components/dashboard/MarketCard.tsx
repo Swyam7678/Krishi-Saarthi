@@ -97,7 +97,7 @@ export function MarketCard({ data, location, selectedCrops, onCropsChange }: Mar
       <CardHeader>
         <CardTitle>{t('market_title')}</CardTitle>
         <CardDescription>
-          {location ? `Prices in ${location}` : (t('market_desc' as any) || "Live market rates")}
+          {location ? `Prices in ${location}` : (t('market_desc') || "Live market rates")}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1">

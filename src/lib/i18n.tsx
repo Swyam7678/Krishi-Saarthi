@@ -28,7 +28,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: keyof typeof translations['en']) => {
-    return translations[language]?.[key] || translations['en'][key] || key;
+    const langData = (translations as any)[language];
+    return langData?.[key] || translations['en'][key] || key;
   }, [language]);
 
   const value = useMemo(() => ({

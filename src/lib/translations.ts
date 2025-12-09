@@ -61,6 +61,7 @@ export const translations = {
     
     // Market
     market_title: "Mandi Prices",
+    market_desc: "Live rates from local markets.",
     rates: "Rates",
     trends: "Trends",
     select_crops: "Select Crops",
@@ -73,6 +74,7 @@ export const translations = {
     
     // AI Recommendation
     ai_title: "AI Crop Suggestion",
+    ai_desc: "Get personalized crop suggestions based on soil health.",
     get_suggestion: "Get Suggestion",
     analyzing: "Analyzing...",
     soil_type: "Soil Type",
@@ -127,6 +129,7 @@ export const translations = {
     
     // Schemes
     schemes_title: "Government Schemes",
+    schemes_desc: "Government schemes for farmers.",
     view_details: "View Details",
     scheme_pm_kisan_title: "PM Kisan Samman Nidhi",
     scheme_pm_kisan_desc: "Income support of ₹6,000 per year for farmers.",
@@ -239,6 +242,7 @@ export const translations = {
 
     // Market
     market_title: "मंडी भाव",
+    market_desc: "Live rates from local markets.",
     rates: "भाव",
     trends: "रुझान",
     select_crops: "फसलें चुनें",
@@ -251,6 +255,7 @@ export const translations = {
 
     // AI Recommendation
     ai_title: "AI फसल सुझाव",
+    ai_desc: "Get personalized crop suggestions based on soil health.",
     get_suggestion: "सुझाव प्राप्त करें",
     analyzing: "विश्लेषण कर रहा है...",
     soil_type: "मिट्टी का प्रकार",
@@ -305,6 +310,7 @@ export const translations = {
     
     // Schemes
     schemes_title: "सरकारी योजनाएं",
+    schemes_desc: "सरकारी योजनाएं किसानों के लिए।",
     view_details: "विवरण देखें",
     scheme_pm_kisan_title: "पीएम किसान सम्मान निधि",
     scheme_pm_kisan_desc: "किसानों के लिए ₹6,000 प्रति वर्ष की आय सहायता।",
@@ -413,6 +419,7 @@ export const translations = {
     moisture: "हासा नमी",
 
     market_title: "বাজার দাম",
+    market_desc: "Live rates from local markets.",
     rates: "দাম",
     trends: "প্রবণতা",
     select_crops: "ফসল নির্বাচন",
@@ -424,6 +431,7 @@ export const translations = {
     avg: "গড়",
 
     ai_title: "AI ফসল পরামর্শ",
+    ai_desc: "Get personalized crop suggestions based on soil health.",
     get_suggestion: "পরামর্শ নাও",
     analyzing: "বিশ্লেষণ করছে...",
     soil_type: "মাটির প্রকার",
@@ -476,13 +484,14 @@ export const translations = {
     
     // Schemes
     schemes_title: "সরকারি প্রকল্প",
+    schemes_desc: "সরকারি প্রকল্প কিসানদের জন্য।",
     view_details: "বিস্তৃত দেখুন",
     scheme_pm_kisan_title: "পিএম কিসান সম্মান নিধি",
     scheme_pm_kisan_desc: "শেততসর জন্য ₹6,000 বার্ষিক আয় সহায়তা।",
     scheme_pmfby_title: "পিএম ফসল বিমা পরিকল্পনা",
     scheme_pmfby_desc: "অর্থনৈতিক সহায়তার জন্য ফসল বিমা।",
     scheme_shc_title: "মাটি স্বাস্থ কার্ড",
-    scheme_shc_desc: "পুষ্টি ও সার বিষয়ক ফসল-উপকারিতা।",
+    scheme_shc_desc: "পুষ্টি ও সার বিষয়ক ফসল-উপকারিতা।",
     scheme_pkvy_title: "পারপরাগত কৃষি বিকাশ পরিকল্পনা",
     scheme_pkvy_desc: "জৈব চাষে আরম্মোচন।",
     
@@ -517,10 +526,17 @@ export const translations = {
     plan_annual_f1: "সমস্ত বৃদ্ধির পরিকল্পনা সুবিধা",
     plan_annual_f2: "হার্ডওয়্যার-নিয়ন্ত্রিত NPK ডিস্ট্রিবিউশন",
     plan_annual_f3: "ব্যক্তিগত পরামর্শ ও সূচী",
-    plan_annual_f4: "অগ্রাধিকার আপডেট ও ছাড়",
+    plan_annual_f4: "অগ্রাধিকার আপডেট ও ছাড়",
     plan_community_title: "সমাজ / অংশীদারিত্ব",
     plan_community_price: "₹3,000–₹5,000",
     plan_community_duration: "বিলম্ব সময়",
     plan_community_desc: "চাষী গোষ্ঠী, FPO, সমবায়ের জন্য।",
-  }
+  },
+  pa: {},
+  mr: {},
+  ta: {},
+  gu: {},
+  bn: {},
+  bho: {},
+  kn: {},
 };

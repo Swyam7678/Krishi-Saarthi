@@ -124,7 +124,7 @@ export function CropRecommendation({ npkData }: CropRecommendationProps) {
           {t('ai_title')}
         </CardTitle>
         <CardDescription>
-          {t('ai_desc' as any) || "Get personalized crop suggestions based on soil health"}
+          {t('ai_desc') || "Get personalized crop suggestions based on soil health"}
         </CardDescription>
       </CardHeader>
       <CardContent>
