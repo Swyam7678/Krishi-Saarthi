@@ -34,25 +34,61 @@ export const getMarketPrices = action({
 
     // Helper to generate mock history based on current price
     const generateHistory = (basePrice: number) => {
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-      return months.map((month, i) => ({
-        date: month,
-        price: Math.round(basePrice * (1 + (Math.random() * 0.2 - 0.1))) // +/- 10% variation
-      }));
+      const history = [];
+      const today = new Date();
+      // Generate last 7 days
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const dateStr = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+        // Random fluctuation +/- 5%
+        const fluctuation = (Math.random() * 0.1) - 0.05; 
+        history.push({
+          date: dateStr,
+          price: Math.round(basePrice * (1 + fluctuation))
+        });
+      }
+      return history;
     };
 
-    // Fallback data defined first so it can be used in catch block
-    const fallbackCrops: MarketItem[] = [
-      { name: lang === 'en' ? "Wheat" : "गेहूँ (Wheat)", min: 2100, max: 2400, avg: 2250, current: 2250, history: [] },
-      { name: lang === 'en' ? "Rice" : "चावल (Rice)", min: 2800, max: 3200, avg: 3000, current: 3000, history: [] },
-      { name: lang === 'en' ? "Maize" : "मक्का (Maize)", min: 1800, max: 2100, avg: 1950, current: 1950, history: [] },
-      { name: lang === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)", min: 300, max: 350, avg: 325, current: 325, history: [] },
-      { name: lang === 'en' ? "Soybean" : "सोयाबीन (Soybean)", min: 4500, max: 5200, avg: 4850, current: 4850, history: [] },
-      { name: lang === 'en' ? "Mustard" : "सरसों (Mustard)", min: 5000, max: 5600, avg: 5300, current: 5300, history: [] },
-      { name: lang === 'en' ? "Potato" : "आलू (Potato)", min: 800, max: 1200, avg: 1000, current: 1000, history: [] },
-      { name: lang === 'en' ? "Onion" : "प्याज (Onion)", min: 1500, max: 2500, avg: 2000, current: 2000, history: [] },
-      { name: lang === 'en' ? "Tomato" : "टमाटर (Tomato)", min: 1000, max: 2000, avg: 1500, current: 1500, history: [] },
-    ].map(crop => ({ ...crop, history: generateHistory(crop.avg) }));
+    // Helper to get dynamic current price
+    const getDynamicPrice = (base: number) => {
+        // Random fluctuation +/- 8%
+        const fluctuation = (Math.random() * 0.16) - 0.08; 
+        return Math.round(base * (1 + fluctuation));
+    };
+
+    // Base data for crops
+    const baseCrops = [
+      { name: lang === 'en' ? "Wheat" : "गेहूँ (Wheat)", avg: 2250 },
+      { name: lang === 'en' ? "Rice" : "चावल (Rice)", avg: 3000 },
+      { name: lang === 'en' ? "Maize" : "मक्का (Maize)", avg: 1950 },
+      { name: lang === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)", avg: 325 },
+      { name: lang === 'en' ? "Soybean" : "सोयाबीन (Soybean)", avg: 4850 },
+      { name: lang === 'en' ? "Mustard" : "सरसों (Mustard)", avg: 5300 },
+      { name: lang === 'en' ? "Potato" : "आलू (Potato)", avg: 1000 },
+      { name: lang === 'en' ? "Onion" : "प्याज (Onion)", avg: 2000 },
+      { name: lang === 'en' ? "Tomato" : "टमाटर (Tomato)", avg: 1500 },
+    ];
+
+    // Generate dynamic fallback data
+    const fallbackCrops: MarketItem[] = baseCrops.map(crop => {
+      const current = getDynamicPrice(crop.avg);
+      const history = generateHistory(crop.avg);
+      // Calculate min/max from history and current to be consistent
+      const allPrices = [...history.map(h => h.price), current];
+      const min = Math.min(...allPrices);
+      const max = Math.max(...allPrices);
+      
+      return {
+        name: crop.name,
+        avg: crop.avg,
+        current,
+        min,
+        max,
+        history
+      };
+    });
 
     try {
       const prompt = `

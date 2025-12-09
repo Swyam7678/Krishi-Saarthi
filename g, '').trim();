@@ -1,26 +1,18 @@
-      if (result.success && result.data) {
-        const content = result.data.choices[0]?.message?.content;
-        if (content) {
-          // Clean up code blocks if present
-          const jsonStr = content.replace(/```json/g, '').replace(/```/g, '');
+          const crops = JSON.parse(jsonStr) as MarketItem[];
           
-          try {
-            const crops = JSON.parse(jsonStr) as MarketItem[];
-            
-            return crops.map((crop: MarketItem) => ({
-              ...crop,
-              current: Math.round(crop.avg + (Math.random() * 100 - 50))
-            }));
-          } catch (error) {
-            console.log("Failed to parse JSON from AI response, using fallback");
-            return fallbackCrops;
-          }
+          // Add history to AI results if missing
+          return crops.map((crop: MarketItem) => ({
+            ...crop,
+            history: crop.history && crop.history.length > 0 ? crop.history : generateHistory(crop.avg)
+          }));
         }
       }
-      console.log("AI returned no content or failed, using fallback");
+      // If AI returns success but no content/bad format, return fallback
+      console.log("AI response invalid, using fallback");
       return fallbackCrops;
     } catch (error) {
-      console.log("Error processing AI response:", error);
+      console.error("Error fetching market prices:", error);
       return fallbackCrops;
     }
-  }
+  },
+});
