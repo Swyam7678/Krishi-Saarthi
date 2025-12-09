@@ -7,9 +7,8 @@
         }
       }
       
-      console.log("AI response invalid or empty, using fallback.");
+      console.log("Vly AI returned unsuccessful response or no data, using fallback");
       return fallbackCrops;
-
     } catch (error) {
       console.error("Error fetching market prices:", error);
       return fallbackCrops;
