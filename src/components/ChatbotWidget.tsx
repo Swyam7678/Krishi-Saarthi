@@ -134,20 +134,24 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
     // Nitrogen Logic
     if (npkData.n < 100) { // Low
       fertilizers.push(t('low_n_fert'));
-      crops.push(language === 'en' ? "Millets" : "बाजरा (Millets)", language === 'en' ? "Pulses" : "दालें (Pulses)");
+      // Suggest nitrogen-fixing crops or hardy crops
+      crops.push(language === 'en' ? "Legumes (Nitrogen Fixing)" : "दलहन (नाइट्रोजन फिक्सिंग)");
+      crops.push(language === 'en' ? "Millets" : "बाजरा (Millets)");
       isHealthy = false;
     }
 
     // Phosphorus Logic
     if (npkData.p < 100) { // Low
       fertilizers.push(t('low_p_fert'));
-      crops.push(language === 'en' ? "Pulses" : "दालें (Pulses)", language === 'en' ? "Groundnut" : "मूंगफली (Groundnut)");
+      crops.push(language === 'en' ? "Pulses" : "दालें (Pulses)");
+      crops.push(language === 'en' ? "Groundnut" : "मूंगफली (Groundnut)");
       isHealthy = false;
     }
 
     // Potassium Logic
     if (npkData.k < 150) { // Low
       fertilizers.push(t('low_k_fert'));
+      crops.push(language === 'en' ? "Root Vegetables" : "कंदमूल सब्जियां");
       crops.push(language === 'en' ? "Millets" : "बाजरा (Millets)");
       isHealthy = false;
     }
@@ -157,7 +161,8 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       crops.push(
         language === 'en' ? "Wheat" : "गेहूँ (Wheat)", 
         language === 'en' ? "Rice" : "धान (Rice)", 
-        language === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)"
+        language === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)",
+        language === 'en' ? "Cotton" : "कपास (Cotton)"
       );
     }
 
