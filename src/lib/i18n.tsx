@@ -14,7 +14,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('app-language') as Language;
-      if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn', 'bho', 'sat', 'kn'].includes(savedLang)) {
+      if (savedLang && Object.keys(translations).includes(savedLang)) {
         return savedLang;
       }
     }
@@ -28,7 +28,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: keyof typeof translations['en']) => {
-    const langData = (translations as any)[language];
+    const langData = translations[language] as Record<string, string> | undefined;
     return langData?.[key] || translations['en'][key] || key;
   }, [language]);
 

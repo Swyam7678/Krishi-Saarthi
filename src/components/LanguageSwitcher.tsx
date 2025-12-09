@@ -7,11 +7,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/lib/i18n";
 import { Languages } from "lucide-react";
+import { Language } from "@/lib/translations";
 
 export function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage();
 
-  const languages = [
+  const languages: { code: Language; label: string }[] = [
     { code: 'en', label: 'English' },
     { code: 'hi', label: 'हिंदी' },
     { code: 'pa', label: 'ਪੰਜਾਬੀ' },
@@ -21,7 +22,7 @@ export function LanguageSwitcher() {
     { code: 'bn', label: 'বাংলা' },
     { code: 'bho', label: 'भोजपुरी' },
     { code: 'sat', label: 'संताली' },
-  ] as const;
+  ];
 
   const currentLabel = languages.find(l => l.code === language)?.label || 'English';
 
