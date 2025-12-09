@@ -128,28 +128,28 @@ export function NPKCard({ data, onSheetUrlChange, currentUrl }: NPKCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
+          <div className="flex flex-col items-center p-2 sm:p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
             <span className="text-xs font-medium text-muted-foreground mb-1">N</span>
-            <span className="text-2xl font-bold text-green-700 dark:text-green-400">{data.n}</span>
+            <span className="text-xl sm:text-2xl font-bold text-green-700 dark:text-green-400">{data.n}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
               data.status.n === 'Optimal' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
             }`}>
               {data.status.n}
             </span>
           </div>
-          <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+          <div className="flex flex-col items-center p-2 sm:p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
             <span className="text-xs font-medium text-muted-foreground mb-1">P</span>
-            <span className="text-2xl font-bold text-green-700 dark:text-green-400">{data.p}</span>
+            <span className="text-xl sm:text-2xl font-bold text-green-700 dark:text-green-400">{data.p}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
               data.status.p === 'Optimal' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
             }`}>
               {data.status.p}
             </span>
           </div>
-          <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+          <div className="flex flex-col items-center p-2 sm:p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
             <span className="text-xs font-medium text-muted-foreground mb-1">K</span>
-            <span className="text-2xl font-bold text-green-700 dark:text-green-400">{data.k}</span>
+            <span className="text-xl sm:text-2xl font-bold text-green-700 dark:text-green-400">{data.k}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
               data.status.k === 'Optimal' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
             }`}>

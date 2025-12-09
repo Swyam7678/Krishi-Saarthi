@@ -173,7 +173,7 @@ export function WeatherCard({ data, onLocationChange }: WeatherCardProps) {
               </div>
             </div>
             
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
               <div className="flex flex-col items-center p-2 bg-muted/30 rounded-lg">
                 <Droplets className="h-4 w-4 mb-1 text-blue-500" />
                 <span className="text-sm font-semibold">{data.humidity}%</span>
