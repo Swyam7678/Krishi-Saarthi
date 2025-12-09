@@ -10,6 +10,7 @@ import { ReportTab, NPKData } from "@/components/chatbot/ReportTab";
 import { ChatTab } from "@/components/chatbot/ChatTab";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { getNPKStatus } from "@/lib/npk-config";
 
 interface ChatbotWidgetProps {
   npkData: NPKData | null;
@@ -131,8 +132,8 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
     const crops: string[] = [];
     let isHealthy = true;
 
-    // Nitrogen Logic (Refined: Low < 140)
-    if (npkData.n < 140) { // Low
+    // Nitrogen Logic
+    if (getNPKStatus(npkData.n, 'n') === 'low') {
       fertilizers.push(t('low_n_fert'));
       // Suggest nitrogen-fixing crops or hardy crops
       crops.push(language === 'en' ? "Legumes (Nitrogen Fixing)" : "दलहन (नाइट्रोजन फिक्सिंग)");
@@ -140,16 +141,16 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
       isHealthy = false;
     }
 
-    // Phosphorus Logic (Refined: Low < 30)
-    if (npkData.p < 30) { // Low
+    // Phosphorus Logic
+    if (getNPKStatus(npkData.p, 'p') === 'low') {
       fertilizers.push(t('low_p_fert'));
       crops.push(language === 'en' ? "Pulses" : "दालें (Pulses)");
       crops.push(language === 'en' ? "Groundnut" : "मूंगफली (Groundnut)");
       isHealthy = false;
     }
 
-    // Potassium Logic (Refined: Low < 150)
-    if (npkData.k < 150) { // Low
+    // Potassium Logic
+    if (getNPKStatus(npkData.k, 'k') === 'low') {
       fertilizers.push(t('low_k_fert'));
       crops.push(language === 'en' ? "Root Vegetables" : "कंदमूल सब्जियां");
       crops.push(language === 'en' ? "Millets" : "बाजरा (Millets)");

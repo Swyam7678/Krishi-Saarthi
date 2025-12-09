@@ -3,6 +3,7 @@ import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { vly } from "../lib/vly-integrations";
 import { internal } from "./_generated/api";
+import { getNPKStatus, NPK_THRESHOLDS } from "../lib/npk-config";
 
 export const chat = action({
   args: {
@@ -186,7 +187,7 @@ export const generateCropRecommendation = action({
           soil: ["Clay", "Loamy", "Silt", "Peaty"], 
           minPh: 5.0, maxPh: 8.0, 
           reason: lang === 'en' ? "Suitable for high rainfall and clayey soil." : "अधिक वर्षा और नमी वाली मिट्टी उपयुक्त है।",
-          nutrientNeeds: { n: "high", p: "medium", k: "medium" }
+          nutrientNeeds: { n: "high", p: "optimal", k: "optimal" }
         },
         { 
           name: lang === 'en' ? "Wheat" : "गेहूँ (Wheat)", 
@@ -195,7 +196,7 @@ export const generateCropRecommendation = action({
           soil: ["Loamy", "Clay", "Silt", "Chalky"], 
           minPh: 6.0, maxPh: 7.5, 
           reason: lang === 'en' ? "Cool climate and moderate water needs." : "ठंडी जलवायु और मध्यम पानी की आवश्यकता।",
-          nutrientNeeds: { n: "medium", p: "medium", k: "medium" }
+          nutrientNeeds: { n: "optimal", p: "optimal", k: "optimal" }
         },
         { 
           name: lang === 'en' ? "Maize" : "मक्का (Maize)", 
@@ -204,14 +205,14 @@ export const generateCropRecommendation = action({
           soil: ["Loamy", "Sandy", "Silt", "Chalky"], 
           minPh: 5.5, maxPh: 7.5, 
           reason: lang === 'en' ? "Needs well-drained soil." : "अच्छी जल निकासी वाली मिट्टी की आवश्यकता।",
-          nutrientNeeds: { n: "high", p: "medium", k: "medium" }
+          nutrientNeeds: { n: "high", p: "optimal", k: "optimal" }
         },
       ];
 
       // Determine input levels (Refined Thresholds)
-      const nLevel = args.nitrogen < 140 ? "low" : args.nitrogen > 280 ? "high" : "medium";
-      const pLevel = args.phosphorus < 30 ? "low" : args.phosphorus > 70 ? "high" : "medium";
-      const kLevel = args.potassium < 150 ? "low" : args.potassium > 300 ? "high" : "medium";
+      const nLevel = getNPKStatus(args.nitrogen, 'n');
+      const pLevel = getNPKStatus(args.phosphorus, 'p');
+      const kLevel = getNPKStatus(args.potassium, 'k');
 
       // Calculate suitability score
       const scoredCrops = crops.map(crop => {
@@ -238,7 +239,7 @@ export const generateCropRecommendation = action({
          // Nutrient compatibility check
          // Nitrogen
          if (crop.nutrientNeeds.n === nLevel) score += 2;
-         else if (nLevel === "high" && crop.nutrientNeeds.n === "medium") score += 1;
+         else if (nLevel === "high" && crop.nutrientNeeds.n === "optimal") score += 1;
          else if (nLevel === "low" && crop.nutrientNeeds.n === "high") score -= 1;
 
          // Potassium (Important for roots/fruits)
@@ -285,9 +286,9 @@ export const generateCropRecommendation = action({
           
           // Dynamic fertilizer tip
           let tips = [];
-          if (args.nitrogen < 140 && crop.nutrientNeeds.n !== "low") tips.push(lang === 'en' ? "Nitrogen (Urea)" : "नाइट्रोजन (यूरिया)");
-          if (args.phosphorus < 30) tips.push(lang === 'en' ? "Phosphorus (DAP)" : "फॉस्फोरस (DAP)");
-          if (args.potassium < 150) tips.push(lang === 'en' ? "Potash (MOP)" : "पोटाश (MOP)");
+          if (args.nitrogen < NPK_THRESHOLDS.n.low && crop.nutrientNeeds.n !== "low") tips.push(lang === 'en' ? "Nitrogen (Urea)" : "नाइट्रोजन (यूरिया)");
+          if (args.phosphorus < NPK_THRESHOLDS.p.low) tips.push(lang === 'en' ? "Phosphorus (DAP)" : "फॉस्फोरस (DAP)");
+          if (args.potassium < NPK_THRESHOLDS.k.low) tips.push(lang === 'en' ? "Potash (MOP)" : "पोटाश (MOP)");
           
           let tipStr = tips.length > 0 
             ? (lang === 'en' ? `Soil lacks nutrients. Use ${tips.join(", ")}.` : `मिट्टी में पोषक तत्वों की कमी है। ${tips.join(", ")} का प्रयोग करें।`)

@@ -6,6 +6,7 @@ import { MessageCircle, Volume2, VolumeX, Share2, Droplets, Sprout, Leaf, AlertT
 import { useLanguage } from "@/lib/i18n";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getNPKStatus, getNPKProgressValue, NPK_THRESHOLDS, NPKType } from "@/lib/npk-config";
 
 export interface NPKData {
   n: number;
@@ -39,37 +40,41 @@ export function ReportTab({
   const { t, language } = useLanguage();
 
   // Helper to determine color based on value
-  const getStatusColor = (value: number, type: 'n' | 'p' | 'k') => {
-    if (type === 'n') return value < 140 ? "text-red-500" : value > 280 ? "text-amber-500" : "text-green-500";
-    if (type === 'p') return value < 30 ? "text-red-500" : value > 70 ? "text-amber-500" : "text-green-500";
-    return value < 150 ? "text-red-500" : value > 300 ? "text-amber-500" : "text-green-500";
+  const getStatusColor = (value: number, type: NPKType) => {
+    const status = getNPKStatus(value, type);
+    if (status === 'low') return "text-red-500";
+    if (status === 'high') return "text-amber-500";
+    return "text-green-500";
   };
 
-  const getStatusLabel = (value: number, type: 'n' | 'p' | 'k') => {
-    const isLow = type === 'n' ? value < 140 : type === 'p' ? value < 30 : value < 150;
-    const isHigh = type === 'n' ? value > 280 : type === 'p' ? value > 70 : value > 300;
+  const getStatusLabel = (value: number, type: NPKType) => {
+    const status = getNPKStatus(value, type);
     
-    if (isLow) return language === 'en' ? "Low" : "कम";
-    if (isHigh) return language === 'en' ? "High" : "अधिक";
+    if (status === 'low') return language === 'en' ? "Low" : "कम";
+    if (status === 'high') return language === 'en' ? "High" : "अधिक";
     return language === 'en' ? "Optimal" : "उत्तम";
   };
 
-  const getNutrientRole = (type: 'n' | 'p' | 'k') => {
+  const getNutrientRole = (type: NPKType) => {
     if (type === 'n') return language === 'en' ? "Leaf Growth" : "पत्तियों का विकास";
     if (type === 'p') return language === 'en' ? "Root & Flower" : "जड़ और फूल";
     return language === 'en' ? "Overall Health" : "समग्र स्वास्थ्य";
   };
 
-  const getStatusIcon = (value: number, type: 'n' | 'p' | 'k') => {
-    const isLow = type === 'n' ? value < 140 : type === 'p' ? value < 30 : value < 150;
-    const isHigh = type === 'n' ? value > 280 : type === 'p' ? value > 70 : value > 300;
+  const getStatusIcon = (value: number, type: NPKType) => {
+    const status = getNPKStatus(value, type);
 
-    if (isLow) return <ArrowDown className="h-3 w-3 text-red-500" />;
-    if (isHigh) return <ArrowUp className="h-3 w-3 text-amber-500" />;
+    if (status === 'low') return <ArrowDown className="h-3 w-3 text-red-500" />;
+    if (status === 'high') return <ArrowUp className="h-3 w-3 text-amber-500" />;
     return <CheckCircle2 className="h-3 w-3 text-green-500" />;
   };
 
-  const getProgressValue = (value: number, max: number) => Math.min((value / max) * 100, 100);
+  const getIndicatorClass = (value: number, type: NPKType) => {
+    const status = getNPKStatus(value, type);
+    if (status === 'low') return "bg-red-500";
+    if (status === 'high') return "bg-amber-500";
+    return "bg-green-500";
+  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-muted/5">
@@ -128,14 +133,14 @@ export function ReportTab({
                       </div>
                     </div>
                     <Progress 
-                      value={getProgressValue(npkData.n, 350)} 
+                      value={getNPKProgressValue(npkData.n, 'n')} 
                       className="h-2.5 bg-muted/50" 
-                      indicatorClassName={npkData.n < 140 ? "bg-red-500" : npkData.n > 280 ? "bg-amber-500" : "bg-green-500"} 
+                      indicatorClassName={getIndicatorClass(npkData.n, 'n')} 
                     />
                     <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
                       <span>0</span>
-                      <span>140</span>
-                      <span>280+</span>
+                      <span>{NPK_THRESHOLDS.n.low}</span>
+                      <span>{NPK_THRESHOLDS.n.high}+</span>
                     </div>
                   </div>
 
@@ -165,14 +170,14 @@ export function ReportTab({
                       </div>
                     </div>
                     <Progress 
-                      value={getProgressValue(npkData.p, 100)} 
+                      value={getNPKProgressValue(npkData.p, 'p')} 
                       className="h-2.5 bg-muted/50" 
-                      indicatorClassName={npkData.p < 30 ? "bg-red-500" : npkData.p > 70 ? "bg-amber-500" : "bg-green-500"} 
+                      indicatorClassName={getIndicatorClass(npkData.p, 'p')} 
                     />
                     <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
                       <span>0</span>
-                      <span>30</span>
-                      <span>70+</span>
+                      <span>{NPK_THRESHOLDS.p.low}</span>
+                      <span>{NPK_THRESHOLDS.p.high}+</span>
                     </div>
                   </div>
 
@@ -202,14 +207,14 @@ export function ReportTab({
                       </div>
                     </div>
                     <Progress 
-                      value={getProgressValue(npkData.k, 400)} 
+                      value={getNPKProgressValue(npkData.k, 'k')} 
                       className="h-2.5 bg-muted/50" 
-                      indicatorClassName={npkData.k < 150 ? "bg-red-500" : npkData.k > 300 ? "bg-amber-500" : "bg-green-500"} 
+                      indicatorClassName={getIndicatorClass(npkData.k, 'k')} 
                     />
                     <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
                       <span>0</span>
-                      <span>150</span>
-                      <span>300+</span>
+                      <span>{NPK_THRESHOLDS.k.low}</span>
+                      <span>{NPK_THRESHOLDS.k.high}+</span>
                     </div>
                   </div>
                 </div>
