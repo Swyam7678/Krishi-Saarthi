@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, DollarSign, LineChart as LineChartIcon, Setti
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,10 +41,6 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
   const [tempSelectedCrops, setTempSelectedCrops] = useState<string[]>(selectedCrops);
   const { t } = useLanguage();
 
-  // Debug logging
-  // console.log("MarketCard data:", data);
-  // console.log("MarketCard selectedCrops:", selectedCrops);
-
   if (!data) return (
     <Card className="h-full animate-pulse">
       <CardHeader><CardTitle>{t('market_title')}</CardTitle></CardHeader>
@@ -56,19 +52,26 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
 
   // Filter data based on selected crops
   // Match by ID if available, otherwise by name
-  const filteredData = selectedCrops.length > 0 
-    ? safeData.filter(item => {
-        // If selectedCrops contains IDs (lowercase), match ID
-        // If selectedCrops contains Names (Capitalized/Hindi), match Name
-        // We check both to be safe during migration
-        return selectedCrops.includes(item.name) || (item.id && selectedCrops.includes(item.id));
-      })
-    : safeData;
+  const filteredData = useMemo(() => {
+    return selectedCrops.length > 0 
+      ? safeData.filter(item => {
+          // If selectedCrops contains IDs (lowercase), match ID
+          // If selectedCrops contains Names (Capitalized/Hindi), match Name
+          // We check both to be safe during migration
+          return selectedCrops.includes(item.name) || (item.id && selectedCrops.includes(item.id));
+        })
+      : safeData;
+  }, [safeData, selectedCrops]);
 
   // Set default selected crop for chart if not set or not in filtered list
-  if ((!selectedCrop || (filteredData.length > 0 && !filteredData.find(c => c.name === selectedCrop))) && filteredData.length > 0) {
-    setSelectedCrop(filteredData[0].name);
-  }
+  useEffect(() => {
+    if (filteredData.length > 0) {
+      const currentExists = filteredData.find(c => c.name === selectedCrop);
+      if (!selectedCrop || !currentExists) {
+        setSelectedCrop(filteredData[0].name);
+      }
+    }
+  }, [filteredData, selectedCrop]);
 
   const currentCropData = safeData.find(c => c.name === selectedCrop);
 
