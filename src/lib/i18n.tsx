@@ -14,12 +14,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('app-language') as Language;
-      if (savedLang && Object.keys(translations).includes(savedLang)) {
+      if (savedLang && ['en', 'hi', 'pa', 'mr', 'ta', 'gu', 'bn', 'bho', 'sat', 'kn'].includes(savedLang)) {
         return savedLang;
       }
     }
     return 'hi'; // Default to Hindi
   });
+
+  useEffect(() => {
+    console.log("LanguageProvider mounted, current language:", language);
+  }, []);
 
   const handleSetLanguage = useCallback((lang: Language) => {
     console.log("Language switching to:", lang);
@@ -28,7 +32,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: keyof typeof translations['en']) => {
-    const langData = translations[language] as Record<string, string> | undefined;
+    const langData = (translations as any)[language];
     return langData?.[key] || translations['en'][key] || key;
   }, [language]);
 
