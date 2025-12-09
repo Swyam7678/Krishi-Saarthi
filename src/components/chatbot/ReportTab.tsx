@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Volume2, VolumeX, Share2, Droplets, Sprout, Leaf, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { MessageCircle, Volume2, VolumeX, Share2, Droplets, Sprout, Leaf, AlertTriangle, CheckCircle2, Info, ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export interface NPKData {
   n: number;
@@ -37,11 +38,35 @@ export function ReportTab({
 }: ReportTabProps) {
   const { t, language } = useLanguage();
 
-  // Helper to determine color based on value (simplified logic)
+  // Helper to determine color based on value
   const getStatusColor = (value: number, type: 'n' | 'p' | 'k') => {
-    if (type === 'n') return value < 140 ? "text-red-500" : value > 280 ? "text-yellow-500" : "text-green-500";
-    if (type === 'p') return value < 30 ? "text-red-500" : value > 70 ? "text-yellow-500" : "text-green-500";
-    return value < 150 ? "text-red-500" : value > 300 ? "text-yellow-500" : "text-green-500";
+    if (type === 'n') return value < 140 ? "text-red-500" : value > 280 ? "text-amber-500" : "text-green-500";
+    if (type === 'p') return value < 30 ? "text-red-500" : value > 70 ? "text-amber-500" : "text-green-500";
+    return value < 150 ? "text-red-500" : value > 300 ? "text-amber-500" : "text-green-500";
+  };
+
+  const getStatusLabel = (value: number, type: 'n' | 'p' | 'k') => {
+    const isLow = type === 'n' ? value < 140 : type === 'p' ? value < 30 : value < 150;
+    const isHigh = type === 'n' ? value > 280 : type === 'p' ? value > 70 : value > 300;
+    
+    if (isLow) return language === 'en' ? "Low" : "कम";
+    if (isHigh) return language === 'en' ? "High" : "अधिक";
+    return language === 'en' ? "Optimal" : "उत्तम";
+  };
+
+  const getNutrientRole = (type: 'n' | 'p' | 'k') => {
+    if (type === 'n') return language === 'en' ? "Leaf Growth" : "पत्तियों का विकास";
+    if (type === 'p') return language === 'en' ? "Root & Flower" : "जड़ और फूल";
+    return language === 'en' ? "Overall Health" : "समग्र स्वास्थ्य";
+  };
+
+  const getStatusIcon = (value: number, type: 'n' | 'p' | 'k') => {
+    const isLow = type === 'n' ? value < 140 : type === 'p' ? value < 30 : value < 150;
+    const isHigh = type === 'n' ? value > 280 : type === 'p' ? value > 70 : value > 300;
+
+    if (isLow) return <ArrowDown className="h-3 w-3 text-red-500" />;
+    if (isHigh) return <ArrowUp className="h-3 w-3 text-amber-500" />;
+    return <CheckCircle2 className="h-3 w-3 text-green-500" />;
   };
 
   const getProgressValue = (value: number, max: number) => Math.min((value / max) * 100, 100);
@@ -76,35 +101,116 @@ export function ReportTab({
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3">
                   {/* Nitrogen */}
-                  <div className="bg-white dark:bg-card p-3 rounded-xl border shadow-sm space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-muted-foreground">Nitrogen (N)</span>
-                      <span className={`font-bold ${getStatusColor(npkData.n, 'n')}`}>{npkData.n}</span>
+                  <div className="bg-white dark:bg-card p-3 rounded-xl border shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-2 opacity-5">
+                      <Leaf className="h-12 w-12" />
                     </div>
-                    <Progress value={getProgressValue(npkData.n, 350)} className="h-2" indicatorClassName={npkData.n < 140 ? "bg-red-500" : npkData.n > 280 ? "bg-yellow-500" : "bg-green-500"} />
-                    <p className="text-[10px] text-muted-foreground text-right">mg/kg</p>
+                    <div className="flex justify-between items-start mb-2 relative z-10">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-sm">Nitrogen (N)</span>
+                          <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-normal bg-muted text-muted-foreground">
+                            {getNutrientRole('n')}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {getStatusIcon(npkData.n, 'n')}
+                          <span className={`text-xs font-medium ${getStatusColor(npkData.n, 'n')}`}>
+                            {getStatusLabel(npkData.n, 'n')}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-xl font-bold ${getStatusColor(npkData.n, 'n')}`}>{npkData.n}</span>
+                        <p className="text-[10px] text-muted-foreground">mg/kg</p>
+                      </div>
+                    </div>
+                    <Progress 
+                      value={getProgressValue(npkData.n, 350)} 
+                      className="h-2.5 bg-muted/50" 
+                      indicatorClassName={npkData.n < 140 ? "bg-red-500" : npkData.n > 280 ? "bg-amber-500" : "bg-green-500"} 
+                    />
+                    <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
+                      <span>0</span>
+                      <span>140</span>
+                      <span>280+</span>
+                    </div>
                   </div>
 
                   {/* Phosphorus */}
-                  <div className="bg-white dark:bg-card p-3 rounded-xl border shadow-sm space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-muted-foreground">Phosphorus (P)</span>
-                      <span className={`font-bold ${getStatusColor(npkData.p, 'p')}`}>{npkData.p}</span>
+                  <div className="bg-white dark:bg-card p-3 rounded-xl border shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-2 opacity-5">
+                      <Sprout className="h-12 w-12" />
                     </div>
-                    <Progress value={getProgressValue(npkData.p, 100)} className="h-2" indicatorClassName={npkData.p < 30 ? "bg-red-500" : npkData.p > 70 ? "bg-yellow-500" : "bg-green-500"} />
-                    <p className="text-[10px] text-muted-foreground text-right">mg/kg</p>
+                    <div className="flex justify-between items-start mb-2 relative z-10">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-sm">Phosphorus (P)</span>
+                          <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-normal bg-muted text-muted-foreground">
+                            {getNutrientRole('p')}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {getStatusIcon(npkData.p, 'p')}
+                          <span className={`text-xs font-medium ${getStatusColor(npkData.p, 'p')}`}>
+                            {getStatusLabel(npkData.p, 'p')}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-xl font-bold ${getStatusColor(npkData.p, 'p')}`}>{npkData.p}</span>
+                        <p className="text-[10px] text-muted-foreground">mg/kg</p>
+                      </div>
+                    </div>
+                    <Progress 
+                      value={getProgressValue(npkData.p, 100)} 
+                      className="h-2.5 bg-muted/50" 
+                      indicatorClassName={npkData.p < 30 ? "bg-red-500" : npkData.p > 70 ? "bg-amber-500" : "bg-green-500"} 
+                    />
+                    <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
+                      <span>0</span>
+                      <span>30</span>
+                      <span>70+</span>
+                    </div>
                   </div>
 
                   {/* Potassium */}
-                  <div className="bg-white dark:bg-card p-3 rounded-xl border shadow-sm space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-muted-foreground">Potassium (K)</span>
-                      <span className={`font-bold ${getStatusColor(npkData.k, 'k')}`}>{npkData.k}</span>
+                  <div className="bg-white dark:bg-card p-3 rounded-xl border shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-2 opacity-5">
+                      <Droplets className="h-12 w-12" />
                     </div>
-                    <Progress value={getProgressValue(npkData.k, 400)} className="h-2" indicatorClassName={npkData.k < 150 ? "bg-red-500" : npkData.k > 300 ? "bg-yellow-500" : "bg-green-500"} />
-                    <p className="text-[10px] text-muted-foreground text-right">mg/kg</p>
+                    <div className="flex justify-between items-start mb-2 relative z-10">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-sm">Potassium (K)</span>
+                          <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-normal bg-muted text-muted-foreground">
+                            {getNutrientRole('k')}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          {getStatusIcon(npkData.k, 'k')}
+                          <span className={`text-xs font-medium ${getStatusColor(npkData.k, 'k')}`}>
+                            {getStatusLabel(npkData.k, 'k')}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-xl font-bold ${getStatusColor(npkData.k, 'k')}`}>{npkData.k}</span>
+                        <p className="text-[10px] text-muted-foreground">mg/kg</p>
+                      </div>
+                    </div>
+                    <Progress 
+                      value={getProgressValue(npkData.k, 400)} 
+                      className="h-2.5 bg-muted/50" 
+                      indicatorClassName={npkData.k < 150 ? "bg-red-500" : npkData.k > 300 ? "bg-amber-500" : "bg-green-500"} 
+                    />
+                    <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
+                      <span>0</span>
+                      <span>150</span>
+                      <span>300+</span>
+                    </div>
                   </div>
                 </div>
 
