@@ -24,7 +24,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Loader2, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Loader2, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { useState, useEffect, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -37,6 +37,7 @@ interface MarketItem {
   avg: number;
   current: number;
   history: { date: string; price: number }[];
+  isFallback?: boolean;
 }
 
 interface MarketCardProps {
@@ -51,6 +52,7 @@ export function MarketCard({ data, location, selectedCrops, onCropsChange }: Mar
   const [selectedCrop, setSelectedCrop] = useState<string>("");
 
   const safeData = Array.isArray(data) ? data : [];
+  const isFallback = safeData.length > 0 && safeData[0].isFallback;
 
   // Filter data based on selected crops
   const filteredData = useMemo(() => {
@@ -101,6 +103,12 @@ export function MarketCard({ data, location, selectedCrops, onCropsChange }: Mar
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1">
+        {isFallback && (
+          <div className="mb-4 rounded-md bg-amber-50 p-3 text-sm text-amber-900 flex items-center gap-2 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-200 dark:border-amber-800">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            <span>{t('market_fallback_warning') || "Live connection failed. Showing estimated values."}</span>
+          </div>
+        )}
         <Tabs defaultValue="rates" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="rates">{t('rates')}</TabsTrigger>

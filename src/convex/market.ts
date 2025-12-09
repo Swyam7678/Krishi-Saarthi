@@ -11,6 +11,7 @@ interface MarketItem {
   avg: number;
   current: number;
   history: { date: string; price: number }[];
+  isFallback?: boolean;
 }
 
 export const getMarketPrices = action({
@@ -88,7 +89,8 @@ export const getMarketPrices = action({
         current,
         min,
         max,
-        history
+        history,
+        isFallback: true
       };
     });
 

@@ -71,6 +71,7 @@ export const translations = {
     no_crops: "No crops selected.",
     select_crop_view: "Select crop to view chart",
     avg: "Avg",
+    market_fallback_warning: "Live connection failed. Showing estimated values.",
     
     // AI Recommendation
     ai_title: "AI Crop Suggestion",
@@ -252,6 +253,7 @@ export const translations = {
     no_crops: "कोई फसल नहीं चुनी गई।",
     select_crop_view: "चार्ट देखने के लिए फसल चुनें",
     avg: "औसत",
+    market_fallback_warning: "लाइव कनेक्शन विफल। अनुमानित मान दिखाए जा रहे हैं।",
 
     // AI Recommendation
     ai_title: "AI फसल सुझाव",
@@ -429,6 +431,7 @@ export const translations = {
     no_crops: "কোনো ফসল না",
     select_crop_view: "চার্ট দেখার জন্য ফসল নির্বাচন করুন",
     avg: "গড়",
+    market_fallback_warning: "লাইভ কনেকশন বিফল। অনুমানিত মান দেখানো হচ্ছে।",
 
     ai_title: "AI ফসল পরামর্শ",
     ai_desc: "Get personalized crop suggestions based on soil health.",
