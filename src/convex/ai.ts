@@ -208,10 +208,10 @@ export const generateCropRecommendation = action({
         },
       ];
 
-      // Determine input levels
-      const nLevel = args.nitrogen < 50 ? "low" : args.nitrogen > 150 ? "high" : "medium";
-      const pLevel = args.phosphorus < 50 ? "low" : args.phosphorus > 100 ? "high" : "medium";
-      const kLevel = args.potassium < 50 ? "low" : args.potassium > 150 ? "high" : "medium";
+      // Determine input levels (Refined Thresholds)
+      const nLevel = args.nitrogen < 140 ? "low" : args.nitrogen > 280 ? "high" : "medium";
+      const pLevel = args.phosphorus < 30 ? "low" : args.phosphorus > 70 ? "high" : "medium";
+      const kLevel = args.potassium < 150 ? "low" : args.potassium > 300 ? "high" : "medium";
 
       // Calculate suitability score
       const scoredCrops = crops.map(crop => {
@@ -285,9 +285,9 @@ export const generateCropRecommendation = action({
           
           // Dynamic fertilizer tip
           let tips = [];
-          if (args.nitrogen < 50 && crop.nutrientNeeds.n !== "low") tips.push(lang === 'en' ? "Nitrogen (Urea)" : "नाइट्रोजन (यूरिया)");
-          if (args.phosphorus < 50) tips.push(lang === 'en' ? "Phosphorus (DAP)" : "फॉस्फोरस (DAP)");
-          if (args.potassium < 50) tips.push(lang === 'en' ? "Potash (MOP)" : "पोटाश (MOP)");
+          if (args.nitrogen < 140 && crop.nutrientNeeds.n !== "low") tips.push(lang === 'en' ? "Nitrogen (Urea)" : "नाइट्रोजन (यूरिया)");
+          if (args.phosphorus < 30) tips.push(lang === 'en' ? "Phosphorus (DAP)" : "फॉस्फोरस (DAP)");
+          if (args.potassium < 150) tips.push(lang === 'en' ? "Potash (MOP)" : "पोटाश (MOP)");
           
           let tipStr = tips.length > 0 
             ? (lang === 'en' ? `Soil lacks nutrients. Use ${tips.join(", ")}.` : `मिट्टी में पोषक तत्वों की कमी है। ${tips.join(", ")} का प्रयोग करें।`)

@@ -39,8 +39,8 @@ export function ReportTab({
 
   // Helper to determine color based on value (simplified logic)
   const getStatusColor = (value: number, type: 'n' | 'p' | 'k') => {
-    if (type === 'n') return value < 100 ? "text-red-500" : value > 200 ? "text-yellow-500" : "text-green-500";
-    if (type === 'p') return value < 30 ? "text-red-500" : value > 80 ? "text-yellow-500" : "text-green-500";
+    if (type === 'n') return value < 140 ? "text-red-500" : value > 280 ? "text-yellow-500" : "text-green-500";
+    if (type === 'p') return value < 30 ? "text-red-500" : value > 70 ? "text-yellow-500" : "text-green-500";
     return value < 150 ? "text-red-500" : value > 300 ? "text-yellow-500" : "text-green-500";
   };
 
@@ -83,7 +83,7 @@ export function ReportTab({
                       <span className="text-sm font-medium text-muted-foreground">Nitrogen (N)</span>
                       <span className={`font-bold ${getStatusColor(npkData.n, 'n')}`}>{npkData.n}</span>
                     </div>
-                    <Progress value={getProgressValue(npkData.n, 250)} className="h-2" indicatorClassName={npkData.n < 100 ? "bg-red-500" : "bg-green-500"} />
+                    <Progress value={getProgressValue(npkData.n, 350)} className="h-2" indicatorClassName={npkData.n < 140 ? "bg-red-500" : npkData.n > 280 ? "bg-yellow-500" : "bg-green-500"} />
                     <p className="text-[10px] text-muted-foreground text-right">mg/kg</p>
                   </div>
 
@@ -93,7 +93,7 @@ export function ReportTab({
                       <span className="text-sm font-medium text-muted-foreground">Phosphorus (P)</span>
                       <span className={`font-bold ${getStatusColor(npkData.p, 'p')}`}>{npkData.p}</span>
                     </div>
-                    <Progress value={getProgressValue(npkData.p, 100)} className="h-2" indicatorClassName={npkData.p < 30 ? "bg-red-500" : "bg-green-500"} />
+                    <Progress value={getProgressValue(npkData.p, 100)} className="h-2" indicatorClassName={npkData.p < 30 ? "bg-red-500" : npkData.p > 70 ? "bg-yellow-500" : "bg-green-500"} />
                     <p className="text-[10px] text-muted-foreground text-right">mg/kg</p>
                   </div>
 
@@ -103,7 +103,7 @@ export function ReportTab({
                       <span className="text-sm font-medium text-muted-foreground">Potassium (K)</span>
                       <span className={`font-bold ${getStatusColor(npkData.k, 'k')}`}>{npkData.k}</span>
                     </div>
-                    <Progress value={getProgressValue(npkData.k, 350)} className="h-2" indicatorClassName={npkData.k < 150 ? "bg-red-500" : "bg-green-500"} />
+                    <Progress value={getProgressValue(npkData.k, 400)} className="h-2" indicatorClassName={npkData.k < 150 ? "bg-red-500" : npkData.k > 300 ? "bg-yellow-500" : "bg-green-500"} />
                     <p className="text-[10px] text-muted-foreground text-right">mg/kg</p>
                   </div>
                 </div>
