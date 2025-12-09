@@ -20,6 +20,7 @@ import type * as schemes from "../schemes.js";
 import type * as test_ai_debug from "../test_ai_debug.js";
 import type * as test_chat from "../test_chat.js";
 import type * as test_features from "../test_features.js";
+import type * as test_market from "../test_market.js";
 import type * as users from "../users.js";
 import type * as verify_recommendations from "../verify_recommendations.js";
 import type * as weather from "../weather.js";
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   test_ai_debug: typeof test_ai_debug;
   test_chat: typeof test_chat;
   test_features: typeof test_features;
+  test_market: typeof test_market;
   users: typeof users;
   verify_recommendations: typeof verify_recommendations;
   weather: typeof weather;
