@@ -43,21 +43,23 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
   if (!data) return (
     <Card className="h-full animate-pulse">
       <CardHeader><CardTitle>{t('market_title')}</CardTitle></CardHeader>
-      <CardContent className="h-32 bg-muted/20 rounded-md" />
+      <CardContent className="h-32 bg-muted rounded-md" />
     </Card>
   );
 
+  const safeData = Array.isArray(data) ? data : [];
+
   // Filter data based on selected crops
   const filteredData = selectedCrops.length > 0 
-    ? data.filter(item => selectedCrops.includes(item.name))
-    : data;
+    ? safeData.filter(item => selectedCrops.includes(item.name))
+    : safeData;
 
   // Set default selected crop for chart if not set or not in filtered list
   if ((!selectedCrop || (filteredData.length > 0 && !filteredData.find(c => c.name === selectedCrop))) && filteredData.length > 0) {
     setSelectedCrop(filteredData[0].name);
   }
 
-  const currentCropData = data.find(c => c.name === selectedCrop);
+  const currentCropData = safeData.find(c => c.name === selectedCrop);
 
   const toggleCropSelection = (cropName: string) => {
     setTempSelectedCrops(prev => {
@@ -107,7 +109,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
                 </DialogHeader>
                 <ScrollArea className="h-[300px] pr-4">
                   <div className="grid grid-cols-1 gap-2">
-                    {data.map((crop) => (
+                    {safeData.map((crop) => (
                       <div 
                         key={crop.name} 
                         className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${

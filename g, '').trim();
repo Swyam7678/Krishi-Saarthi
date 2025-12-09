@@ -1,17 +1,26 @@
-          const crops = JSON.parse(jsonStr) as Omit<MarketItem, 'history'>[];
+      if (result.success && result.data) {
+        const content = result.data.choices[0]?.message?.content;
+        if (content) {
+          // Clean up code blocks if present
+          const jsonStr = content.replace(/```json/g, '').replace(/```/g, '');
           
-          return crops.map((crop) => ({
-            ...crop,
-            current: Math.round(crop.avg + (Math.random() * 100 - 50)),
-            history: generateHistory(crop.avg)
-          }));
+          try {
+            const crops = JSON.parse(jsonStr) as MarketItem[];
+            
+            return crops.map((crop: MarketItem) => ({
+              ...crop,
+              current: Math.round(crop.avg + (Math.random() * 100 - 50))
+            }));
+          } catch (error) {
+            console.log("Failed to parse JSON from AI response, using fallback");
+            return fallbackCrops;
+          }
         }
       }
-      // If AI fails but doesn't throw, return fallback
+      console.log("AI returned no content or failed, using fallback");
       return fallbackCrops;
     } catch (error) {
-      console.error("Error fetching market prices:", error);
+      console.log("Error processing AI response:", error);
       return fallbackCrops;
     }
-  },
-});
+  }
