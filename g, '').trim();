@@ -1,27 +1,11 @@
           const crops = JSON.parse(jsonStr) as MarketItem[];
           
-          return crops.map((crop: MarketItem) => {
-            // Ensure ID exists, fallback to name slug or random
-            const id = crop.id || crop.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-            
-            // Ensure history exists
-            const history = crop.history || generateHistory(crop.avg || crop.current);
-            
-            return {
-              ...crop,
-              id,
-              history,
-              current: crop.current || Math.round(crop.avg + (Math.random() * 100 - 50))
-            };
-          });
+          return crops.map((crop: MarketItem) => ({
+            ...crop,
+            current: Math.round(crop.avg + (Math.random() * 100 - 50)),
+            history: generateHistory(crop.avg)
+          }));
         }
       }
-      // If parsing fails or no content, return fallback
-      console.log("AI response invalid or empty, using fallback");
-      return fallbackCrops;
     } catch (error) {
-      console.error("Error fetching market prices:", error);
-      return fallbackCrops;
-    }
-  },
-});
+// ... keep existing code

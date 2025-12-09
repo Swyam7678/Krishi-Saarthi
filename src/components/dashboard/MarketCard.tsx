@@ -211,49 +211,65 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
           </TabsContent>
 
           <TabsContent value="trends" className="flex-1 flex flex-col min-h-0 mt-0 w-full">
-            <div className="mb-4">
-              <Select value={selectedCrop} onValueChange={setSelectedCrop}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t('select_crops')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredData.map((crop) => (
-                    <SelectItem key={crop.id || crop.name} value={crop.name}>
-                      {crop.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="flex-1 min-h-[200px] w-full">
-              {currentCropData ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={currentCropData.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                    <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
-                    <Tooltip 
-                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                      formatter={(value: number) => [`₹${value}`, 'Price']}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="price" 
-                      stroke="#f97316" 
-                      strokeWidth={2} 
-                      dot={{ r: 4, fill: "#f97316" }} 
-                      activeDot={{ r: 6 }} 
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full flex items-center justify-center text-muted-foreground">
-                  <LineChartIcon className="h-8 w-8 mb-2 opacity-20" />
-                  <p>{t('select_crop_view')}</p>
+            {filteredData.length === 0 ? (
+              <div className="h-full min-h-[200px] flex flex-col items-center justify-center text-muted-foreground p-4 text-center border-2 border-dashed rounded-lg">
+                <p className="mb-2">{t('no_crops')}</p>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setOpen(true)}>{t('select_crops')}</Button>
+                  {selectedCrops.length > 0 && (
+                    <Button variant="ghost" size="sm" onClick={() => onCropsChange && onCropsChange([])}>
+                      {t('reset') || "Reset"}
+                    </Button>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <>
+                <div className="mb-4">
+                  <Select value={selectedCrop} onValueChange={setSelectedCrop}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('select_crops')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredData.map((crop) => (
+                        <SelectItem key={crop.id || crop.name} value={crop.name}>
+                          {crop.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex-1 min-h-[200px] w-full">
+                  {currentCropData ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={currentCropData.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                        <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis fontSize={12} tickLine={false} axisLine={false} domain={['auto', 'auto']} />
+                        <Tooltip 
+                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                          formatter={(value: number) => [`₹${value}`, 'Price']}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="price" 
+                          stroke="#f97316" 
+                          strokeWidth={2} 
+                          dot={{ r: 4, fill: "#f97316" }} 
+                          activeDot={{ r: 6 }} 
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-muted-foreground">
+                      <LineChartIcon className="h-8 w-8 mb-2 opacity-20" />
+                      <p>{t('select_crop_view')}</p>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </TabsContent>
         </Tabs>
       </CardContent>
