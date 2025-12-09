@@ -5,6 +5,7 @@ export const translations = {
     // General
     app_name: "KrishiSaarthi",
     dashboard: "Dashboard",
+    schemes: "Schemes",
     subtitle: "Smart Farm Assist",
     welcome: "Welcome",
     farmer: "Farmer",
@@ -15,6 +16,8 @@ export const translations = {
     cancel: "Cancel",
     loading: "Loading...",
     error: "Error",
+    error_fetching_market: "Failed to load market data",
+    market_updated: "Market data updated",
     success: "Success",
     
     // Weather
@@ -180,6 +183,7 @@ export const translations = {
     // General
     app_name: "कृषि सारथी",
     dashboard: "डैशबोर्ड",
+    schemes: "योजनाएं",
     subtitle: "स्मार्ट कृषि सहायक",
     welcome: "स्वागत है",
     farmer: "किसान",
@@ -190,6 +194,8 @@ export const translations = {
     cancel: "रद्द करें",
     loading: "लोड हो रहा है...",
     error: "त्रुटि",
+    error_fetching_market: "बाजार डेटा लोड करने में विफल",
+    market_updated: "बाजार डेटा अपडेट किया गया",
     success: "सफल",
 
     // Weather
@@ -358,6 +364,7 @@ export const translations = {
     // Punjabi
     app_name: "ਕ੍ਰਿਸ਼ੀ ਸਾਰਥੀ",
     dashboard: "ਡੈਸ਼ਬੋਰਡ",
+    schemes: "ਸਕੀਮਾਂ",
     subtitle: "ਸਮਾਰਟ ਖੇਤੀ ਸਹਾਇਕ",
     welcome: "ਜੀ ਆਇਆਂ ਨੂੰ",
     farmer: "ਕਿਸਾਨ",
@@ -368,6 +375,8 @@ export const translations = {
     cancel: "ਰੱਦ ਕਰੋ",
     loading: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
     error: "ਗਲਤੀ",
+    error_fetching_market: "ਮੰਡੀ ਡੇਟਾ ਲੋਡ ਕਰਨ ਵਿੱਚ ਵਿਫਲ",
+    market_updated: "ਮੰਡੀ ਡੇਟਾ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ",
     success: "ਸਫਲ",
 
     weather_title: "ਮੌਸਮ ਦੀ ਭਵਿੱਖਬਾਣੀ",
@@ -526,6 +535,7 @@ export const translations = {
     // Marathi
     app_name: "कृषी सारथी",
     dashboard: "डॅशबोर्ड",
+    schemes: "स्कीमा",
     subtitle: "स्मार्ट शेती सहाय्यक",
     welcome: "स्वागत आहे",
     farmer: "शेतकरी",
@@ -536,6 +546,8 @@ export const translations = {
     cancel: "रद्द करा",
     loading: "लोड होत आहे...",
     error: "त्रुटी",
+    error_fetching_market: "मंडी डेटा लोड करण्यात अडचण",
+    market_updated: "मंडी डेटा अपडेट केले गेले",
     success: "यशस्वी",
 
     weather_title: "हवामान अंदाज",
@@ -679,7 +691,7 @@ export const translations = {
     plan_annual_desc: "प्रगतशील शेतकऱ्यांसाठी दीर्घकालीन मदत.",
     plan_annual_f1: "सर्व विकास योजना फायदे",
     plan_annual_f2: "हार्डवेअर-नियंत्रित NPK वितरण",
-    plan_annual_f3: "वैयक्तिक सल्ला आणि वेळापत्रक",
+    plan_annual_f3: "वैयक्तिक सलाह आणि वेळापत्रक",
     plan_annual_f4: "प्राधान्य अपडेट्स आणि सवलती",
     plan_community_title: "समुदाय / सहकारी",
     plan_community_price: "₹3,000–₹5,000",
@@ -687,13 +699,14 @@ export const translations = {
     plan_community_desc: "शेतकरी गट, FPO, सहकारी संस्थांसाठी डिझाइन केलेले.",
     plan_community_f1: "मल्टी-फार्म निरीक्षण डॅशबोर्ड",
     plan_community_f2: "घाऊक खत मिश्रण मदत",
-    plan_community_f3: "गट सल्ला सत्रे",
+    plan_community_f3: "गट सलाह सत्रे",
     plan_community_f4: "पुरवठा साखळी एकत्रीकरण",
   },
   ta: {
     // Tamil
     app_name: "கிருஷி சாரதி",
     dashboard: "டாஷ்போர்டு",
+    schemes: "திட்டங்கள்",
     subtitle: "ஸ்மார்ட் விவசாய உதவியாளர்",
     welcome: "வரவேற்கிறோம்",
     farmer: "விவசாயி",
@@ -704,6 +717,8 @@ export const translations = {
     cancel: "ரத்துசெய்",
     loading: "ஏற்றுகிறது...",
     error: "பிழை",
+    error_fetching_market: "சந்தை தரவு பார்க்க விலக்குகிறது",
+    market_updated: "சந்தை தரவு புதுப்பிக்கப்பட்டது",
     success: "வெற்றி",
 
     weather_title: "வானிலை முன்னறிவிப்பு",
@@ -813,9 +828,9 @@ export const translations = {
     scheme_pmfby_title: "பிஎம் பயிர் காப்பீட்டுத் திட்டம்",
     scheme_pmfby_desc: "நிதி ஆதரவுக்கான பயிர் காப்பீட்டுத் திட்டம்.",
     scheme_shc_title: "மண் சுகாதார அட்டை",
-    scheme_shc_desc: "ஊட்டச்சத்துக்கள் மற்றும் உரங்களின் பயிர் வாரியான பரிந்துரைகள்.",
+    scheme_shc_desc: "பொட்டுக்கள் மற்றும் உரங்களின் பயிர் வாரியான பரிந்துரைகள்.",
     scheme_pkvy_title: "பாரம்பரிய விவசாய மேம்பாட்டுத் திட்டம்",
-    scheme_pkvy_desc: "இயற்கை விவசாயம் மற்றும் மண் ஆரோக்கியத்தை ஊக்குவித்தல்.",
+    scheme_pkvy_desc: "இயற்கை விவசாயம் மற்றும் மண் சுகாதாரத்தை ஊக்குவித்தல்.",
     
     // Resources
     resources_title: "விவசாய வளங்கள்",
@@ -862,6 +877,7 @@ export const translations = {
     // Gujarati
     app_name: "કૃષિ સારથી",
     dashboard: "ડેશબોર્ડ",
+    schemes: "સબ્સ્ક્રિપ્શન યોજના",
     subtitle: "સ્માર્ટ ખેતી સહાયક",
     welcome: "સ્વાગત છે",
     farmer: "ખેડૂત",
@@ -872,6 +888,8 @@ export const translations = {
     cancel: "રદ કરો",
     loading: "લોડ થઈ રહ્યું છે...",
     error: "ભૂલ",
+    error_fetching_market: "મંડી ડેટા લોડ કરવામાં અસર થઈ",
+    market_updated: "મંડી ડેટા અપડેટ કરાયો",
     success: "સફળ",
 
     weather_title: "હવામાન આગાહી",
@@ -1030,6 +1048,7 @@ export const translations = {
     // Bengali
     app_name: "কৃষি সারথি",
     dashboard: "ড্যাশবোর্ড",
+    schemes: "সরকারি যোজনা",
     subtitle: "স্মার্ট কৃষি সহায়ক",
     welcome: "স্বাগতম",
     farmer: "কৃষক",
@@ -1040,6 +1059,8 @@ export const translations = {
     cancel: "বাতিল",
     loading: "লোড হচ্ছে...",
     error: "ত্রুটি",
+    error_fetching_market: "মান্ডি ডেটা লোড করা হয়নি",
+    market_updated: "মান্ডি ডেটা আপডেট হয়েছে",
     success: "সফল",
 
     weather_title: "আবহাওয়ার পূর্বাভাস",
@@ -1198,6 +1219,7 @@ export const translations = {
     // Bhojpuri
     app_name: "कृषि सारथी",
     dashboard: "डैशबोर्ड",
+    schemes: "सरकारी योजना",
     subtitle: "स्मार्ट खेती सहायक",
     welcome: "स्वागत बा",
     farmer: "किसान",
@@ -1208,6 +1230,8 @@ export const translations = {
     cancel: "रद्द करीं",
     loading: "लोड हो रहल बा...",
     error: "गड़बड़ी",
+    error_fetching_market: "मंडी डेटा लोड करने में विफल",
+    market_updated: "मंडी डेटा अपडेट किया गया",
     success: "सफल",
 
     weather_title: "मौसम के हाल",
@@ -1362,6 +1386,7 @@ export const translations = {
     // Santali (Using Devanagari script for broader compatibility)
     app_name: "कृषि सारथी",
     dashboard: "डैशबोर्ड",
+    schemes: "सरकार योजना",
     subtitle: "स्मार्ट चास आबाद",
     welcome: "जोहार",
     farmer: "चासी",
@@ -1372,6 +1397,8 @@ export const translations = {
     cancel: "बंग",
     loading: "लोड होयोक काना...",
     error: "भूल",
+    error_fetching_market: "बाजार डेटा लोड करने में विफल",
+    market_updated: "बाजार डेटा अपडेट किया गया",
     success: "सफल",
 
     weather_title: "मौसम खबर",
@@ -1526,6 +1553,7 @@ export const translations = {
     // Kannada
     app_name: "ಕೃಷಿ ಸಾರಥಿ",
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    schemes: "ಸರ್ಕಾರ ಯೋಜನೆ",
     subtitle: "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಹಾಯಕ",
     welcome: "ಸ್ವಾಗತ",
     farmer: "ರೈತ",
@@ -1536,6 +1564,8 @@ export const translations = {
     cancel: "ರದ್ದುಮಾಡಿ",
     loading: "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
     error: "ದೋಷ",
+    error_fetching_market: "ಮಂಡಿ ಡೇಟಾ ಲೋಡ್ ಆಗುತ್ತಿದೆ",
+    market_updated: "ಮಂಡಿ ಡೇಟಾ ಅಪ್‌ಡೇಟ್",
     success: "ಯಶಸ್ವಿ",
 
     weather_title: "ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ",
