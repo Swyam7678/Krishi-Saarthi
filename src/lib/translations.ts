@@ -394,8 +394,8 @@ export const translations = {
     data_source: "ਡਾਟਾ ਸਰੋਤ ਬਦਲੋ",
     sheet_url: "ਗੂਗਲ ਸ਼ੀਟ URL",
     current_source: "ਮੌਜੂਦਾ",
-    default_source: "ਡਿਫੌਲਟ (ਡੈਮੋ ਸ਼ੀਟ)",
-    custom_sheet: "ਕਸਟਮ ਸ਼ੀਟ",
+    default_source: "ਡਿਫੌਲਟ (ਡੈਮੋ ਸ਼ੀਟ)",
+    custom_sheet: "ਕਸਟਮ ਸ਼ੀਟ",
     reset: "ਰੀਸੈਟ",
     required_format: "ਲੋੜੀਂਦਾ ਫਾਰਮੈਟ",
     sheet_instruction: "ਤੁਹਾਡੀ ਗੂਗਲ ਸ਼ੀਟ ਵਿੱਚ ਇਹ ਹੈਡਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ:",
@@ -484,7 +484,7 @@ export const translations = {
     // Resources
     resources_title: "ਖੇਤੀ ਸਰੋਤ",
     
-    // Pricing (Punjabi - using English fallback for now to ensure consistency)
+    // Pricing
     pricing_title: "Subscription Plans",
     pricing_desc: "ਆਪਣੀ ਖੇਤੀ ਦੀਆਂ ਲੋੜਾਂ ਲਈ ਸਹੀ ਯੋਜਨਾ ਚੁਣੋ। ਮੌਸਮੀ ਸਹਾਇਤਾ ਤੋਂ ਲੈ ਕੇ ਵਿਆਪਕ ਸਾਲਾਨਾ ਮਾਰਗਦਰਸ਼ਨ ਤੱਕ।",
     most_popular: "ਸਭ ਤੋਂ ਮਸ਼ਹੂਰ",
@@ -652,7 +652,7 @@ export const translations = {
     // Resources
     resources_title: "शेती संसाधने",
     
-    // Pricing (Marathi - using English fallback)
+    // Pricing
     pricing_title: "Subscription Plans",
     pricing_desc: "तुमच्या शेतीच्या गरजांसाठी योग्य योजना निवडा. हंगामी मदतीपासून ते सर्वसमावेशक वार्षिक मार्गदर्शनापर्यंत.",
     most_popular: "सर्वात लोकप्रिय",
@@ -820,7 +820,7 @@ export const translations = {
     // Resources
     resources_title: "விவசாய வளங்கள்",
     
-    // Pricing (Tamil - using English fallback)
+    // Pricing
     pricing_title: "Subscription Plans",
     pricing_desc: "உங்கள் விவசாயத் தேவைகளுக்கு ஏற்ற திட்டத்தைத் தேர்வு செய்யவும். பருவகால ஆதரவு முதல் விரிவான ஆண்டு வழிகாட்டுதல் வரை.",
     most_popular: "மிகவும் பிரபலமானது",
@@ -988,7 +988,7 @@ export const translations = {
     // Resources
     resources_title: "ખેતી સંસાધનો",
     
-    // Pricing (Gujarati - using English fallback)
+    // Pricing
     pricing_title: "Subscription Plans",
     pricing_desc: "તમારી ખેતીની જરૂરિયાતો માટે યોગ્ય યોજના પસંદ કરો. મોસમી સહાયથી લઈને વ્યાપક વાર્ષિક માર્ગદર્શન સુધી.",
     most_popular: "સૌથી લોકપ્રિય",
@@ -1156,7 +1156,7 @@ export const translations = {
     // Resources
     resources_title: "কৃষি সম্পদ",
     
-    // Pricing (Bengali - using English fallback)
+    // Pricing
     pricing_title: "Subscription Plans",
     pricing_desc: "আপনার চাষের প্রয়োজনের জন্য নিখুঁত পরিকল্পনা চয়ন করুন। মৌসুমী সহায়তা থেকে ব্যাপক বার্ষিক নির্দেশিকা পর্যন্ত।",
     most_popular: "সবচেয়ে জনপ্রিয়",
@@ -1621,7 +1621,7 @@ export const translations = {
     feature_market: "ಮಂಡಿ ಬೆಲೆಗಳು",
     feature_market_desc: "ಸ್ಥಳೀಯ ಮಾರುಕಟ್ಟೆಗಳಿಂದ ಲೈವ್ ದರಗಳು.",
     feature_ai: "AI ಸಲಹೆಗಾರ",
-    feature_ai_desc: "ವೈಯಕ್ತಿಕ ಬೆಳೆ ಸಲಹೆಗಳು.",
+    feature_ai_desc: "ವೈಯಕ್ತಿಕ ಬೆಳೆ ಶಿಫಾರಸುಗಳು.",
     
     chatbot_title: "ಕೃಷಿ ಸಾರಥಿ ಸಹಾಯಕ",
     chatbot_welcome: "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ AI ಕೃಷಿ ಸಹಾಯಕ. ನಿಮ್ಮ ಮಣ್ಣಿನ ವಿಶ್ಲೇಷಣೆ ಇಲ್ಲಿದೆ:",
@@ -1631,7 +1631,7 @@ export const translations = {
     healthy_soil: "ಮಣ್ಣು ಆರೋಗ್ಯಕರವಾಗಿದೆ. ಸಮತೋಲಿತ ಸಾವಯವ ಗೊಬ್ಬರವನ್ನು ಬಳಸಿ.",
     low_n_fert: "ಯೂರಿಯಾ / ಅಮೋನಿಯಂ ಸಲ್ಫೇಟ್ (ಕಡಿಮೆ ಸಾರಜನಕ)",
     low_p_fert: "SSP (ಕಡಿಮೆ ರಂಜಕ)",
-    low_k_fert: "MOP (ಕಡಿಮೆ ಪೊಟ್ಯಾಸಿಯಮ್)",
+    low_k_fert: "MOP (ಕಡಿಮೆ ಪೊಟ್ಟಾಶಿಯಮ್)",
     share_whatsapp: "WhatsApp ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ",
     read_aloud: "ಜೋರಾಗಿ ಓದಿ",
     stop_reading: "ಓದುವುದನ್ನು ನಿಲ್ಲಿಸಿ",
@@ -1641,7 +1641,7 @@ export const translations = {
     scheme_pm_kisan_title: "ಪಿಎಂ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ",
     scheme_pm_kisan_desc: "ರೈತರಿಗೆ ವರ್ಷಕ್ಕೆ ₹6,000 ಆದಾಯ ಬೆಂಬಲ.",
     scheme_pmfby_title: "ಪಿಎಂ ಫಸಲ್ ಬಿಮಾ ಯೋಜನೆ",
-    scheme_pmfby_desc: "ಆರ್ಥಿಕ ಬೆಂಬಲಕ್ಕಾಗಿ ಬೆಳೆ ವಿಮೆ ಯೋಜನೆ.",
+    scheme_pmfby_desc: "ಆರ್ಥಿಕ ಬೆಂಬಲಕ್ಕಾಗಿ ಬೆಳೆ ಬಿಮಾ ಯೋಜನೆ.",
     scheme_shc_title: "ಮಣ್ಣಿನ ಆರೋಗ್ಯ ಕಾರ್ಡ್",
     scheme_shc_desc: "ಪೋಷಕಾಂಶಗಳು ಮತ್ತು ಗೊಬ್ಬರಗಳ ಬೆಳೆವಾರು ಶಿಫಾರಸುಗಳು.",
     scheme_pkvy_title: "ಪರಂಪರಾಗತ್ ಕೃಷಿ ವಿಕಾಸ್ ಯೋಜನೆ",
