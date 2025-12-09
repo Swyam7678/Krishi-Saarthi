@@ -11,9 +11,10 @@ import "./index.css";
 import "./types/global.d.ts";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+import Landing from "./pages/Landing.tsx";
+import AuthPage from "./pages/Auth.tsx";
+
 // Lazy load route components for better code splitting
-const Landing = lazy(() => import("./pages/Landing.tsx"));
-const AuthPage = lazy(() => import("./pages/Auth.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const TestVoice = lazy(() => import("./pages/TestVoice.tsx"));
 
