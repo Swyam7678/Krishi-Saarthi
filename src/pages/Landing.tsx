@@ -29,69 +29,6 @@ export default function Landing() {
   }, [getMarket, language]);
 
   return (
->>>>>>> REPLACE
-<<<<<<< SEARCH
-        {/* Features Grid */}
-        <section className="py-16 px-4 bg-muted/30">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">{t('features')}</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <FeatureCard 
-                icon={<CloudSun className=\"h-10 w-10 text-blue-500\" />}
-                title={t('feature_weather')}
-                desc={t('feature_weather_desc')}
-              />
-              <FeatureCard 
-                icon={<Sprout className=\"h-10 w-10 text-green-500\" />}
-                title={t('feature_soil')}
-                desc={t('feature_soil_desc')}
-              />
-              <FeatureCard 
-                icon={<BrainCircuit className=\"h-10 w-10 text-purple-500\" />}
-                title={t('feature_ai')}
-                desc={t('feature_ai_desc')}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Subscription Section */}
-=======
-        {/* Features Grid */}
-        <section className="py-16 px-4 bg-muted/30">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">{t('features')}</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <FeatureCard 
-                icon={<CloudSun className="h-10 w-10 text-blue-500" />}
-                title={t('feature_weather')}
-                desc={t('feature_weather_desc')}
-              />
-              <FeatureCard 
-                icon={<Sprout className="h-10 w-10 text-green-500" />}
-                title={t('feature_soil')}
-                desc={t('feature_soil_desc')}
-              />
-              <FeatureCard 
-                icon={<BrainCircuit className="h-10 w-10 text-purple-500" />}
-                title={t('feature_ai')}
-                desc={t('feature_ai_desc')}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Market Section */}
-        <section className="py-16 px-4 bg-background">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">{t('market_title') || "Live Market Prices"}</h2>
-            <div className="max-w-4xl mx-auto h-[600px]">
-              <MarketCard data={marketData} />
-            </div>
-          </div>
-        </section>
-
-        {/* Subscription Section */}
     <div className="min-h-screen bg-background flex flex-col">
       {/* Hero Section */}
       <header className="w-full py-6 px-4 md:px-8 flex justify-between items-center max-w-7xl mx-auto">
@@ -126,7 +63,7 @@ export default function Landing() {
         <section className="py-16 px-4 bg-muted/30">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">{t('features')}</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               <FeatureCard 
                 icon={<CloudSun className="h-10 w-10 text-blue-500" />}
                 title={t('feature_weather')}
@@ -142,6 +79,16 @@ export default function Landing() {
                 title={t('feature_ai')}
                 desc={t('feature_ai_desc')}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Market Section */}
+        <section className="py-16 px-4 bg-background">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-12">{t('market_title') || "Live Market Prices"}</h2>
+            <div className="max-w-4xl mx-auto h-[600px]">
+              <MarketCard data={marketData} />
             </div>
           </div>
         </section>
