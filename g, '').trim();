@@ -1,26 +1,17 @@
-          try {
-            const crops = JSON.parse(jsonStr) as MarketItem[];
-            return crops.map((crop: MarketItem) => ({
-              ...crop,
-              current: Math.round(crop.avg + (Math.random() * 100 - 50))
-            }));
-          } catch (e) {
-            console.error("Failed to parse AI JSON:", e);
-            console.log("Returning fallback market data due to parse error");
-            return fallbackCrops;
-          }
-        } else {
-            console.warn("AI returned success but no content.");
+          const crops = JSON.parse(jsonStr) as MarketItem[];
+          
+          return crops.map((crop: MarketItem) => ({
+            ...crop,
+            current: Math.round(crop.avg + (Math.random() * 100 - 50))
+          }));
         }
-      } else {
-        console.warn("AI request failed or returned no data:", result);
       }
       
-      console.log("Returning fallback market data (end of function)");
+      console.log("AI response invalid or empty, using fallback.");
       return fallbackCrops;
+
     } catch (error) {
       console.error("Error fetching market prices:", error);
-      console.log("Returning fallback market data due to exception");
       return fallbackCrops;
     }
   },
