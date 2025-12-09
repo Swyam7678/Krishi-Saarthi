@@ -7,7 +7,14 @@ interface LanguageContextType {
   t: (key: keyof typeof translations['en']) => string;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+// Provide a safe default context to prevent crashes if used outside provider
+const defaultContext: LanguageContextType = {
+  language: 'en',
+  setLanguage: () => console.warn("LanguageProvider not found. setLanguage ignored."),
+  t: (key) => (translations['en'] as any)[key] || key,
+};
+
+const LanguageContext = createContext<LanguageContextType>(defaultContext);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   // Lazy initialization to prevent hydration mismatch and extra renders
@@ -51,8 +58,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
+  // Context will now fallback to defaultContext instead of being undefined
   return context;
 }
