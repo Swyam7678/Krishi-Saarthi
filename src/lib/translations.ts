@@ -136,6 +136,8 @@ export const translations = {
     
     // Pricing
     pricing_title: "Subscription Plans",
+    pricing_desc: "Choose the perfect plan for your farming needs. From seasonal support to comprehensive annual guidance.",
+    most_popular: "Most Popular",
     choose_plan: "Choose Plan",
     
     plan_seasonal_title: "Seasonal Starter",
@@ -312,6 +314,8 @@ export const translations = {
     
     // Pricing
     pricing_title: "सदस्यता योजनाएं",
+    pricing_desc: "अपनी खेती की जरूरतों के लिए सही योजना चुनें। मौसमी सहायता से लेकर व्यापक वार्षिक मार्गदर्शन तक।",
+    most_popular: "सबसे लोकप्रिय",
     choose_plan: "योजना चुनें",
     
     plan_seasonal_title: "मौसमी स्टार्टर",
@@ -445,7 +449,7 @@ export const translations = {
     feature_weather: "ਮੌਸਮ ਅਪਡੇਟ",
     feature_weather_desc: "ਸਹੀ ਭਵਿੱਖਬਾਣੀ ਅਤੇ ਚੇਤਾਵਨੀਆਂ।",
     feature_soil: "ਮਿੱਟੀ ਦੀ ਸਿਹਤ",
-    feature_soil_desc: "NPK ਪੱਧਰਾਂ ਦੀ ਤੁਰੰਤ ਨਿਗਰਾਨੀ।",
+    feature_soil_desc: "NPK ਪੱਧਰਾਂ ਦੀ ਤੁਰੰਤ ਨਿਰੀਕਾਰ।",
     feature_market: "ਮੰਡੀ ਭਾਅ",
     feature_market_desc: "ਸਥਾਨਕ ਬਾਜ਼ਾਰਾਂ ਤੋਂ ਲਾਈਵ ਰੇਟ।",
     feature_ai: "AI ਸਲਾਹਕਾਰ",
@@ -482,6 +486,8 @@ export const translations = {
     
     // Pricing (Punjabi - using English fallback for now to ensure consistency)
     pricing_title: "Subscription Plans",
+    pricing_desc: "ਆਪਣੀ ਖੇਤੀ ਦੀਆਂ ਲੋੜਾਂ ਲਈ ਸਹੀ ਯੋਜਨਾ ਚੁਣੋ। ਮੌਸਮੀ ਸਹਾਇਤਾ ਤੋਂ ਲੈ ਕੇ ਵਿਆਪਕ ਸਾਲਾਨਾ ਮਾਰਗਦਰਸ਼ਨ ਤੱਕ।",
+    most_popular: "ਸਭ ਤੋਂ ਮਸ਼ਹੂਰ",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -648,6 +654,8 @@ export const translations = {
     
     // Pricing (Marathi - using English fallback)
     pricing_title: "Subscription Plans",
+    pricing_desc: "तुमच्या शेतीच्या गरजांसाठी योग्य योजना निवडा. हंगामी मदतीपासून ते सर्वसमावेशक वार्षिक मार्गदर्शनापर्यंत.",
+    most_popular: "सर्वात लोकप्रिय",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -814,6 +822,8 @@ export const translations = {
     
     // Pricing (Tamil - using English fallback)
     pricing_title: "Subscription Plans",
+    pricing_desc: "உங்கள் விவசாயத் தேவைகளுக்கு ஏற்ற திட்டத்தைத் தேர்வு செய்யவும். பருவகால ஆதரவு முதல் விரிவான ஆண்டு வழிகாட்டுதல் வரை.",
+    most_popular: "மிகவும் பிரபலமானது",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -957,7 +967,7 @@ export const translations = {
     crop_rec: "પાક ભલામણો",
     healthy_soil: "જમીન સ્વસ્થ છે. સંતુલિત જૈવિક ખાતરનો ઉપયોગ કરો.",
     low_n_fert: "યુરિયા / એમોનિયમ સલ્ફેટ (ઓછું નાઇટ્રોજન)",
-    low_p_fert: "SSP (ઓછું ફોસ્ફરસ)",
+    low_p_fert: "SSP (ઓછું ફોસ્ફોરસ)",
     low_k_fert: "MOP (ઓછું પોટેશિયમ)",
     share_whatsapp: "WhatsApp પર શેર કરો",
     read_aloud: "સાંભળો",
@@ -980,6 +990,8 @@ export const translations = {
     
     // Pricing (Gujarati - using English fallback)
     pricing_title: "Subscription Plans",
+    pricing_desc: "તમારી ખેતીની જરૂરિયાતો માટે યોગ્ય યોજના પસંદ કરો. મોસમી સહાયથી લઈને વ્યાપક વાર્ષિક માર્ગદર્શન સુધી.",
+    most_popular: "સૌથી લોકપ્રિય",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -1146,6 +1158,8 @@ export const translations = {
     
     // Pricing (Bengali - using English fallback)
     pricing_title: "Subscription Plans",
+    pricing_desc: "আপনার চাষের প্রয়োজনের জন্য নিখুঁত পরিকল্পনা চয়ন করুন। মৌসুমী সহায়তা থেকে ব্যাপক বার্ষিক নির্দেশিকা পর্যন্ত।",
+    most_popular: "সবচেয়ে জনপ্রিয়",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -1308,6 +1322,8 @@ export const translations = {
     resources_title: "खेती संसाधन",
     
     pricing_title: "Subscription Plans",
+    pricing_desc: "अमाक चास जरूरत लगिद सही योजना बाछाव में। मौसमी मदद खोन साल भर रेयाक सलाह हबीज।",
+    most_popular: "सब खोन लोकप्रिय",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -1470,6 +1486,8 @@ export const translations = {
     resources_title: "चास सामान",
     
     pricing_title: "Subscription Plans",
+    pricing_desc: "अमाक चास जरूरत लगिद सही योजना बाछाव में। मौसमी मदद खोन साल भर रेयाक सलाह हबीज।",
+    most_popular: "सब खोन लोकप्रिय",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",
@@ -1632,6 +1650,8 @@ export const translations = {
     resources_title: "ಕೃಷಿ ಸಂಪನ್ಮೂಲಗಳು",
     
     pricing_title: "Subscription Plans",
+    pricing_desc: "ನಿಮ್ಮ ಕೃಷಿ ಅಗತ್ಯಗಳಿಗೆ ಸೂಕ್ತವಾದ ಯೋಜನೆಯನ್ನು ಆರಿಸಿ. ಕಾಲೋಚಿತ ಬೆಂಬಲದಿಂದ ಸಮಗ್ರ ವಾರ್ಷಿಕ ಮಾರ್ಗದರ್ಶನದವರೆಗೆ.",
+    most_popular: "ಅತ್ಯಂತ ಜನಪ್ರಿಯ",
     choose_plan: "Choose Plan",
     plan_seasonal_title: "Seasonal Starter",
     plan_seasonal_price: "₹299–₹399",

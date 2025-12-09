@@ -70,14 +70,14 @@ export function SubscriptionSection() {
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-4">{t('pricing_title')}</h2>
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Choose the perfect plan for your farming needs. From seasonal support to comprehensive annual guidance.
+          {t('pricing_desc')}
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {plans.map((plan, index) => (
             <Card key={index} className={`flex flex-col relative ${plan.highlight ? 'border-primary shadow-lg scale-105 z-10' : 'hover:shadow-md transition-shadow'}`}>
               {plan.highlight && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
-                  Most Popular
+                  {t('most_popular')}
                 </div>
               )}
               <CardHeader>
