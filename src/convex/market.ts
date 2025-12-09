@@ -69,11 +69,10 @@ export const getMarketPrices = action({
         Ensure the JSON is valid and contains no other text. Do not include markdown formatting.
       `;
 
-      const result = await vly.ai.completion({
-        model: 'gpt-4o-mini',
+      const result = await vly.completion({
+        model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         maxTokens: 1000,
-        temperature: 0.3,
       });
 
       if (result.success && result.data) {

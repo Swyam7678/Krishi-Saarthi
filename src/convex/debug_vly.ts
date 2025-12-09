@@ -7,10 +7,13 @@ export const debug = action({
   handler: async (ctx) => {
     try {
       console.log("Testing Vly AI connection...");
-      const result = await vly.ai.completion({
+      const result = await vly.completion({
         model: 'gpt-4o',
-        messages: [{ role: 'user', content: 'Hello' }],
-        maxTokens: 10,
+        messages: [
+          { role: 'system', content: 'You are a helpful assistant.' },
+          { role: 'user', content: 'Hello, are you working?' }
+        ],
+        maxTokens: 100,
       });
       console.log("Vly Result:", JSON.stringify(result, null, 2));
       return result;

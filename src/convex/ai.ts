@@ -5,6 +5,56 @@ import { vly } from "../lib/vly-integrations";
 import { internal } from "./_generated/api";
 import { getNPKStatus, NPK_THRESHOLDS } from "../lib/npk-config";
 
+// Helper for keyword-based fallback
+function getSimpleResponse(message: string, lang: string, context?: string): string {
+  const lowerMsg = message.toLowerCase();
+  const isHindi = lang === 'hi';
+  
+  // Weather
+  if (lowerMsg.includes('weather') || lowerMsg.includes('rain') || lowerMsg.includes('temp') || lowerMsg.includes('मौसम') || lowerMsg.includes('बारिश')) {
+    return isHindi 
+      ? "आप डैशबोर्ड पर वास्तविक समय का मौसम, तापमान और पूर्वानुमान देख सकते हैं। क्या आप कुछ और जानना चाहते हैं?"
+      : "You can check the real-time weather, temperature, and forecast directly on the dashboard. Would you like to know about something else?";
+  }
+
+  // Soil / NPK
+  if (lowerMsg.includes('soil') || lowerMsg.includes('npk') || lowerMsg.includes('fertilizer') || lowerMsg.includes('मिट्टी') || lowerMsg.includes('खाद')) {
+    if (context && context.includes("Current Soil Data")) {
+      return isHindi
+        ? `आपके मिट्टी के डेटा (संदर्भ में उपलब्ध) के आधार पर, मैं देख सकता हूँ कि इसमें सुधार की आवश्यकता हो सकती है। कृपया विस्तृत विश्लेषण के लिए 'मृदा स्वास्थ्य' कार्ड देखें।`
+        : `Based on your soil data, I can see the current NPK levels. Please check the 'Soil Health' card for a detailed analysis and fertilizer suggestions.`;
+    }
+    return isHindi
+      ? "आप अपनी मिट्टी की जांच के लिए 'मृदा स्वास्थ्य' अनुभाग का उपयोग कर सकते हैं। वहां आप NPK मान दर्ज कर सकते हैं।"
+      : "You can use the 'Soil Health' section to monitor your soil nutrients. Do you have your NPK values ready?";
+  }
+
+  // Crops
+  if (lowerMsg.includes('crop') || lowerMsg.includes('grow') || lowerMsg.includes('plant') || lowerMsg.includes('फसल') || lowerMsg.includes('उगाएं')) {
+    return isHindi
+      ? "फसल सुझावों के लिए, कृपया 'फसल सलाह' (Advisory) अनुभाग पर जाएं। वहां एआई आपकी मिट्टी के अनुसार बेहतरीन फसल सुझाएगा।"
+      : "For crop recommendations, please visit the 'Advisory' section. The AI can analyze your soil and suggest the best crops for you.";
+  }
+
+  // Schemes
+  if (lowerMsg.includes('scheme') || lowerMsg.includes('govt') || lowerMsg.includes('money') || lowerMsg.includes('योजना') || lowerMsg.includes('सरकार')) {
+    return isHindi
+      ? "सरकार की नवीनतम कृषि योजनाओं की जानकारी 'योजनाएं' (Schemes) अनुभाग में उपलब्ध है।"
+      : "You can find the latest government agricultural schemes in the 'Schemes' section of the dashboard.";
+  }
+
+  // Default Greeting/Help
+  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('नमस्ते')) {
+    return isHindi
+      ? "नमस्ते! मैं कृषि सारथी हूँ। मैं आपकी खेती में कैसे मदद कर सकता हूँ?"
+      : "Namaste! I am Krishi Saarthi. How can I help you with your farming today?";
+  }
+
+  return isHindi
+    ? "क्षमा करें, मैं अभी AI से संपर्क नहीं कर पा रहा हूँ। लेकिन आप डैशबोर्ड पर मौसम, मिट्टी और फसल की जानकारी देख सकते हैं।"
+    : "I apologize, I'm having trouble connecting to the AI right now. However, you can access Weather, Soil Health, and Crop Advisory directly on the dashboard.";
+}
+
 export const chat = action({
   args: {
     message: v.string(),
@@ -52,7 +102,7 @@ export const chat = action({
     ];
 
     try {
-      const result = await vly.ai.completion({
+      const result = await vly.completion({
         model: 'gpt-4o',
         messages: messages,
         maxTokens: 1000,
@@ -62,25 +112,13 @@ export const chat = action({
         return result.data.choices[0]?.message?.content || "Error generating response.";
       }
       console.error("Vly AI Error Response:", result);
-      return "Sorry, I am unable to process your request at the moment.";
+      // Use smart fallback instead of generic error
+      return getSimpleResponse(args.message, lang, args.context);
     } catch (e) {
       console.error("Chat Exception:", e);
       
-      // Fallback responses based on language
-      const fallbackResponses: Record<string, string> = {
-        'en': "I apologize, I am currently having trouble connecting to the AI service. Please check your internet connection or try again in a moment. I am here to help with your farming questions!",
-        'hi': "क्षमा करें, मुझे अभी AI सेवा से जुड़ने में समस्या हो रही है। कृपया अपना इंटरनेट कनेक्शन जांचें या कुछ देर बाद पुनः प्रयास करें। मैं आपकी खेती संबंधी सहायता के लिए यहाँ हूँ!",
-        'pa': "ਮਾਫ ਕਰਨਾ, ਮੈਨੂੰ ਇਸ ਸਮੇਂ AI ਸੇਵਾ ਨਾਲ ਜੁੜਨ ਵਿੱਚ ਸਮੱਸਿਆ ਆ ਰਹੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਚੈੱਕ ਕਰੋ ਜਾਂ ਥੋੜ੍ਹੀ ਦੇਰ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
-        'mr': "क्षमस्व, मला सध्या AI सेवेशी कनेक्ट करण्यात अडचण येत आहे. कृपया तुमचे इंटरनेट कनेक्शन तपासा किंवा थोड्या वेळाने पुन्हा प्रयत्न करा.",
-        'ta': "மன்னிக்கவும், தற்போது AI சேவையுடன் இணைப்பதில் சிக்கல் உள்ளது. உங்கள் இணைய இணைப்பைச் சரிபார்க்கவும் அல்லது சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.",
-        'gu': "માફ કરશો, મને અત્યારે AI સેવા સાથે જોડાવામાં તકલીફ પડી રહી છે. કૃપા કરીને તમારું ઇન્ટરનેટ કનેક્શન તપાસો અથવા થોડી વાર પછી ફરી પ્રયાસ કરો.",
-        'bn': "দুঃখিত, আমি বর্তমানে AI পরিষেবার সাথে সংযোগ করতে সমস্যার সম্মুখীন হচ্ছি। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন বা কিছুক্ষণ পর আবার চেষ্টা করুন।",
-        'kn': "ಕ್ಷಮಿಸಿ, ನನಗೆ ಪ್ರಸ್ತುತ AI ಸೇವೆಯೊಂದಿಗೆ ಸಂಪರ್ಕ ಸಾಧಿಸಲು ತೊಂದರೆಯಾಗುತ್ತಿದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಅಥವಾ ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-        'bho': "माफ करीं, हमरा अभी AI सेवा से जुडे में दिक्कत हो रहल बा। रउआ आपन इंटरनेट चेक करीं या कुछ देर बाद फिर से कोशिश करीं।",
-        'sat': "ᱤᱠᱟᱹᱧ ᱢᱮ, ᱱᱤᱛᱚᱜ ᱤᱧ AI ᱥᱮᱵᱟ ᱥᱟᱞᱟᱜ ᱡᱚᱲᱟᱣ ᱨᱮ ᱮᱴᱠᱮᱴᱚᱬᱮ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ᱾ ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱟᱢᱟᱜ ᱤᱱᱴᱟᱨᱱᱮᱴ ᱧᱮᱞ ᱢᱮ ᱥᱮ ᱛᱷᱚᱲᱟ ᱚᱠᱛᱚ ᱛᱟᱭᱚᱢ ᱟᱨᱦᱚᱸ ᱪᱮᱥᱴᱟᱭ ᱢᱮ᱾"
-      };
-
-      return fallbackResponses[lang] || fallbackResponses['en'];
+      // Use smart fallback instead of generic error
+      return getSimpleResponse(args.message, lang, args.context);
     }
   },
 });
@@ -143,7 +181,7 @@ export const generateCropRecommendation = action({
     `;
 
     try {
-      const result = await vly.ai.completion({
+      const result = await vly.completion({
         model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         maxTokens: 2000
