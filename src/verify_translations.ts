@@ -1,25 +1,30 @@
 import { translations } from "./lib/translations";
 
-const languages = Object.keys(translations) as (keyof typeof translations)[];
+const languages = Object.keys(translations) as Array<keyof typeof translations>;
 const enKeys = Object.keys(translations.en);
 
-const missingKeys: Record<string, string[]> = {};
+let hasError = false;
 
-languages.forEach(lang => {
+console.log("Verifying translations...");
+
+languages.forEach((lang) => {
   if (lang === 'en') return;
-  // @ts-ignore
+  
   const langKeys = Object.keys(translations[lang]);
-  const missing = enKeys.filter(k => !langKeys.includes(k));
-  if (missing.length > 0) {
-    missingKeys[lang] = missing;
+  const missingKeys = enKeys.filter(key => !langKeys.includes(key));
+  
+  if (missingKeys.length > 0) {
+    console.error(`\n❌ Missing keys in ${lang}:`);
+    missingKeys.forEach(key => console.error(`  - ${key}`));
+    hasError = true;
+  } else {
+    console.log(`✅ ${lang} is complete.`);
   }
 });
 
-if (Object.keys(missingKeys).length > 0) {
-  console.log("Found missing translation keys:");
-  console.log(JSON.stringify(missingKeys, null, 2));
+if (hasError) {
+  console.log("\nVerification failed. Please add missing translations.");
   process.exit(1);
 } else {
-  console.log("All translations are complete!");
-  process.exit(0);
+  console.log("\n✨ All translations are complete and verified!");
 }

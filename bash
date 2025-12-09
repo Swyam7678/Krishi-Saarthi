@@ -1,1 +1,1 @@
-npx convex run test_ai_debug:testLanguageCompliance
+npx tsx src/verify_translations.ts
