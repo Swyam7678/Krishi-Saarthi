@@ -1,23 +1,21 @@
+      if (result.success && result.data) {
+        const content = result.data.choices[0]?.message?.content;
+        if (content) {
+          // Clean up code blocks if present
+          const jsonStr = content.replace(/```json/g, '').replace(/```/g, '');
+          
           const crops = JSON.parse(jsonStr) as MarketItem[];
           
-          if (Array.isArray(crops)) {
-            return crops.map((crop: MarketItem) => ({
-              ...crop,
-              // Ensure history is generated if missing (AI doesn't return history)
-              history: crop.history || generateHistory(crop.current || crop.avg),
-              // Ensure current price exists
-              current: crop.current || Math.round(crop.avg + (Math.random() * 100 - 50))
-            }));
-          }
+          return crops.map((crop: MarketItem) => ({
+            ...crop,
+            current: Math.round(crop.avg + (Math.random() * 100 - 50))
+          }));
         }
       }
-      
-      console.log("AI response invalid or empty, using fallback");
+      // Fallback if AI returns success=false or no content
+      console.log("AI returned no data, using fallback.");
       return fallbackCrops;
-
     } catch (error) {
       console.error("Error fetching market prices:", error);
       return fallbackCrops;
     }
-  },
-});
