@@ -241,7 +241,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
                 </div>
                 
                 <div className="flex-1 min-h-[200px] w-full">
-                  {currentCropData ? (
+                  {currentCropData && currentCropData.history && currentCropData.history.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={currentCropData.history} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
