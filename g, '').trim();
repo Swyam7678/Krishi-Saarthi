@@ -1,11 +1,42 @@
-          const crops = JSON.parse(jsonStr) as MarketItem[];
-          
-          return crops.map((crop: MarketItem) => ({
-            ...crop,
-            current: Math.round(crop.avg + (Math.random() * 100 - 50)),
-            history: generateHistory(crop.avg)
-          }));
-        }
-      }
-    } catch (error) {
-// ... keep existing code
+const result = await vly.completion({
+  model: 'gpt-4o',
+  messages: [{ role: 'user', content: prompt }],
+  maxTokens: 1000,
+});
+
+if (result.success && result.data) {
+  const content = result.data.choices[0]?.message?.content;
+  if (content) {
+    // Clean up code blocks if present
+    const jsonStr = content.replace(/```json/g, '').replace(/```/g, '');
+    
+    let crops: any[] = [];
+    try {
+      crops = JSON.parse(jsonStr);
+    } catch (e) {
+      console.error("Failed to parse AI response JSON:", e);
+      return fallbackCrops;
+    }
+
+    if (!Array.isArray(crops) || crops.length === 0) {
+      console.warn("AI response is not a valid array or is empty");
+      return fallbackCrops;
+    }
+    
+    return crops.map((crop: any) => {
+      const avg = Number(crop.avg) || 0;
+      // Ensure history exists for charts
+      const history = crop.history || generateHistory(avg);
+      
+      return {
+        id: crop.id || crop.name?.toLowerCase().replace(/\s+/g, '_') || 'unknown',
+        name: crop.name || 'Unknown Crop',
+        min: Number(crop.min) || avg,
+        max: Number(crop.max) || avg,
+        avg: avg,
+        current: Number(crop.current) || avg,
+        history: history
+      };
+    });
+  }
+}
