@@ -3,57 +3,6 @@ import { Outlet, useNavigate, Link, useLocation } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
->>>>>>> REPLACE
-<<<<<<< SEARCH
-  const { signOut, user, isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
-  const { t } = useLanguage();
-  const [showProfileModal, setShowProfileModal] = useState(false);
-=======
-  const { signOut, user, isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { t } = useLanguage();
-  const [showProfileModal, setShowProfileModal] = useState(false);
->>>>>>> REPLACE
-<<<<<<< SEARCH
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity">
-          {t('app_name')}
-        </Link>
-        <div className="ml-auto flex items-center gap-2">
-=======
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity mr-6">
-          {t('app_name')}
-        </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link 
-            to="/dashboard" 
-            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard" ? "text-foreground" : "text-foreground/60")}
-          >
-            {t('dashboard') || "Overview"}
-          </Link>
-          <Link 
-            to="/dashboard/market" 
-            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard/market" ? "text-foreground" : "text-foreground/60")}
-          >
-            {t('market_title') || "Market"}
-          </Link>
-          <Link 
-            to="/dashboard/advisory" 
-            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard/advisory" ? "text-foreground" : "text-foreground/60")}
-          >
-            {t('feature_ai') || "Advisory"}
-          </Link>
-          <Link 
-            to="/dashboard/schemes" 
-            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard/schemes" ? "text-foreground" : "text-foreground/60")}
-          >
-            {t('schemes') || "Schemes"}
-          </Link>
-        </nav>
-        <div className="ml-auto flex items-center gap-2">
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -63,11 +12,11 @@ import { ChatbotWidget } from "@/components/ChatbotWidget";
 import { useAction, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 export default function DashboardLayout() {
   const { signOut, user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useLanguage();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const updateUser = useMutation(api.users.updateUser);
@@ -143,9 +92,35 @@ export default function DashboardLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity">
+        <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity mr-6">
           {t('app_name')}
         </Link>
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+          <Link 
+            to="/dashboard" 
+            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard" ? "text-foreground" : "text-foreground/60")}
+          >
+            {t('dashboard') || "Overview"}
+          </Link>
+          <Link 
+            to="/dashboard/market" 
+            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard/market" ? "text-foreground" : "text-foreground/60")}
+          >
+            {t('market_title') || "Market"}
+          </Link>
+          <Link 
+            to="/dashboard/advisory" 
+            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard/advisory" ? "text-foreground" : "text-foreground/60")}
+          >
+            {t('feature_ai') || "Advisory"}
+          </Link>
+          <Link 
+            to="/dashboard/schemes" 
+            className={cn("transition-colors hover:text-foreground/80", location.pathname === "/dashboard/schemes" ? "text-foreground" : "text-foreground/60")}
+          >
+            {t('schemes') || "Schemes"}
+          </Link>
+        </nav>
         <div className="ml-auto flex items-center gap-2">
             <LanguageSwitcher />
             <Popover>
