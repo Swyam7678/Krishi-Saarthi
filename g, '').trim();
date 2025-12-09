@@ -8,7 +8,7 @@
       }
     } catch (error) {
       console.error("Error fetching market prices:", error);
-      // Fall through to return fallbackCrops
+      return fallbackCrops;
     }
 
     return fallbackCrops;

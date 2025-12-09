@@ -1,6 +1,1 @@
-await callTool("readFilesToContextTool", {
-  "file_paths": [
-    "src/App.tsx"
-  ],
-  "replace_files_in_context": false
-});
+print(default_api.execute_command_tool(command='npx convex run test_market:test'))
