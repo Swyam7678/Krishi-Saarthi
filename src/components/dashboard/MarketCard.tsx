@@ -41,6 +41,10 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
   const [tempSelectedCrops, setTempSelectedCrops] = useState<string[]>(selectedCrops);
   const { t } = useLanguage();
 
+  // Debug logging
+  // console.log("MarketCard data:", data);
+  // console.log("MarketCard selectedCrops:", selectedCrops);
+
   if (!data) return (
     <Card className="h-full animate-pulse">
       <CardHeader><CardTitle>{t('market_title')}</CardTitle></CardHeader>
@@ -157,13 +161,13 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
-        <Tabs defaultValue="rates" className="flex-1 flex flex-col min-h-0">
+        <Tabs defaultValue="rates" className="flex-1 flex flex-col min-h-0 w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="rates">{t('rates')}</TabsTrigger>
             <TabsTrigger value="trends">{t('trends')}</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="rates" className="flex-1 min-h-0 mt-0">
+          <TabsContent value="rates" className="flex-1 min-h-0 mt-0 w-full">
             {filteredData.length === 0 ? (
               <div className="h-full min-h-[200px] flex flex-col items-center justify-center text-muted-foreground p-4 text-center border-2 border-dashed rounded-lg">
                 <p className="mb-2">{t('no_crops')}</p>
@@ -203,7 +207,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
             )}
           </TabsContent>
 
-          <TabsContent value="trends" className="flex-1 flex flex-col min-h-0 mt-0">
+          <TabsContent value="trends" className="flex-1 flex flex-col min-h-0 mt-0 w-full">
             <div className="mb-4">
               <Select value={selectedCrop} onValueChange={setSelectedCrop}>
                 <SelectTrigger>
