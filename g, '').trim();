@@ -1,22 +1,27 @@
           try {
             const crops = JSON.parse(jsonStr) as MarketItem[];
             return crops.map((crop: MarketItem) => ({
-                ...crop,
-                current: Math.round(crop.avg + (Math.random() * 100 - 50))
+              ...crop,
+              current: Math.round(crop.avg + (Math.random() * 100 - 50))
             }));
-          } catch (parseError) {
-            console.error("JSON Parse Error:", parseError);
-            console.log("Raw content that failed to parse:", jsonStr);
+          } catch (e) {
+            console.error("Failed to parse AI JSON:", e);
+            console.log("Returning fallback market data due to parse error");
+            return fallbackCrops;
           }
+        } else {
+            console.warn("AI returned success but no content.");
         }
       } else {
-        console.error("Vly AI request failed or returned no data:", result);
+        console.warn("AI request failed or returned no data:", result);
       }
+      
+      console.log("Returning fallback market data (end of function)");
+      return fallbackCrops;
     } catch (error) {
       console.error("Error fetching market prices:", error);
+      console.log("Returning fallback market data due to exception");
+      return fallbackCrops;
     }
-    
-    console.log("Returning fallback market data due to error or empty response");
-    return fallbackCrops;
   },
 });

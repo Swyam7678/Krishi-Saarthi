@@ -13,13 +13,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import Landing from "./pages/Landing.tsx";
 import AuthPage from "./pages/Auth.tsx";
+import DashboardLayout from "./layouts/DashboardLayout.tsx";
 
 // Lazy load route components for better code splitting
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const TestVoice = lazy(() => import("./pages/TestVoice.tsx"));
 
 // New Dashboard Components
-const DashboardLayout = lazy(() => import("./layouts/DashboardLayout.tsx"));
+// const DashboardLayout = lazy(() => import("./layouts/DashboardLayout.tsx"));
 const Overview = lazy(() => import("./pages/dashboard/Overview.tsx"));
 const WeatherPage = lazy(() => import("./pages/dashboard/Weather.tsx"));
 const SoilHealthPage = lazy(() => import("./pages/dashboard/SoilHealth.tsx"));
@@ -63,8 +64,8 @@ function RouteSyncer() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <LanguageProvider>
-      <InstrumentationProvider>
+    <InstrumentationProvider>
+      <LanguageProvider>
         <ConvexAuthProvider client={convex}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <TooltipProvider>
@@ -94,7 +95,7 @@ createRoot(document.getElementById("root")!).render(
             </TooltipProvider>
           </ThemeProvider>
         </ConvexAuthProvider>
-      </InstrumentationProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </InstrumentationProvider>
   </StrictMode>,
 );
