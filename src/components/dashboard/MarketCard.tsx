@@ -19,6 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLanguage } from "@/lib/i18n";
 
 interface MarketItem {
+  id?: string;
   name: string;
   min: number;
   max: number;
@@ -50,8 +51,14 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
   const safeData = Array.isArray(data) ? data : [];
 
   // Filter data based on selected crops
+  // Match by ID if available, otherwise by name
   const filteredData = selectedCrops.length > 0 
-    ? safeData.filter(item => selectedCrops.includes(item.name))
+    ? safeData.filter(item => {
+        // If selectedCrops contains IDs (lowercase), match ID
+        // If selectedCrops contains Names (Capitalized/Hindi), match Name
+        // We check both to be safe during migration
+        return selectedCrops.includes(item.name) || (item.id && selectedCrops.includes(item.id));
+      })
     : safeData;
 
   // Set default selected crop for chart if not set or not in filtered list
@@ -61,12 +68,17 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
 
   const currentCropData = safeData.find(c => c.name === selectedCrop);
 
-  const toggleCropSelection = (cropName: string) => {
+  const toggleCropSelection = (crop: MarketItem) => {
+    const identifier = crop.id || crop.name; // Prefer ID for new selections
     setTempSelectedCrops(prev => {
-      if (prev.includes(cropName)) {
-        return prev.filter(c => c !== cropName);
+      // Check if we have the ID or Name in the list
+      const hasId = crop.id && prev.includes(crop.id);
+      const hasName = prev.includes(crop.name);
+      
+      if (hasId || hasName) {
+        return prev.filter(c => c !== crop.id && c !== crop.name);
       } else {
-        return [...prev, cropName];
+        return [...prev, identifier];
       }
     });
   };
@@ -109,22 +121,25 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
                 </DialogHeader>
                 <ScrollArea className="h-[300px] pr-4">
                   <div className="grid grid-cols-1 gap-2">
-                    {safeData.map((crop) => (
-                      <div 
-                        key={crop.name} 
-                        className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
-                          tempSelectedCrops.includes(crop.name) 
-                            ? "bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800" 
-                            : "hover:bg-muted"
-                        }`}
-                        onClick={() => toggleCropSelection(crop.name)}
-                      >
-                        <span className="font-medium">{crop.name}</span>
-                        {tempSelectedCrops.includes(crop.name) && (
-                          <Check className="h-4 w-4 text-orange-600" />
-                        )}
-                      </div>
-                    ))}
+                    {safeData.map((crop) => {
+                      const isSelected = tempSelectedCrops.includes(crop.name) || (crop.id && tempSelectedCrops.includes(crop.id));
+                      return (
+                        <div 
+                          key={crop.id || crop.name} 
+                          className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
+                            isSelected
+                              ? "bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800" 
+                              : "hover:bg-muted"
+                          }`}
+                          onClick={() => toggleCropSelection(crop)}
+                        >
+                          <span className="font-medium">{crop.name}</span>
+                          {isSelected && (
+                            <Check className="h-4 w-4 text-orange-600" />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </ScrollArea>
                 <DialogFooter className="flex-col sm:flex-row gap-2">
@@ -150,14 +165,21 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
 
           <TabsContent value="rates" className="flex-1 min-h-0 mt-0">
             {filteredData.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                <p>{t('no_crops')}</p>
-                <Button variant="link" onClick={() => setOpen(true)}>{t('select_crops')}</Button>
+              <div className="h-full min-h-[200px] flex flex-col items-center justify-center text-muted-foreground p-4 text-center border-2 border-dashed rounded-lg">
+                <p className="mb-2">{t('no_crops')}</p>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setOpen(true)}>{t('select_crops')}</Button>
+                  {selectedCrops.length > 0 && (
+                    <Button variant="ghost" size="sm" onClick={() => onCropsChange && onCropsChange([])}>
+                      {t('reset') || "Reset"}
+                    </Button>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar h-[300px]">
                 {filteredData.map((item) => (
-                  <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                  <div key={item.id || item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
                     <div className="flex flex-col">
                       <span className="font-semibold">{item.name}</span>
                       <span className="text-xs text-muted-foreground">{t('avg')}: ₹{item.avg}/q</span>
@@ -189,7 +211,7 @@ export function MarketCard({ data, location, selectedCrops = [], onCropsChange }
                 </SelectTrigger>
                 <SelectContent>
                   {filteredData.map((crop) => (
-                    <SelectItem key={crop.name} value={crop.name}>
+                    <SelectItem key={crop.id || crop.name} value={crop.name}>
                       {crop.name}
                     </SelectItem>
                   ))}

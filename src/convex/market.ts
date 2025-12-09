@@ -4,6 +4,7 @@ import { v } from "convex/values";
 import { vly } from "../lib/vly-integrations";
 
 interface MarketItem {
+  id: string;
   name: string;
   min: number;
   max: number;
@@ -60,15 +61,15 @@ export const getMarketPrices = action({
 
     // Base data for crops
     const baseCrops = [
-      { name: lang === 'en' ? "Wheat" : "गेहूँ (Wheat)", avg: 2250 },
-      { name: lang === 'en' ? "Rice" : "चावल (Rice)", avg: 3000 },
-      { name: lang === 'en' ? "Maize" : "मक्का (Maize)", avg: 1950 },
-      { name: lang === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)", avg: 325 },
-      { name: lang === 'en' ? "Soybean" : "सोयाबीन (Soybean)", avg: 4850 },
-      { name: lang === 'en' ? "Mustard" : "सरसों (Mustard)", avg: 5300 },
-      { name: lang === 'en' ? "Potato" : "आलू (Potato)", avg: 1000 },
-      { name: lang === 'en' ? "Onion" : "प्याज (Onion)", avg: 2000 },
-      { name: lang === 'en' ? "Tomato" : "टमाटर (Tomato)", avg: 1500 },
+      { id: "wheat", name: lang === 'en' ? "Wheat" : "गेहूँ (Wheat)", avg: 2250 },
+      { id: "rice", name: lang === 'en' ? "Rice" : "चावल (Rice)", avg: 3000 },
+      { id: "maize", name: lang === 'en' ? "Maize" : "मक्का (Maize)", avg: 1950 },
+      { id: "sugarcane", name: lang === 'en' ? "Sugarcane" : "गन्ना (Sugarcane)", avg: 325 },
+      { id: "soybean", name: lang === 'en' ? "Soybean" : "सोयाबीन (Soybean)", avg: 4850 },
+      { id: "mustard", name: lang === 'en' ? "Mustard" : "सरसों (Mustard)", avg: 5300 },
+      { id: "potato", name: lang === 'en' ? "Potato" : "आलू (Potato)", avg: 1000 },
+      { id: "onion", name: lang === 'en' ? "Onion" : "प्याज (Onion)", avg: 2000 },
+      { id: "tomato", name: lang === 'en' ? "Tomato" : "टमाटर (Tomato)", avg: 1500 },
     ];
 
     // Generate dynamic fallback data
@@ -81,6 +82,7 @@ export const getMarketPrices = action({
       const max = Math.max(...allPrices);
       
       return {
+        id: crop.id,
         name: crop.name,
         avg: crop.avg,
         current,
@@ -96,6 +98,7 @@ export const getMarketPrices = action({
         Wheat, Rice, Maize, Sugarcane, Soybean, Mustard, Potato, Onion, Tomato.
         
         Return ONLY a JSON array with objects containing:
+        - id: string (lowercase english identifier, e.g., "wheat")
         - name: string (Name in ${targetLang} and English, e.g., "गेहूँ (Wheat)")
         - min: number (Minimum price)
         - max: number (Maximum price)
