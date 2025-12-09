@@ -368,14 +368,14 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
           </CardHeader>
           
           <Tabs defaultValue="report" className="flex-1 flex flex-col overflow-hidden">
-            <div className="px-4 pt-2 bg-muted/10 border-b">
+            <div className="px-4 pt-2 bg-muted/10 border-b shrink-0">
               <TabsList className="w-full grid grid-cols-2">
                 <TabsTrigger value="report">Report</TabsTrigger>
                 <TabsTrigger value="chat">Chat</TabsTrigger>
               </TabsList>
             </div>
 
-            <TabsContent value="report" className="flex-1 overflow-hidden p-0 m-0 data-[state=active]:flex flex-col">
+            <TabsContent value="report" className="flex-1 overflow-hidden p-0 m-0 data-[state=active]:flex flex-col min-h-0">
               <ReportTab 
                 npkData={npkData}
                 fertilizers={fertilizers}
@@ -387,7 +387,7 @@ export function ChatbotWidget({ npkData, onRefresh, isLoading = false }: Chatbot
               />
             </TabsContent>
 
-            <TabsContent value="chat" className="flex-1 overflow-hidden p-0 m-0 data-[state=active]:flex flex-col">
+            <TabsContent value="chat" className="flex-1 overflow-hidden p-0 m-0 data-[state=active]:flex flex-col min-h-0">
               <ChatTab 
                 messages={messages}
                 input={input}

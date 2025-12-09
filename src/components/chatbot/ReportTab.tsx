@@ -80,7 +80,7 @@ export function ReportTab({
     <div className="flex-1 flex flex-col overflow-hidden bg-muted/5">
       <CardContent className="flex-1 overflow-hidden p-0">
         <ScrollArea className="h-full">
-          <div className="p-4 space-y-6">
+          <div className="p-4 space-y-6 pb-20 sm:pb-4">
             {/* Welcome Message */}
             <div className="flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">

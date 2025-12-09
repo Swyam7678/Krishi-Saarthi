@@ -97,7 +97,8 @@ export function CropRecommendation({ npkData }: CropRecommendationProps) {
               className="gap-2 text-xs h-8 bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:text-green-800 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
             >
               <Zap className="h-3 w-3" />
-              {t('use_live_data')}
+              <span className="hidden sm:inline">{t('use_live_data')}</span>
+              <span className="sm:hidden">Live</span>
             </Button>
           )}
         </div>
@@ -105,9 +106,9 @@ export function CropRecommendation({ npkData }: CropRecommendationProps) {
       <CardContent>
         <Tabs defaultValue="new" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="new">{t('get_suggestion') || "New Analysis"}</TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <History className="h-4 w-4" />
+            <TabsTrigger value="new" className="text-xs sm:text-sm">{t('get_suggestion') || "New Analysis"}</TabsTrigger>
+            <TabsTrigger value="history" className="flex items-center gap-2 text-xs sm:text-sm">
+              <History className="h-3 w-3 sm:h-4 sm:w-4" />
               History
             </TabsTrigger>
           </TabsList>
@@ -116,7 +117,7 @@ export function CropRecommendation({ npkData }: CropRecommendationProps) {
             <div className="grid md:grid-cols-2 gap-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <FormField
                       control={form.control}
                       name="nitrogen"
